@@ -1,0 +1,92 @@
+export const testimonials = [
+  {
+    name: "Aminata",
+    role: "Étudiante en économie",
+    text: "J’ai vérifié la disponibilité et les prix des paquets de spaghetti dans les supermarchés près de chez moi. C’est rapide et ça complète mes revenus d’études.",
+    thumbnail: "https://randomuser.me/api/portraits/women/21.jpg",
+  },
+  {
+    name: "Mamadou",
+    role: "Commercial indépendant",
+    text: "J’ai relevé les stocks de boissons énergisantes dans plusieurs points de vente à Abidjan. C’est simple et flexible.",
+    thumbnail: "https://randomuser.me/api/portraits/men/31.jpg",
+  },
+  {
+    name: "Fatou",
+    role: "Agent de sécurité",
+    text: "Après le travail, je prends des photos des rayons de produits alimentaires dans des boutiques locales. L’application est facile à utiliser.",
+    thumbnail: "https://randomuser.me/api/portraits/women/45.jpg",
+  },
+  {
+    name: "Seydou",
+    role: "Livreur moto",
+    text: "Je vérifie la présence des supports publicitaires d’une marque de téléphonie dans différents points de vente pendant mes pauses.",
+    thumbnail: "https://randomuser.me/api/portraits/men/49.jpg",
+  },
+  {
+    name: "Awa",
+    role: "Assistante Brand Manager",
+    text: "En plus de mon emploi, j’évalue la visibilité des nouveaux packs de biscuits dans les grandes surfaces, ce qui enrichit ma compréhension du terrain.",
+    thumbnail: "https://randomuser.me/api/portraits/women/60.jpg",
+  },
+  {
+    name: "Issa",
+    role: "Agent call center",
+    text: "Je collecte les prix et promotions de produits d’hygiène dans divers magasins. C’est un revenu complémentaire intéressant.",
+    thumbnail: "https://randomuser.me/api/portraits/men/56.jpg",
+  },
+  {
+    name: "Mariama",
+    role: "Étudiante en marketing",
+    text: "J’ai participé à des missions d’évaluation des boissons gazeuses dans plusieurs points de vente. Les instructions sont claires et rapides à suivre.",
+    thumbnail: "https://randomuser.me/api/portraits/women/38.jpg",
+  },
+  {
+    name: "Ousmane",
+    role: "Chauffeur taxi",
+    text: "Je réalise des missions photos pour vérifier la présence d’affiches publicitaires de téléphonie dans les kiosques. C’est flexible et ça paie vite.",
+    thumbnail: "https://randomuser.me/api/portraits/men/61.jpg",
+  },
+  {
+    name: "Aminata",
+    role: "Employée en grande distribution",
+    text: "J’ai recueilli des avis clients sur les nouveaux packs de riz dans mon magasin. Ça me donne un complément de salaire intéressant.",
+    thumbnail: "https://randomuser.me/api/portraits/women/26.jpg",
+  },
+  {
+    name: "Marie",
+    role: "Ménagère",
+    text: "J’ai aidé à vérifier la qualité et le prix de produits laitiers dans mon quartier. Ça m’a permis d’arrondir mes fins de mois sans me déplacer loin.",
+    thumbnail: "https://randomuser.me/api/portraits/women/54.jpg",
+  },
+  {
+    name: "Jean",
+    role: "Employé de banque",
+    text: "J’ai participé à des missions de collecte d’informations sur des services bancaires dans plusieurs agences. C’est un bon complément à mon travail.",
+    thumbnail: "https://randomuser.me/api/portraits/men/39.jpg",
+  },
+  {
+    name: "Fatima",
+    role: "Vendeuse de marché",
+    text: "Je prends des photos et fais des rapports sur la disponibilité des produits dans mon marché. C’est simple et adapté à mon emploi du temps.",
+    thumbnail: "https://randomuser.me/api/portraits/women/67.jpg",
+  },
+  {
+    name: "Koffi",
+    role: "Étudiant en informatique",
+    text: "J’ai fait des missions de vérification de la présence de produits électroniques dans des boutiques. L’application est intuitive et les missions sont bien rémunérées.",
+    thumbnail: "https://randomuser.me/api/portraits/men/18.jpg",
+  },
+  {
+    name: "Adama",
+    role: "Chauffeur de bus",
+    text: "Je fais des missions de vérification des publicités dans les gares routières pendant mes pauses. C’est flexible et ça aide à gagner un revenu supplémentaire.",
+    thumbnail: "https://randomuser.me/api/portraits/men/28.jpg",
+  },
+  {
+    name: "Nadia",
+    role: "Secrétaire",
+    text: "J’ai réalisé des enquêtes sur la satisfaction client dans des commerces de proximité. C’était intéressant et ça a amélioré mon sens de l’observation.",
+    thumbnail: "https://randomuser.me/api/portraits/women/73.jpg",
+  },
+];

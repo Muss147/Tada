@@ -1,0 +1,23 @@
+{
+  "name": "@tada/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "supabase start",
+    "clean": "git clean -xdf .turbo node_modules",
+    "lint": "biome lint",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tada/email": "workspace:*",
+    "@tada/logger": "workspace:*",
+    "@tada/supabase": "workspace:*",
+    "@tada/ui": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^5.5.4"
+  }
+}
