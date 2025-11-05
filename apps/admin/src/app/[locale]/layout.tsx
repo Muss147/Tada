@@ -1,12 +1,19 @@
 import { cn } from "@tada/ui/lib/utils";
 import "@tada/ui/globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
+import { DM_Sans } from "next/font/google";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Providers } from "./providers";
 import NavigationLoadingProviders from "./navigation-loading-providers";
+
+// Configuration de la police DM Sans
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Tada",
@@ -38,8 +45,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          `${GeistSans.variable} ${GeistMono.variable}`,
-          "whitespace-pre-line overscroll-none antialiased"
+          dmSans.variable,
+          "whitespace-pre-line overscroll-none antialiased font-sans"
         )}
       >
         <NavigationLoadingProviders>

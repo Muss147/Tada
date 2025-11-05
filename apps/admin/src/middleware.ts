@@ -11,7 +11,14 @@ const I18nMiddleware = createI18nMiddleware({
 
 const publicPaths = ["/login", "/forgot-password", "/reset-password"];
 
+// 🚧 DEV MODE: Désactiver l'authentification pour les tests
+const DISABLE_AUTH = true;
+
 export async function middleware(request: NextRequest) {
+  // Si l'authentification est désactivée, passer directement au middleware i18n
+  if (DISABLE_AUTH) {
+    return I18nMiddleware(request);
+  }
   const isPublicPath = publicPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path),
   );
