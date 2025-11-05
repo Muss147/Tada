@@ -14,7 +14,7 @@ export default async function Page({
   const mode = searchParams.mode;
 
   const shouldShowConversationCard =
-    !templateId && (!mode || mode === "ai" || mode === "contributor-info");
+    !templateId && (!mode || mode === "ai" || mode === "contributor-info" || mode === "profile-enhancement");
 
   return (
     <div className="flex h-screen bg-gray-100">
