@@ -10,8 +10,7 @@ import {
   groupParticipantsByAge,
   SurveyData,
 } from "@/lib/utils";
-import { AssistantRuntimeProvider } from "@assistant-ui/react";
-import { useVercelAIAssistantRuntime } from "@assistant-ui/react-ai-sdk";
+// Runtime provider global configuré dans providers.tsx
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
@@ -31,9 +30,7 @@ export function MyRuntimeProvider({
   const [executiveSummary, setExecutiveSummary] =
     // useState<string>("Loading...");
     useState<string>(executiveSummaryMock);
-  const runtime = useVercelAIAssistantRuntime({
-    api: "/api/assistant",
-  });
+  // Pas besoin de runtime local, utilise le provider global
 
   const generateExecutiveSummary = useAction(
     generateExecutiveSummaryAction,
@@ -61,7 +58,6 @@ export function MyRuntimeProvider({
   }, [mission]);
 
   return (
-    <AssistantRuntimeProvider runtime={runtime}>
       <div className="max-w-7xl mx-auto  gap-2 space-y-4">
         <div className="w-full mb-12">
           <ParticipantInfo
@@ -106,7 +102,6 @@ export function MyRuntimeProvider({
           {children}
         </div>
       </div>
-    </AssistantRuntimeProvider>
   );
 }
 
