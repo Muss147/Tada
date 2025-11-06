@@ -1,6 +1,7 @@
 "use client";
 import { useI18n } from "@/locales/client";
 import { Badge } from "@tada/ui/components/badge";
+import { Button as UIButton } from "@tada/ui/components/button";
 import {
   Table,
   TableBody,
@@ -9,6 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@tada/ui/components/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@tada/ui/components/dropdown-menu";
 import { cn } from "@tada/ui/lib/utils";
 import {
   type Row,
@@ -18,10 +26,13 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowLeft, ArrowRight, EyeIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, EyeIcon, MoreHorizontal, Edit, Trash2, Building2, Plus } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Organization } from "./type";
+import { OrganizationManager } from "./organization-manager";
+import { useToast } from "@/hooks/use-toast";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -50,15 +61,72 @@ const Button = ({
   );
 };
 
-type OrganizationWithMissions = Organization & { missions: number };
+type OrganizationWithMissions = Organization & { 
+  missions: number;
+  _count?: {
+    members: number;
+    missions: number;
+    projects: number;
+  };
+};
 
 export function ListOrganizations({
-  organizations,
+  organizations: initialOrganizations,
 }: {
   organizations: OrganizationWithMissions[];
 }) {
   const t = useI18n();
+  const router = useRouter();
+  const { toast } = useToast();
   const pageSize = 8;
+  
+  const [organizations, setOrganizations] = useState<OrganizationWithMissions[]>(initialOrganizations);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedOrganization, setSelectedOrganization] = useState<OrganizationWithMissions | null>(null);
+
+  const handleEdit = (org: OrganizationWithMissions) => {
+    setSelectedOrganization(org);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDelete = async (org: OrganizationWithMissions) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${org.name}" ?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/organizations/${org.id}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Organisation supprimée",
+          description: `${org.name} a été supprimée avec succès.`,
+        });
+        router.refresh();
+      } else {
+        toast({
+          title: "Erreur",
+          description: result.error || "Impossible de supprimer l'organisation",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'organisation",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSuccess = () => {
+    router.refresh();
+  };
 
   const workspacesColumns = [
     {
@@ -83,6 +151,20 @@ export function ListOrganizations({
       },
     },
     {
+      header: "Membres",
+      accessorKey: "members",
+      meta: {
+        align: "text-left",
+      },
+      cell: ({ row }: { row: Row<OrganizationWithMissions> }) => {
+        return (
+          <span className="text-sm text-gray-600">
+            {row.original._count?.members || 0}
+          </span>
+        );
+      },
+    },
+    {
       header: "",
       accessorKey: "actions",
       meta: {
@@ -90,9 +172,34 @@ export function ListOrganizations({
       },
       cell: ({ row }: { row: Row<OrganizationWithMissions> }) => {
         return (
-          <Link href={`/organizations/${row.original.id}`}>
-            <EyeIcon className="size-5 text-gray-700 group-hover:text-gray-900 dark:text-gray-300 group-hover:dark:text-gray-50" />
-          </Link>
+          <div className="flex items-center justify-end gap-2">
+            <Link href={`/organizations/${row.original.id}`}>
+              <UIButton variant="ghost" size="sm">
+                <EyeIcon className="h-4 w-4" />
+              </UIButton>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <UIButton variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </UIButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => handleEdit(row.original)}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Modifier
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => handleDelete(row.original)}
+                  className="text-red-600"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         );
       },
     },
@@ -112,10 +219,17 @@ export function ListOrganizations({
   });
 
   return (
-    <div className="w-full rounded-lg border border-gray-100 bg-white shadow-sm p-5">
-      <h2 className="mb-6 text-xl font-semibold text-gray-800">
-        {t("organizations.list.title")}
-      </h2>
+    <>
+      <div className="w-full rounded-lg border border-gray-100 bg-white shadow-sm p-5">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">
+            {t("organizations.list.title")}
+          </h2>
+          <UIButton onClick={() => setIsCreateDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nouvelle organisation
+          </UIButton>
+        </div>
       <Table>
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -193,5 +307,22 @@ export function ListOrganizations({
         </div>
       </div>
     </div>
+
+    <OrganizationManager
+      isOpen={isCreateDialogOpen}
+      onClose={() => setIsCreateDialogOpen(false)}
+      onSuccess={handleSuccess}
+    />
+
+    <OrganizationManager
+      isOpen={isEditDialogOpen}
+      onClose={() => {
+        setIsEditDialogOpen(false);
+        setSelectedOrganization(null);
+      }}
+      organization={selectedOrganization || undefined}
+      onSuccess={handleSuccess}
+    />
+    </>
   );
 }

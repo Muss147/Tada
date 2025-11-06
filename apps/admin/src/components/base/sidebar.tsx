@@ -26,21 +26,19 @@ import {
 } from "@tada/ui/components/select";
 import { cn } from "@tada/ui/lib/utils";
 import {
-  Calendar,
-  CircleDollarSign,
-  Clock,
-  FileText,
-  Filter,
-  FolderOpen,
-  Globe,
   Home,
-  Layers,
-  LogOut,
-  Moon,
-  Settings,
-  User,
-  UserCog,
   Users,
+  FolderOpen,
+  Settings,
+  Filter,
+  LogOut,
+  Globe,
+  Layers,
+  Building2,
+  UserCog,
+  Gift,
+  CircleDollarSign,
+  ClipboardList,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -116,13 +114,13 @@ export function Sidebar() {
           href: "/missions-to-validate",
         },
         {
-          icon: <User className="h-5 w-5" />,
-          text: t("navigation.organizations"),
+          icon: <Building2 className="h-5 w-5" />,
+          text: "Organisations",
           href: "/organizations",
         },
         {
           icon: <UserCog className="h-5 w-5" />,
-          text: "Gestion des utilisateurs",
+          text: "Utilisateurs",
           href: "/organizations/users",
         },
       ],
@@ -138,6 +136,16 @@ export function Sidebar() {
       ],
     },
     {
+      title: "Audit & Reporting",
+      items: [
+        {
+          icon: <ClipboardList className="h-5 w-5" />,
+          text: "Audit des Missions",
+          href: "/audit/missions",
+        },
+      ],
+    },
+    {
       title: t("navigation.settings"),
       items: [
         {
@@ -149,6 +157,11 @@ export function Sidebar() {
           icon: <Filter className="h-5 w-5" />,
           text: "Attributs d'audience",
           href: "/settings/audience-attributes",
+        },
+        {
+          icon: <Gift className="h-5 w-5" />,
+          text: "Récompenses",
+          href: "/settings/rewards",
         },
       ],
     },

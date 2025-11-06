@@ -3,6 +3,9 @@ import { Icons } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/locales/client";
+import { MembersManager } from "./members-manager";
+import { useRouter } from "next/navigation";
+import { UserPlus, Mail } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -51,6 +54,7 @@ const TeamMembersPreview = ({
   organizationName: string;
 }) => {
   const t = useI18n();
+  const router = useRouter();
   const [inviteEmail, setInviteEmail] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<string>("admin");
   const [members, setMembers] = useState<TeamMember[]>(membersInitial);
@@ -60,6 +64,7 @@ const TeamMembersPreview = ({
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [newRole, setNewRole] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -218,13 +223,26 @@ const TeamMembersPreview = ({
     }
   };
 
+  const handleMemberAdded = () => {
+    router.refresh();
+  };
+
   return (
     <div className="p-5 text-gray-800 bg-white rounded-lg">
       {/* Section d'invitation */}
       <div className="mb-10 pb-8 border-b border-gray-200 grid grid-cols-1 2xl:grid-cols-[40%_60%] gap-4">
-        <h2 className="text-lg font-semibold mb-5">
-          {t("teamMembers.invite.title")}
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            {t("teamMembers.invite.title")}
+          </h2>
+          <Button
+            onClick={() => setIsAddMemberOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Ajouter un membre
+          </Button>
+        </div>
 
         <div className="w-full">
           <form
@@ -232,9 +250,7 @@ const TeamMembersPreview = ({
             className="flex flex-col md:flex-row gap-3"
           >
             <div className="relative flex-grow">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                ✉️
-              </span>
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
               <Input
                 type="email"
                 value={inviteEmail}
@@ -273,7 +289,7 @@ const TeamMembersPreview = ({
                 </>
               ) : (
                 <>
-                  <span>✉️</span>
+                  <Mail className="h-4 w-4 mr-2" />
                   {t("teamMembers.invite.submit")}
                 </>
               )}
@@ -492,6 +508,15 @@ const TeamMembersPreview = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modal d'ajout de membre */}
+      <MembersManager
+        isOpen={isAddMemberOpen}
+        onClose={() => setIsAddMemberOpen(false)}
+        organizationId={members[0]?.organizationId}
+        organizationName={organizationName}
+        onSuccess={handleMemberAdded}
+      />
     </div>
   );
 };

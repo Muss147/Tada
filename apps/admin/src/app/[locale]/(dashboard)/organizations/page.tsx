@@ -13,6 +13,21 @@ export default async function OrganizationsPage() {
       logo: true,
       slug: true,
       metadata: true,
+      status: true,
+      country: true,
+      sector: true,
+      createdAt: true,
+      updatedAt: true,
+      _count: {
+        select: {
+          members: true,
+          missions: true,
+          projects: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
@@ -21,7 +36,7 @@ export default async function OrganizationsPage() {
       <ListOrganizations
         organizations={organizations.map((organization) => ({
           ...organization,
-          missions: 0,
+          missions: organization._count.missions,
         }))}
       />
     </div>
