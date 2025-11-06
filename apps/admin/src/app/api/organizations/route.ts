@@ -98,11 +98,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("Données reçues par l'API:", JSON.stringify(body, null, 2));
     
     // Validation des données
     const validation = validateCreateOrganization(body);
+    console.log("Résultat de la validation:", validation);
     
     if (!validation.valid) {
+      console.error("Erreurs de validation:", validation.errors);
       return NextResponse.json(
         { 
           success: false, 
@@ -143,7 +146,7 @@ export async function POST(req: Request) {
           data: {
             email: ownerData.email,
             name: ownerData.name,
-            role: "client",
+            role: "client_admin",
             position: ownerData.position || null,
             country: orgData.country || null,
           },

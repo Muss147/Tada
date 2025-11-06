@@ -27,6 +27,7 @@ import { X } from "lucide-react";
 interface AttributeManagerProps {
   isOpen: boolean;
   onClose: () => void;
+  onAttributeCreated?: (newAttribute: any) => void;
   attribute?: {
     id?: string;
     name: string;
@@ -43,6 +44,7 @@ interface AttributeManagerProps {
 export function AttributeManager({
   isOpen,
   onClose,
+  onAttributeCreated,
   attribute,
 }: AttributeManagerProps) {
   const [formData, setFormData] = useState({
@@ -155,7 +157,15 @@ export function AttributeManager({
         throw new Error(errorData.error || "Failed to save attribute");
       }
 
-      // Succès - fermer le modal (le parent rechargera les données)
+      const result = await response.json();
+
+      // Si c'est une création et qu'on a un callback, l'appeler
+      if (!attribute?.id && onAttributeCreated && result) {
+        console.log("Appel du callback onAttributeCreated avec:", result);
+        onAttributeCreated(result);
+      }
+
+      // Succès - fermer le modal
       onClose();
     } catch (err) {
       console.error("Error saving attribute:", err);

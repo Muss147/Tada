@@ -4,6 +4,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@tada/ui/components/button";
 import { Badge } from "@tada/ui/components/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@tada/ui/components/dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -19,7 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@tada/ui/components/dropdown-menu";
-import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2, Loader2 } from "lucide-react";
 import { AttributeManager } from "./attribute-manager";
 
 // Types
@@ -66,13 +74,24 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 interface AttributeListProps {
+  initialAttributes?: Attribute[];
   onRefresh?: () => void;
+  onAttributeUpdated?: (updatedAttribute: Attribute) => void;
+  onAttributeDeleted?: (deletedId: string) => void;
 }
 
-export function AttributeList({ onRefresh }: AttributeListProps) {
-  const [attributes, setAttributes] = useState<Attribute[]>([]);
+export function AttributeList({ 
+  initialAttributes = [], 
+  onRefresh, 
+  onAttributeUpdated, 
+  onAttributeDeleted 
+}: AttributeListProps) {
+  const [attributes, setAttributes] = useState<Attribute[]>(initialAttributes);
   const [selectedAttribute, setSelectedAttribute] = useState<Attribute | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [attributeToDelete, setAttributeToDelete] = useState<Attribute | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,21 +122,39 @@ export function AttributeList({ onRefresh }: AttributeListProps) {
 
   // Charger les attributs au montage du composant
   useEffect(() => {
-    fetchAttributes();
+    if (initialAttributes.length > 0) {
+      setAttributes(initialAttributes);
+      setIsLoading(false);
+    } else {
+      fetchAttributes();
+    }
   }, []);
+
+  // Mettre à jour les attributs quand les props changent
+  useEffect(() => {
+    if (initialAttributes.length > 0) {
+      setAttributes(initialAttributes);
+      setIsLoading(false);
+    }
+  }, [initialAttributes]);
 
   const handleEdit = (attribute: any) => {
     setSelectedAttribute(attribute);
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cet attribut ?")) {
-      return;
-    }
+  const openDeleteDialog = (attribute: Attribute) => {
+    setAttributeToDelete(attribute);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!attributeToDelete) return;
+    
+    setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/audience-attributes/${id}`, {
+      const response = await fetch(`/api/audience-attributes/${attributeToDelete.id}`, {
         method: "DELETE",
       });
 
@@ -126,11 +163,21 @@ export function AttributeList({ onRefresh }: AttributeListProps) {
         throw new Error(errorData.error || "Failed to delete attribute");
       }
 
-      // Recharger la liste après suppression
-      await fetchAttributes();
+      // Mettre à jour le state local
+      setAttributes(prevAttributes => prevAttributes.filter(attr => attr.id !== attributeToDelete.id));
+      
+      // Notifier le parent
+      if (onAttributeDeleted) {
+        onAttributeDeleted(attributeToDelete.id);
+      }
+
+      setIsDeleteDialogOpen(false);
+      setAttributeToDelete(null);
     } catch (err) {
       console.error("Error deleting attribute:", err);
       alert(err instanceof Error ? err.message : "Failed to delete attribute");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -208,7 +255,14 @@ export function AttributeList({ onRefresh }: AttributeListProps) {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
-                  {attribute._count?.values || 0} contributeurs
+                  <div className="flex flex-col items-end">
+                    <span className="font-medium tabular-nums">
+                      {(attribute._count?.values || 0).toLocaleString()}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      contributeurs
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -224,13 +278,9 @@ export function AttributeList({ onRefresh }: AttributeListProps) {
                         <Pencil className="mr-2 h-4 w-4" />
                         Modifier
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Eye className="mr-2 h-4 w-4" />
-                        Voir les détails
-                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onClick={() => handleDelete(attribute.id)}
+                        onClick={() => openDeleteDialog(attribute)}
                         className="text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -255,8 +305,58 @@ export function AttributeList({ onRefresh }: AttributeListProps) {
           // Recharger les attributs après fermeture du modal
           fetchAttributes();
         }}
-        attribute={selectedAttribute}
+        attribute={selectedAttribute || undefined}
       />
+
+      {/* Dialog Suppression */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />
+              Supprimer l'attribut
+            </DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer définitivement l'attribut{" "}
+              <span className="font-semibold text-gray-900">
+                {attributeToDelete?.name}
+              </span>{" "}
+              ? Cette action est irréversible et supprimera toutes les données associées.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setAttributeToDelete(null);
+              }}
+              disabled={isDeleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suppression...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -36,7 +36,7 @@ interface OrganizationManagerProps {
     country?: string | null;
     sector?: string | null;
   };
-  onSuccess?: () => void;
+  onSuccess?: (organization?: any) => void;
 }
 
 export function OrganizationManager({
@@ -111,6 +111,25 @@ export function OrganizationManager({
     setIsSubmitting(true);
     setError(null);
 
+    // Validation côté client pour la création
+    if (!organization?.id) {
+      if (!formData.name.trim()) {
+        setError("Le nom de l'organisation est requis");
+        setIsSubmitting(false);
+        return;
+      }
+      if (!formData.ownerEmail.trim()) {
+        setError("L'email du propriétaire est requis");
+        setIsSubmitting(false);
+        return;
+      }
+      if (!formData.ownerName.trim()) {
+        setError("Le nom du propriétaire est requis");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       const url = organization?.id
         ? `/api/organizations/${organization.id}`
@@ -118,23 +137,64 @@ export function OrganizationManager({
       
       const method = organization?.id ? "PATCH" : "POST";
 
+      // Structurer les données selon ce que l'API attend
+      let requestData;
+      
+      if (organization?.id) {
+        // Pour la modification, envoyer seulement les données de l'organisation
+        requestData = {
+          name: formData.name,
+          slug: formData.slug,
+          logo: formData.logo || null,
+          metadata: formData.metadata || null,
+          status: formData.status,
+          country: formData.country || null,
+          sector: formData.sector || null,
+        };
+      } else {
+        // Pour la création, structurer avec organization et owner
+        requestData = {
+          organization: {
+            name: formData.name,
+            slug: formData.slug,
+            logo: formData.logo || null,
+            metadata: formData.metadata || null,
+            status: formData.status,
+            country: formData.country || null,
+            sector: formData.sector || null,
+          },
+          owner: {
+            email: formData.ownerEmail,
+            name: formData.ownerName,
+            position: formData.ownerPosition || null,
+          },
+        };
+      }
+
+      console.log("Données envoyées à l'API:", requestData);
+
       const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestData),
       });
 
       const result = await response.json();
+      console.log("Réponse de l'API:", result);
 
       if (!response.ok) {
-        throw new Error(result.error || "Failed to save organization");
+        console.error("Erreur API:", result);
+        const errorMessage = result.errors ? 
+          result.errors.join(", ") : 
+          (result.error || result.message || "Failed to save organization");
+        throw new Error(errorMessage);
       }
 
       // Succès
       if (onSuccess) {
-        onSuccess();
+        onSuccess(result.data || result);
       }
       onClose();
     } catch (err) {

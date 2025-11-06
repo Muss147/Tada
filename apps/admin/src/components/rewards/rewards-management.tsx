@@ -30,7 +30,7 @@ import {
 import { Badge } from "@tada/ui/components/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { Plus, Edit, Trash2, Gift } from "lucide-react";
+import { Plus, Edit, Trash2, Gift, Loader2 } from "lucide-react";
 import { Textarea } from "@tada/ui/components/textarea";
 
 interface Reward {
@@ -56,8 +56,11 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
   const [rewards, setRewards] = useState<Reward[]>(initialRewards);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [rewardToDelete, setRewardToDelete] = useState<Reward | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -82,6 +85,16 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
       const result = await response.json();
 
       if (response.ok) {
+        // Ajouter la nouvelle récompense au state local
+        const newReward: Reward = {
+          ...result.data,
+          _count: {
+            history: 0,
+          },
+        };
+        
+        setRewards(prevRewards => [newReward, ...prevRewards]);
+        
         toast({
           title: "Récompense créée",
           description: `${result.data.name} a été créée avec succès.`,
@@ -95,7 +108,6 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
           value: 100,
           status: "active",
         });
-        router.refresh();
       } else {
         toast({
           title: "Erreur",
@@ -143,13 +155,24 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
       const result = await response.json();
 
       if (response.ok) {
+        // Mettre à jour la récompense dans le state local
+        const updatedReward: Reward = {
+          ...result.data,
+          _count: selectedReward?._count || { history: 0 },
+        };
+        
+        setRewards(prevRewards => 
+          prevRewards.map(reward => 
+            reward.id === selectedReward?.id ? updatedReward : reward
+          )
+        );
+        
         toast({
           title: "Récompense modifiée",
           description: "La récompense a été modifiée avec succès.",
         });
         setIsEditOpen(false);
         setSelectedReward(null);
-        router.refresh();
       } else {
         toast({
           title: "Erreur",
@@ -168,22 +191,31 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cette récompense ?")) {
-      return;
-    }
+  const openDeleteDialog = (reward: Reward) => {
+    setRewardToDelete(reward);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!rewardToDelete) return;
+    
+    setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/rewards/${id}`, {
+      const response = await fetch(`/api/rewards/${rewardToDelete.id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
+        // Supprimer la récompense du state local
+        setRewards(prevRewards => prevRewards.filter(reward => reward.id !== rewardToDelete.id));
+        
         toast({
           title: "Récompense supprimée",
           description: "La récompense a été supprimée avec succès.",
         });
-        router.refresh();
+        setIsDeleteDialogOpen(false);
+        setRewardToDelete(null);
       } else {
         toast({
           title: "Erreur",
@@ -197,6 +229,8 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
         description: "Une erreur est survenue",
         variant: "destructive",
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -287,7 +321,7 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDelete(reward.id)}
+                        onClick={() => openDeleteDialog(reward)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -512,6 +546,56 @@ export function RewardsManagement({ initialRewards }: RewardsManagementProps) {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Suppression */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />
+              Supprimer la récompense
+            </DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer définitivement la récompense{" "}
+              <span className="font-semibold text-gray-900">
+                {rewardToDelete?.name}
+              </span>{" "}
+              ? Cette action est irréversible et supprimera toutes les données associées.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setRewardToDelete(null);
+              }}
+              disabled={isDeleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suppression...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

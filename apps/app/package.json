@@ -19,6 +19,7 @@
     "@heroui/react": "^2.7.8",
     "@prisma/client": "^6.5.0",
     "@react-email/render": "^1.4.0",
+    "@sentry/nextjs": "^8",
     "@tada/analytics": "workspace:*",
     "@tada/email": "workspace:*",
     "@tada/kv": "workspace:*",
@@ -66,7 +67,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@sentry/nextjs": "^8",
     "@supabase/sentry-js-integration": "^0.2.0",
     "@types/node": "^22",
     "@types/nodemailer": "^6.4.17",

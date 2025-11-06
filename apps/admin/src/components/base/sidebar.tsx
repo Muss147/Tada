@@ -78,7 +78,7 @@ export function Sidebar() {
   const t = useI18n();
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
 
   // Get current locale from pathname
   const currentLocale = useCurrentLocale();
@@ -210,30 +210,39 @@ export function Sidebar() {
 
       {/* User Profile */}
       <div className="p-6 border-t border-gray-200 dark:border-gray-800">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="w-full justify-start px-0 hover:bg-transparent"
-            >
-              <Avatar className="mr-3">
-                {session?.user?.image && (
-                  <AvatarImage src={session?.user?.image} alt="User avatar" />
-                )}
-                <AvatarFallback>
-                  {session?.user?.name?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 text-left ">
-                <p className="text-xs font-medium dark:text-white truncate line-clamp-1">
-                  {session?.user?.name}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate line-clamp-1">
-                  {session?.user?.email}
-                </p>
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
+        {isPending ? (
+          <div className="flex items-center w-full px-0">
+            <div className="mr-3 h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+            <div className="flex-1">
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+              <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />
+            </div>
+          </div>
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full justify-start px-0 hover:bg-transparent"
+              >
+                <Avatar className="mr-3">
+                  {session?.user?.image && (
+                    <AvatarImage src={session?.user?.image} alt="User avatar" />
+                  )}
+                  <AvatarFallback>
+                    {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 text-left ">
+                  <p className="text-xs font-medium dark:text-white truncate line-clamp-1">
+                    {session?.user?.name || "User"}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate line-clamp-1">
+                    {session?.user?.email || ""}
+                  </p>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]">
             <DropdownMenuLabel>{t("user.menu.title")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -255,7 +264,8 @@ export function Sidebar() {
               <span>{t("user.menu.signOut")}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

@@ -1,12 +1,8 @@
 import { cn } from "@tada/ui/lib/utils";
 import "@tada/ui/globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { DM_Sans } from "next/font/google";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
-import { Providers } from "./providers";
-import NavigationLoadingProviders from "./navigation-loading-providers";
-import { LayoutClientWrapper } from "./layout-client-wrapper";
+import { ClientProviders } from "./client-providers";
 
 // Configuration de la police DM Sans
 const dmSans = DM_Sans({
@@ -50,16 +46,9 @@ export default function RootLayout({
           "whitespace-pre-line overscroll-none antialiased font-sans"
         )}
       >
-        <LayoutClientWrapper fontVariable={dmSans.variable}>
-          <NavigationLoadingProviders>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <Providers params={params}>
-                <Toaster />
-                {children}
-              </Providers>
-            </ThemeProvider>
-          </NavigationLoadingProviders>
-        </LayoutClientWrapper>
+        <ClientProviders locale={params.locale}>
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );

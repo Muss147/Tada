@@ -1,0 +1,1 @@
+{"version":3,"file":"image-view-modal.d.ts","sourceRoot":"","sources":["../../../src/components/customs/image-view-modal.tsx"],"names":[],"mappings":"AAaA,UAAU,qBAAqB;IAC7B,MAAM,EAAE,OAAO,CAAC;IAChB,OAAO,EAAE,MAAM,IAAI,CAAC;IACpB,QAAQ,EAAE,MAAM,CAAC;IACjB,GAAG,CAAC,EAAE,MAAM,CAAC;CACd;AAED,wBAAgB,gBAAgB,CAAC,EAC/B,MAAM,EACN,OAAO,EACP,QAAQ,EACR,GAAa,GACd,EAAE,qBAAqB,+BAyFvB"}

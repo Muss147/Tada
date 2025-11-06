@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../dialog";
 import { Button } from "../button";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { useState } from "react";
-import { useI18n } from "@tada/app/src/locales/client";
 
 interface ImageViewerModalProps {
   isOpen: boolean;
@@ -19,8 +18,6 @@ export function ImageViewerModal({
   imageUrl,
   alt = "Image",
 }: ImageViewerModalProps) {
-  const t = useI18n();
-
   const [zoom, setZoom] = useState(1);
 
   const handleZoomIn = () => {
@@ -54,7 +51,7 @@ export function ImageViewerModal({
         <DialogHeader className="p-4 pb-2">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold">
-              {t("missions.addSubDashboard.imageViewer.title")}
+              Image Viewer
             </DialogTitle>
             <div className="flex items-center gap-2 mr-10">
               <Button
@@ -77,7 +74,7 @@ export function ImageViewerModal({
                 <ZoomIn className="h-4 w-4" />
               </Button>
               <Button variant="outline" size="sm" onClick={resetZoom}>
-                {t("missions.addSubDashboard.imageViewer.reset")}
+                Reset
               </Button>
             </div>
           </div>
@@ -101,7 +98,7 @@ export function ImageViewerModal({
 
         <div className="p-4 pt-0 text-center">
           <p className="text-sm text-gray-500">
-            {t("missions.addSubDashboard.imageViewer.doubleClickHint")}
+            Double-click to reset zoom
           </p>
         </div>
       </DialogContent>

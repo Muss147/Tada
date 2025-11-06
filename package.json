@@ -28,12 +28,14 @@
     "@t3-oss/env-nextjs": "^0.11.1",
     "@types/json2csv": "^5.0.7",
     "@veltdev/types": "^4.5.0-beta.61",
+    "tsc-alias": "^1.8.16",
     "turbo": "^1.12.4",
-    "typescript": "^5.5.4"
+    "typescript": "^5.9.3"
   },
   "packageManager": "bun@1.1.26",
   "dependencies": {
     "@novu/nextjs": "^3.5.0",
+    "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-select": "^2.1.6",
     "@stripe/stripe-js": "^7.4.0",
     "@supabase/supabase-js": "^2.49.1",

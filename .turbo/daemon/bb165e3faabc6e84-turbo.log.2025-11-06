@@ -1,0 +1,264 @@
+2025-11-06T14:40:45.272081Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-06T14:40:45.379941Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\daemon"), AnchoredSystemPathBuf(".turbo\\cookies\\1.cookie")}
+2025-11-06T14:40:45.380164Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-06T14:40:45.575136Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies")}
+2025-11-06T14:40:45.575160Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-06T14:40:46.188168Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\bb165e3faabc6e84-turbo.log.2025-11-06")}
+2025-11-06T14:40:46.188215Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-11-06T14:40:48.288225Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\.next")}
+2025-11-06T14:40:48.288245Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:40:49.079025Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\.next")}
+2025-11-06T14:40:49.079054Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:40:49.974832Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\.next")}
+2025-11-06T14:40:49.974879Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:40:50.477109Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\.next")}
+2025-11-06T14:40:50.477153Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:45:02.180708Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:45:02.180768Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:45:12.375237Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:45:12.375279Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:45:24.788139Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:45:24.788169Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:45:35.984428Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:45:35.984482Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:48:37.478258Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:48:37.478281Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:48:50.877118Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:48:50.877169Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:48:59.296280Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:48:59.296300Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:49:15.480253Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:49:15.480286Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:50:36.280756Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:50:36.280787Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:50:47.886203Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\users-management.tsx")}
+2025-11-06T14:50:47.886304Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:55:38.979218Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:55:38.979264Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:55:53.379446Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T14:55:53.379491Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:56:05.674166Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:56:05.674217Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:56:23.888992Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T14:56:23.889045Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:57:16.081729Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:57:16.081774Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:58:24.777245Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:58:24.777277Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:59:39.884003Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:59:39.884026Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T14:59:53.282269Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T14:59:53.282300Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:00:00.275663Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:00:00.275685Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:00:00.378645Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:00:00.378753Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:00:57.776761Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:00:57.776804Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:02.689900Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:02.689930Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:20.776822Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:20.776843Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:20.877592Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:20.877875Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:30.881648Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:30.881677Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:31.075677Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:31.075695Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:01:48.875538Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:01:48.875561Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:02:09.580914Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:02:09.580939Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:02:09.783593Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:02:09.783629Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:02:52.378916Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:02:52.378946Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:03:14.188749Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:03:14.188770Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:03:14.579712Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:03:14.579738Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:05:26.574608Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:05:26.574803Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:05:35.386113Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:05:35.386160Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:05:42.987429Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:05:42.987565Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:05:50.384735Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:05:50.384771Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:06:01.675118Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:06:01.675167Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:06:14.577695Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:06:14.577781Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:06:29.380278Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:06:29.380318Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:06:29.475876Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:06:29.475914Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:06:50.575415Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:06:50.575451Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:07:04.574467Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:07:04.574503Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:07:04.687077Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:07:04.687121Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:07:17.675379Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:07:17.675421Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:11:20.874906Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:11:20.875004Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:11:35.575751Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:11:35.575792Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:11:50.074656Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\settings\\audience-attributes\\page.tsx")}
+2025-11-06T15:11:50.074720Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:12:02.784890Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-manager.tsx")}
+2025-11-06T15:12:02.785152Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:14:44.280036Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:14:44.280093Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:15:04.983930Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:15:04.983996Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:15:22.480680Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:15:22.480731Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:15:38.079988Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:15:38.080047Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:16:02.180504Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:16:02.180638Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:19:46.484967Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:19:46.485040Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:19:58.882211Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\settings\\attribute-list.tsx")}
+2025-11-06T15:19:58.882231Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:04.683173Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:04.683214Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:13.282093Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:13.282112Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:24.483967Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:24.483988Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:37.475526Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:37.475546Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:45.482507Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:45.482523Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:27:53.575285Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:27:53.575316Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:28:06.480769Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\rewards\\rewards-management.tsx")}
+2025-11-06T15:28:06.480794Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:32:37.483385Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:32:37.483445Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:32:48.887215Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:32:48.887265Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:33:01.076227Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:33:01.076284Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:33:15.687986Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:33:15.688029Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:33:27.677710Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:33:27.677764Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:33:36.276965Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:33:36.277020Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:33:52.689586Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:33:52.689640Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:34:21.682258Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:34:21.682281Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:34:36.175407Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:34:36.175459Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:35:50.779181Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:35:50.779208Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:36:45.088752Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\lib\\validations\\organization.ts")}
+2025-11-06T15:36:45.088772Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:38:40.978801Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:38:40.978820Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:38:49.680003Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T15:38:49.680017Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:38:58.178501Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T15:38:58.178529Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:39:07.979931Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T15:39:07.979992Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:39:29.482702Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:39:29.482739Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:39:40.389861Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\organization-manager.tsx")}
+2025-11-06T15:39:40.389955Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:39:51.479361Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T15:39:51.479604Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:41:13.584114Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:41:13.584137Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:41:22.985279Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:41:22.985303Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:41:46.884964Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\type.ts")}
+2025-11-06T15:41:46.884985Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:41:57.081749Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:41:57.081797Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:42:07.982570Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:42:07.982658Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:42:27.690247Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:42:27.690273Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:43:42.685825Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:43:42.685847Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:43:52.880368Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:43:52.880391Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:44:03.577935Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:44:03.577967Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:44:13.578917Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T15:44:13.578941Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:51:27.876448Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\profile-enrichment-config.tsx")}
+2025-11-06T15:51:27.876494Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:51:27.984689Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\profile-enrichment-config.tsx")}
+2025-11-06T15:51:27.984748Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:51:44.583016Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\profile-enrichment-config.tsx")}
+2025-11-06T15:51:44.583037Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:52:36.281678Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\forms\\create-mission-form.tsx")}
+2025-11-06T15:52:36.281739Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T15:52:47.378842Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\forms\\create-mission-form.tsx")}
+2025-11-06T15:52:47.378888Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:06:35.786246Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\modals\\create-mission-modal.tsx")}
+2025-11-06T16:06:35.786272Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:20:25.377834Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T16:20:25.377861Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:20:40.585795Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T16:20:40.585817Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:24:34.275977Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T16:24:34.275996Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:24:34.375090Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T16:24:34.375113Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:24:51.775948Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\organizations\\route.ts")}
+2025-11-06T16:24:51.775998Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:28:10.486624Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T16:28:10.486646Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:28:17.485940Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T16:28:17.485990Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T16:28:24.577679Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\organizations\\list-organizations.tsx")}
+2025-11-06T16:28:24.577706Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:19:18.583920Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\base\\sidebar.tsx")}
+2025-11-06T18:19:18.584025Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:19:25.177628Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\analysis\\page.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\analysis")}
+2025-11-06T18:19:25.177708Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:19:25.282419Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\analysis\\page.tsx")}
+2025-11-06T18:19:25.282541Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:22:01.080757Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\analysis\\page.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\components\\base\\sidebar.tsx")}
+2025-11-06T18:22:01.080916Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:22:01.182983Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\analysis")}
+2025-11-06T18:22:01.183032Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:30.778124Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\audit\\missions\\route.ts")}
+2025-11-06T18:33:30.778166Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:30.876128Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\audit\\missions")}
+2025-11-06T18:33:30.876216Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:39.481237Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\mission-audit-filters.tsx")}
+2025-11-06T18:33:39.481271Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:39.576089Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions")}
+2025-11-06T18:33:39.576112Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:50.380498Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\profile-enrichment-config.tsx")}
+2025-11-06T18:33:50.380526Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:33:50.477368Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions")}
+2025-11-06T18:33:50.477395Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:34:37.279987Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\(board)\\[boardId]\\[chartId]"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\(board)\\[boardId]\\[chartId]\\my-runtime-provider.tsx")}
+2025-11-06T18:34:37.280748Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:34:50.975340Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\(board)\\[boardId]\\[chartId]\\page.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\(board)\\[boardId]\\[chartId]")}
+2025-11-06T18:34:50.976300Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:35:03.677477Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\update"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\update\\my-runtime-provider.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\update\\layout.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\dashboard\\page.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\dashboard"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\[missionId]\\dashboard\\my-runtime-provider.tsx")}
+2025-11-06T18:35:03.677534Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:35:14.785762Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\create\\my-runtime-provider.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\create\\layout.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\create"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\[locale]\\(dashboard)\\missions\\create\\page.tsx")}
+2025-11-06T18:35:14.785846Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:35:24.476363Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\modals"), AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\forms\\create-mission-form.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\modals\\create-mission-modal.tsx"), AnchoredSystemPathBuf("apps\\admin\\src\\components\\missions\\forms")}
+2025-11-06T18:35:24.476486Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:35:53.382326Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\.next")}
+2025-11-06T18:35:53.382385Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:37:04.178996Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\audit\\missions"), AnchoredSystemPathBuf("apps\\admin\\src\\app\\api\\audit")}
+2025-11-06T18:37:04.179043Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:37:05.081129Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps\\admin\\src\\app\\api")}
+2025-11-06T18:37:05.081180Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tada/admin"), path: AnchoredSystemPathBuf("apps\\admin") }}))
+2025-11-06T18:42:22.823564Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-11-06T18:42:22.956493Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo\\cookies\\1.cookie")}
+2025-11-06T18:42:22.956547Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))

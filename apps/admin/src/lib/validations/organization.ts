@@ -67,17 +67,42 @@ export function validateCreateOrganization(data: any): {
 } {
   const errors: string[] = [];
   
+  // Supporter les deux formats : structure plate et structure imbriquée
+  let orgData, ownerData;
+  
+  if (data.organization && data.owner) {
+    // Format structuré
+    orgData = data.organization;
+    ownerData = data.owner;
+  } else {
+    // Format plat (ancien format)
+    orgData = {
+      name: data.name,
+      slug: data.slug,
+      logo: data.logo,
+      metadata: data.metadata,
+      status: data.status,
+      country: data.country,
+      sector: data.sector,
+    };
+    ownerData = {
+      email: data.ownerEmail,
+      name: data.ownerName,
+      position: data.ownerPosition,
+    };
+  }
+  
   // Validation du nom de l'organisation
-  if (!data.name) {
+  if (!orgData.name) {
     errors.push("Organization name is required");
-  } else if (data.name.trim().length < 2) {
+  } else if (orgData.name.trim().length < 2) {
     errors.push("Organization name must be at least 2 characters long");
   }
   
   // Validation ou génération du slug
-  let slug = data.slug;
-  if (!slug && data.name) {
-    slug = generateSlug(data.name);
+  let slug = orgData.slug;
+  if (!slug && orgData.name) {
+    slug = generateSlug(orgData.name);
   }
   
   if (slug && !isValidSlug(slug)) {
@@ -85,16 +110,16 @@ export function validateCreateOrganization(data: any): {
   }
   
   // Validation de l'email du propriétaire
-  if (!data.ownerEmail) {
+  if (!ownerData.email) {
     errors.push("Owner email is required");
-  } else if (!isValidEmail(data.ownerEmail)) {
+  } else if (!isValidEmail(ownerData.email)) {
     errors.push("Invalid owner email format");
   }
   
   // Validation du nom du propriétaire
-  if (!data.ownerName) {
+  if (!ownerData.name) {
     errors.push("Owner name is required");
-  } else if (data.ownerName.trim().length < 2) {
+  } else if (ownerData.name.trim().length < 2) {
     errors.push("Owner name must be at least 2 characters long");
   }
   
@@ -107,18 +132,18 @@ export function validateCreateOrganization(data: any): {
     errors: [],
     data: {
       organization: {
-        name: data.name.trim(),
+        name: orgData.name.trim(),
         slug: slug,
-        logo: data.logo || null,
-        metadata: data.metadata || null,
-        status: data.status || "active",
-        country: data.country || null,
-        sector: data.sector || null,
+        logo: orgData.logo || null,
+        metadata: orgData.metadata || null,
+        status: orgData.status || "active",
+        country: orgData.country || null,
+        sector: orgData.sector || null,
       },
       owner: {
-        email: data.ownerEmail.toLowerCase().trim(),
-        name: data.ownerName.trim(),
-        position: data.ownerPosition || null,
+        email: ownerData.email.toLowerCase().trim(),
+        name: ownerData.name.trim(),
+        position: ownerData.position || null,
       },
     },
   };

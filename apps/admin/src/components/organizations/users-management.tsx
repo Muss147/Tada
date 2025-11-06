@@ -75,8 +75,11 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
 
@@ -119,6 +122,19 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       const result = await response.json();
 
       if (response.ok) {
+        // Ajouter le nouvel utilisateur au state local pour une mise à jour immédiate
+        const newUser: User = {
+          ...result.data,
+          _count: {
+            members: 0,
+            missionAssignments: 0,
+            surveyResponses: 0,
+          },
+        };
+        
+        // Mettre à jour la liste des utilisateurs en ajoutant le nouveau en premier
+        setUsers(prevUsers => [newUser, ...prevUsers]);
+        
         toast({
           title: "Utilisateur créé",
           description: `${result.data.name} a été créé avec succès.`,
@@ -136,7 +152,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
           image: "",
           kyc_status: "none",
         });
-        router.refresh();
+        // Pas besoin de router.refresh() car on met à jour le state local
       } else {
         toast({
           title: "Erreur",
@@ -181,13 +197,29 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       const result = await response.json();
 
       if (response.ok) {
+        // Mettre à jour l'utilisateur dans le state local
+        const updatedUser: User = {
+          ...result.data,
+          _count: selectedUser?._count || {
+            members: 0,
+            missionAssignments: 0,
+            surveyResponses: 0,
+          },
+        };
+        
+        setUsers(prevUsers => 
+          prevUsers.map(user => 
+            user.id === selectedUser?.id ? updatedUser : user
+          )
+        );
+        
         toast({
           title: "Utilisateur mis à jour",
           description: `${result.data.name} a été mis à jour avec succès.`,
         });
         setIsEditDialogOpen(false);
         setSelectedUser(null);
-        router.refresh();
+        // Pas besoin de router.refresh() car on met à jour le state local
       } else {
         toast({
           title: "Erreur",
@@ -215,11 +247,18 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       });
 
       if (response.ok) {
+        // Mettre à jour le statut de l'utilisateur dans le state local
+        setUsers(prevUsers => 
+          prevUsers.map(u => 
+            u.id === user.id ? { ...u, banned: !user.banned } : u
+          )
+        );
+        
         toast({
           title: user.banned ? "Utilisateur débanni" : "Utilisateur banni",
           description: `${user.name} a été ${user.banned ? "débanni" : "banni"} avec succès.`,
         });
-        router.refresh();
+        // Pas besoin de router.refresh() car on met à jour le state local
       }
     } catch (error) {
       toast({
@@ -230,20 +269,55 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
     }
   };
 
-  const handleDeleteUser = async (user: User) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${user.name} ?`)) return;
+  const openDeleteDialog = (user: User) => {
+    setUserToDelete(user);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    
+    setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/users/${user.id}`, {
+      const response = await fetch(`/api/users/${userToDelete.id}`, {
         method: "DELETE",
       });
 
+      const result = await response.json();
+
       if (response.ok) {
+        if (result.warning) {
+          // L'utilisateur a été banni au lieu d'être supprimé
+          setUsers(prevUsers => 
+            prevUsers.map(u => 
+              u.id === userToDelete.id ? { ...u, banned: true } : u
+            )
+          );
+          
+          toast({
+            title: "Utilisateur banni",
+            description: `${userToDelete.name} a des données associées et a été banni au lieu d'être supprimé.`,
+            variant: "default",
+          });
+        } else {
+          // Suppression réelle
+          setUsers(prevUsers => prevUsers.filter(u => u.id !== userToDelete.id));
+          
+          toast({
+            title: "Utilisateur supprimé",
+            description: `${userToDelete.name} a été supprimé avec succès.`,
+          });
+        }
+        
+        setIsDeleteDialogOpen(false);
+        setUserToDelete(null);
+      } else {
         toast({
-          title: "Utilisateur supprimé",
-          description: `${user.name} a été supprimé avec succès.`,
+          title: "Erreur",
+          description: result.error || "Impossible de supprimer l'utilisateur",
+          variant: "destructive",
         });
-        router.refresh();
       }
     } catch (error) {
       toast({
@@ -251,6 +325,8 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
         description: "Impossible de supprimer l'utilisateur",
         variant: "destructive",
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -389,7 +465,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                         {user.banned ? "Débannir" : "Bannir"}
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleDeleteUser(user)}
+                        onClick={() => openDeleteDialog(user)}
                         className="text-red-600"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -725,6 +801,61 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Suppression */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <Trash2 className="h-5 w-5" />
+              Supprimer l'utilisateur
+            </DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer{" "}
+              <span className="font-semibold text-gray-900">
+                {userToDelete?.name}
+              </span>{" "}
+              ?
+              <br />
+              <span className="text-sm text-amber-600 mt-2 block">
+                ⚠️ Si cet utilisateur a des données associées (missions, réponses, etc.), 
+                il sera banni au lieu d'être supprimé définitivement.
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setUserToDelete(null);
+              }}
+              disabled={isDeleting}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDeleteUser}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Suppression...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
