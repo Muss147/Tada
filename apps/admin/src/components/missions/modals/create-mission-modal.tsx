@@ -121,42 +121,6 @@ export function CreateSurveyModal({ trigger }: CreateSurveyModalProps) {
       description: t("missions.createSurveyModal.contributorInfo.description"),
       onClick: () => router.push(`/missions/create?mode=contributor-info`),
     },
-    {
-      id: "profile-enhancement",
-      title: "Enrichissement de profil",
-      icon: (
-        <svg
-          className="h-8 w-8 text-white"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ),
-      iconBg: "bg-purple-500",
-      iconHoverBg: "hover:bg-purple-600",
-      hoverBg: "hover:bg-purple-50",
-      themeColor: "text-purple-600",
-      features: [
-        {
-          icon: <Users className="h-4 w-4" />,
-          text: "Collecte d'attributs enrichis",
-        },
-        {
-          icon: <List className="h-4 w-4" />,
-          text: "Améliore le ciblage des missions",
-        },
-      ],
-      description:
-        "Collectez des informations supplémentaires sur vos contributeurs (compétences, équipements, disponibilités) pour améliorer le ciblage de vos futures missions.",
-      onClick: () => router.push(`/missions/create?mode=profile-enhancement`),
-    },
   ];
 
   return (
@@ -278,7 +242,3 @@ export function CreateSurveyModal({ trigger }: CreateSurveyModalProps) {
     </Dialog>
   );
 }
-
-// Alias pour l'export avec le nom attendu
-const CreateMissionModal = CreateSurveyModal;
-export default CreateMissionModal;

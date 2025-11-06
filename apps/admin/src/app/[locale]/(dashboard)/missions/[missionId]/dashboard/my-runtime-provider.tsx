@@ -10,7 +10,7 @@ import {
   groupParticipantsByAge,
   SurveyData,
 } from "@/lib/utils";
-// Runtime provider global configuré dans providers.tsx
+import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
@@ -30,7 +30,9 @@ export function MyRuntimeProvider({
   const [executiveSummary, setExecutiveSummary] =
     // useState<string>("Loading...");
     useState<string>(executiveSummaryMock);
-  // Pas besoin de runtime local, utilise le provider global
+  const runtime = useEdgeRuntime({
+    api: "/api/chat",
+  });
 
   const generateExecutiveSummary = useAction(
     generateExecutiveSummaryAction,
@@ -50,6 +52,7 @@ export function MyRuntimeProvider({
     if (mission?.status === "completed" && !mission?.executiveSummary) {
       generateExecutiveSummary.execute({
         missionId: mission.id,
+        responses,
       });
     }
     if (mission?.executiveSummary) {
@@ -58,6 +61,7 @@ export function MyRuntimeProvider({
   }, [mission]);
 
   return (
+    <AssistantRuntimeProvider runtime={runtime}>
       <div className="max-w-7xl mx-auto  gap-2 space-y-4">
         <div className="w-full mb-12">
           <ParticipantInfo
@@ -102,7 +106,6 @@ export function MyRuntimeProvider({
           {children}
         </div>
       </div>
+    </AssistantRuntimeProvider>
   );
 }
-
-export default MyRuntimeProvider;

@@ -2,7 +2,7 @@ import { LayoutChart } from "@/components/missions/boards/layout-chart";
 import { BoardBuilderProvider, Chart } from "@/context/board-builder-context";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import MyRuntimeProvider from "./my-runtime-provider";
+import { MyRuntimeProvider } from "./my-runtime-provider";
 import ChartBuilder from "@/components/missions/boards/chart-builder";
 import { ChartBuilderProvider } from "@/context/chart-builder-context";
 import { ChartGraph } from "@/components/missions/boards/chart-graph";
