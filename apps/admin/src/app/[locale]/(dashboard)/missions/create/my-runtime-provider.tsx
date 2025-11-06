@@ -1,19 +1,7 @@
-"use client";
+'use client'
 
-import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
-
-export function MyRuntimeProvider({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const runtime = useEdgeRuntime({
-    api: "/api/chat",
-  });
-
-  return (
-    <AssistantRuntimeProvider runtime={runtime}>
-      {children}
-    </AssistantRuntimeProvider>
-  );
+// TODO: Réimplémenter le runtime provider avec la bonne configuration
+// Le package @assistant-ui/react-ai-sdk nécessite une configuration spécifique
+export default function MyRuntimeProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

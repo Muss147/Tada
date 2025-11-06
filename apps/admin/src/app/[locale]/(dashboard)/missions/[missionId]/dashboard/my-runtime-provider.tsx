@@ -10,7 +10,8 @@ import {
   groupParticipantsByAge,
   SurveyData,
 } from "@/lib/utils";
-import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import { useVercelAIAssistantRuntime } from "@assistant-ui/react-ai-sdk";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
@@ -30,8 +31,8 @@ export function MyRuntimeProvider({
   const [executiveSummary, setExecutiveSummary] =
     // useState<string>("Loading...");
     useState<string>(executiveSummaryMock);
-  const runtime = useEdgeRuntime({
-    api: "/api/chat",
+  const runtime = useVercelAIAssistantRuntime({
+    api: "/api/assistant",
   });
 
   const generateExecutiveSummary = useAction(
@@ -52,7 +53,6 @@ export function MyRuntimeProvider({
     if (mission?.status === "completed" && !mission?.executiveSummary) {
       generateExecutiveSummary.execute({
         missionId: mission.id,
-        responses,
       });
     }
     if (mission?.executiveSummary) {
@@ -109,3 +109,5 @@ export function MyRuntimeProvider({
     </AssistantRuntimeProvider>
   );
 }
+
+export default MyRuntimeProvider;
