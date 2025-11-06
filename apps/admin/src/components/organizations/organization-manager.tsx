@@ -20,8 +20,105 @@ import {
   SelectValue,
 } from "@tada/ui/components/select";
 import { Textarea } from "@tada/ui/components/textarea";
-import { Loader2, Building2, User } from "lucide-react";
+import { Loader2, Building2, User, Upload, X } from "lucide-react";
 import { SECTORS, generateSlug } from "@/lib/validations/organization";
+
+interface ImageUploadProps {
+  value?: string;
+  onChange: (file: File | null) => void;
+  label: string;
+}
+
+function ImageUpload({ value, onChange, label }: ImageUploadProps) {
+  const [preview, setPreview] = useState<string | null>(value || null);
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+    onChange(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      handleFileChange(files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors relative ${
+          dragActive
+            ? "border-blue-400 bg-blue-50"
+            : "border-gray-300 hover:border-gray-400"
+        }`}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+      >
+        {preview ? (
+          <div className="relative">
+            <img
+              src={preview}
+              alt="Preview"
+              className="mx-auto h-20 w-20 object-contain"
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+              onClick={() => handleFileChange(null)}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center space-y-2">
+            <Upload className="h-8 w-8 text-gray-400" />
+            <p className="text-sm text-gray-600">
+              Glissez-déposez une image ici ou cliquez pour sélectionner
+            </p>
+            <p className="text-xs text-gray-500">PNG, JPG, GIF jusqu'à 10MB</p>
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          onChange={(e) => {
+            const files = e.target.files;
+            if (files && files[0]) {
+              handleFileChange(files[0]);
+            }
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 interface OrganizationManagerProps {
   isOpen: boolean;
@@ -58,6 +155,7 @@ export function OrganizationManager({
     ownerPosition: "",
   });
 
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoGenerateSlug, setAutoGenerateSlug] = useState(true);
@@ -77,6 +175,7 @@ export function OrganizationManager({
         ownerName: "",
         ownerPosition: "",
       });
+      setLogoFile(null); // Réinitialiser le fichier logo
       setAutoGenerateSlug(false);
     } else {
       // Réinitialiser le formulaire pour une nouvelle création
@@ -92,6 +191,7 @@ export function OrganizationManager({
         ownerName: "",
         ownerPosition: "",
       });
+      setLogoFile(null); // Réinitialiser le fichier logo
       setAutoGenerateSlug(true);
     }
     setError(null);
@@ -313,17 +413,11 @@ export function OrganizationManager({
                 </Select>
               </div>
 
-              <div>
-                <Label htmlFor="logo">Logo (URL)</Label>
-                <Input
-                  id="logo"
-                  value={formData.logo}
-                  onChange={(e) =>
-                    setFormData({ ...formData, logo: e.target.value })
-                  }
-                  placeholder="https://example.com/logo.png"
-                />
-              </div>
+              <ImageUpload
+                value={formData.logo}
+                onChange={(file) => setLogoFile(file)}
+                label="Logo de l'organisation"
+              />
 
               <div className="col-span-2">
                 <Label htmlFor="metadata">Métadonnées (JSON)</Label>

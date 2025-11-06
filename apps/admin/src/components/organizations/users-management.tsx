@@ -47,6 +47,8 @@ import {
   Shield,
   Users,
   Loader2,
+  Upload,
+  X,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { RoleBadge } from "@/components/users/role-badge";
@@ -57,16 +59,111 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
-  kyc_status: string | null;
-  banned: boolean | null;
-  position: string | null;
-  country: string | null;
-  _count?: {
-    members: number;
-    missionAssignments: number;
-    surveyResponses: number;
+  role: UserRole;
+  position?: string;
+  country?: string;
+  sector?: string;
+  image?: string;
+  banned: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ImageUploadProps {
+  value?: string;
+  onChange: (file: File | null) => void;
+  label: string;
+}
+
+function ImageUpload({ value, onChange, label }: ImageUploadProps) {
+  const [preview, setPreview] = useState<string | null>(value || null);
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleFileChange = (file: File | null) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreview(null);
+    }
+    onChange(file);
   };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      handleFileChange(files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors relative ${
+          dragActive
+            ? "border-blue-400 bg-blue-50"
+            : "border-gray-300 hover:border-gray-400"
+        }`}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+      >
+        {preview ? (
+          <div className="relative">
+            <img
+              src={preview}
+              alt="Preview"
+              className="mx-auto h-24 w-24 rounded-full object-cover"
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+              onClick={() => handleFileChange(null)}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center space-y-2">
+            <Upload className="h-8 w-8 text-gray-400" />
+            <p className="text-sm text-gray-600">
+              Glissez-déposez une image ici ou cliquez pour sélectionner
+            </p>
+            <p className="text-xs text-gray-500">PNG, JPG, GIF jusqu'à 10MB</p>
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          onChange={(e) => {
+            const files = e.target.files;
+            if (files && files[0]) {
+              handleFileChange(files[0]);
+            }
+          }}
+        />
+      </div>
+    </div>
+  );
 }
 
 export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
@@ -95,6 +192,8 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
     image: "",
     kyc_status: "none",
   });
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -341,10 +440,33 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       sector: "",
       job: "",
       location: "",
-      image: "",
+      image: user.image || "",
       kyc_status: user.kyc_status || "none",
     });
+    setImageFile(null); // Réinitialiser le fichier image
     setIsEditDialogOpen(true);
+  };
+
+  const closeCreateDialog = () => {
+    setIsCreateDialogOpen(false);
+    setImageFile(null); // Réinitialiser le fichier image
+    setFormData({
+      email: "",
+      name: "",
+      role: USER_ROLES.CONTRIBUTOR as UserRole,
+      position: "",
+      country: "",
+      sector: "",
+      job: "",
+      location: "",
+      image: "",
+      kyc_status: "none",
+    });
+  };
+
+  const closeEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setImageFile(null); // Réinitialiser le fichier image
   };
 
   const filteredUsers = users.filter((user) => {
@@ -605,24 +727,18 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                     placeholder="Ex: Technologie, Finance..."
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image">URL de l'image</Label>
-                  <Input
-                    id="image"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({ ...formData, image: e.target.value })
-                    }
-                    placeholder="https://..."
-                  />
-                </div>
+                <ImageUpload
+                  value={formData.image}
+                  onChange={(file) => setImageFile(file)}
+                  label="Photo de profil"
+                />
               </div>
             </div>
             <DialogFooter>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsCreateDialogOpen(false)}
+                onClick={closeCreateDialog}
                 disabled={isSubmitting}
               >
                 Annuler
@@ -767,24 +883,18 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                     placeholder="Ex: Technologie, Finance..."
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-image">URL de l'image</Label>
-                  <Input
-                    id="edit-image"
-                    value={formData.image}
-                    onChange={(e) =>
-                      setFormData({ ...formData, image: e.target.value })
-                    }
-                    placeholder="https://..."
-                  />
-                </div>
+                <ImageUpload
+                  value={formData.image}
+                  onChange={(file) => setImageFile(file)}
+                  label="Photo de profil"
+                />
               </div>
             </div>
             <DialogFooter>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsEditDialogOpen(false)}
+                onClick={closeEditDialog}
                 disabled={isSubmitting}
               >
                 Annuler
