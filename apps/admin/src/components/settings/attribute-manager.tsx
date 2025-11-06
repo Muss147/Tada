@@ -93,9 +93,8 @@ export function AttributeManager({
         throw new Error(errorData.error || "Failed to save attribute");
       }
 
-      // Succès - fermer le modal et rafraîchir la page
+      // Succès - fermer le modal (le parent rechargera les données)
       onClose();
-      window.location.reload();
     } catch (err) {
       console.error("Error saving attribute:", err);
       setError(err instanceof Error ? err.message : "An error occurred");

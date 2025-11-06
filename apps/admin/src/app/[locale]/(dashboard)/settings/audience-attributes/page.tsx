@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@tada/ui/components/button";
 import {
   Card,
@@ -15,6 +15,42 @@ import { AttributeList } from "@/components/settings/attribute-list";
 
 export default function AudienceAttributesPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [stats, setStats] = useState({
+    activeAttributes: 0,
+    enrichedProfiles: 0,
+    totalContributors: 0,
+    completionRate: 0,
+  });
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Charger les statistiques
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch("/api/audience-attributes");
+        if (response.ok) {
+          const attributes = await response.json();
+          const activeCount = attributes.filter((attr: any) => attr.active).length;
+          const totalValues = attributes.reduce((sum: number, attr: any) => sum + (attr._count?.values || 0), 0);
+          
+          setStats({
+            activeAttributes: activeCount,
+            enrichedProfiles: totalValues,
+            totalContributors: 2500, // TODO: Récupérer depuis l'API
+            completionRate: totalValues > 0 ? Math.round((totalValues / 2500) * 100 * 10) / 10 : 0,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, [refreshTrigger]);
+
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return (
     <div className="space-y-6">
@@ -44,9 +80,9 @@ export default function AudienceAttributesPage() {
             <Filter className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
+            <div className="text-2xl font-bold">{stats.activeAttributes}</div>
             <p className="text-xs text-muted-foreground">
-              +2 ce mois-ci
+              Attributs configurés
             </p>
           </CardContent>
         </Card>
@@ -59,9 +95,9 @@ export default function AudienceAttributesPage() {
             <Settings className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold">{stats.enrichedProfiles}</div>
             <p className="text-xs text-muted-foreground">
-              Sur 2,500 contributeurs
+              Valeurs enregistrées
             </p>
           </CardContent>
         </Card>
@@ -74,9 +110,9 @@ export default function AudienceAttributesPage() {
             <Settings className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">49.4%</div>
+            <div className="text-2xl font-bold">{stats.completionRate}%</div>
             <p className="text-xs text-muted-foreground">
-              +5.2% vs mois dernier
+              Taux d'enrichissement
             </p>
           </CardContent>
         </Card>
@@ -91,14 +127,17 @@ export default function AudienceAttributesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AttributeList />
+          <AttributeList onRefresh={handleRefresh} />
         </CardContent>
       </Card>
 
       {/* Modal de création/édition */}
       <AttributeManager
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          handleRefresh();
+        }}
       />
     </div>
   );

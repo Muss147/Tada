@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@tada/ui/components/button";
 import { Badge } from "@tada/ui/components/badge";
 import {
@@ -22,59 +22,20 @@ import {
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
 import { AttributeManager } from "./attribute-manager";
 
-// Données de démonstration
-const DEMO_ATTRIBUTES = [
-  {
-    id: "1",
-    name: "Compétences professionnelles",
-    key: "professional_skills",
-    type: "multiselect",
-    category: "professional",
-    required: false,
-    enrichmentOnly: true,
-    usageCount: 45,
-  },
-  {
-    id: "2",
-    name: "Secteur d'activité",
-    key: "job_sector",
-    type: "select",
-    category: "professional",
-    required: false,
-    enrichmentOnly: false,
-    usageCount: 120,
-  },
-  {
-    id: "3",
-    name: "Centres d'intérêt",
-    key: "interests",
-    type: "multiselect",
-    category: "interests",
-    required: false,
-    enrichmentOnly: true,
-    usageCount: 89,
-  },
-  {
-    id: "4",
-    name: "Équipement disponible",
-    key: "equipment",
-    type: "multiselect",
-    category: "technical",
-    required: false,
-    enrichmentOnly: false,
-    usageCount: 67,
-  },
-  {
-    id: "5",
-    name: "Langues parlées",
-    key: "languages",
-    type: "multiselect",
-    category: "technical",
-    required: true,
-    enrichmentOnly: false,
-    usageCount: 234,
-  },
-];
+// Types
+interface Attribute {
+  id: string;
+  name: string;
+  key: string;
+  type: string;
+  category: string;
+  required: boolean;
+  enrichmentOnly: boolean;
+  active: boolean;
+  _count?: {
+    values: number;
+  };
+}
 
 const TYPE_LABELS: Record<string, string> = {
   text: "Texte",
@@ -104,25 +65,100 @@ const CATEGORY_COLORS: Record<string, string> = {
   availability: "bg-yellow-100 text-yellow-800",
 };
 
-export function AttributeList() {
-  const [attributes, setAttributes] = useState(DEMO_ATTRIBUTES);
-  const [selectedAttribute, setSelectedAttribute] = useState<any>(null);
+interface AttributeListProps {
+  onRefresh?: () => void;
+}
+
+export function AttributeList({ onRefresh }: AttributeListProps) {
+  const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [selectedAttribute, setSelectedAttribute] = useState<Attribute | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Charger les attributs depuis l'API
+  const fetchAttributes = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch("/api/audience-attributes");
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch attributes");
+      }
+      
+      const data = await response.json();
+      setAttributes(data);
+      // Notifier le parent pour mettre à jour les statistiques
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (err) {
+      console.error("Error fetching attributes:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Charger les attributs au montage du composant
+  useEffect(() => {
+    fetchAttributes();
+  }, []);
 
   const handleEdit = (attribute: any) => {
     setSelectedAttribute(attribute);
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cet attribut ?")) {
-      setAttributes(attributes.filter((attr) => attr.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cet attribut ?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/audience-attributes/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete attribute");
+      }
+
+      // Recharger la liste après suppression
+      await fetchAttributes();
+    } catch (err) {
+      console.error("Error deleting attribute:", err);
+      alert(err instanceof Error ? err.message : "Failed to delete attribute");
     }
   };
 
   return (
     <>
-      <div className="rounded-md border">
+      {isLoading && (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Chargement des attributs...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="rounded-md bg-red-50 p-4 mb-4">
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && attributes.length === 0 && (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Aucun attribut configuré</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Cliquez sur "Nouvel attribut" pour créer votre premier attribut
+          </p>
+        </div>
+      )}
+
+      {!isLoading && !error && attributes.length > 0 && (
+        <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -172,7 +208,7 @@ export function AttributeList() {
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
-                  {attribute.usageCount} missions
+                  {attribute._count?.values || 0} contributeurs
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -207,7 +243,8 @@ export function AttributeList() {
             ))}
           </TableBody>
         </Table>
-      </div>
+        </div>
+      )}
 
       {/* Modal d'édition */}
       <AttributeManager
@@ -215,6 +252,8 @@ export function AttributeList() {
         onClose={() => {
           setIsEditModalOpen(false);
           setSelectedAttribute(null);
+          // Recharger les attributs après fermeture du modal
+          fetchAttributes();
         }}
         attribute={selectedAttribute}
       />
