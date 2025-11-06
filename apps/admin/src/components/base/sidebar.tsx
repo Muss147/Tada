@@ -38,6 +38,7 @@ import {
   Moon,
   Settings,
   User,
+  UserCog,
   Users,
 } from "lucide-react";
 import Image from "next/image";
@@ -117,6 +118,11 @@ export function Sidebar() {
           icon: <User className="h-5 w-5" />,
           text: t("navigation.organizations"),
           href: "/organizations",
+        },
+        {
+          icon: <UserCog className="h-5 w-5" />,
+          text: "Gestion des utilisateurs",
+          href: "/organizations/users",
         },
       ],
     },
