@@ -19,11 +19,18 @@ enum KycStatus {
   canceled
 }
 
+enum UserRole {
+  system_admin
+  client_admin
+  contributor
+  validator
+}
+
 model User {
   id                 String              @id @default(uuid())
   email              String              @unique
   name               String
-  role               String              @default("contributor")
+  role               UserRole            @default(contributor)
   position           String?
   country            String?
   sector             String?
@@ -43,6 +50,7 @@ model User {
   validationComments ValidationComment[]
   contributorData    ContributorData[]
   attributeValues    ContributorAttributeValue[]
+  rewardHistory      RewardHistory[]
 
   @@map("user")
 }
@@ -962,4 +970,53 @@ model ContributorAttributeValue {
   @@index([userId])
   @@index([attributeId])
   @@map("contributor_attribute_value")
+}
+
+enum RewardType {
+  credits
+  badge
+  bonus
+  discount
+}
+
+enum RewardStatus {
+  active
+  inactive
+  expired
+}
+
+model RewardConfig {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  type        RewardType
+  trigger     String
+  value       Int
+  status      RewardStatus  @default(active)
+  conditions  Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  history     RewardHistory[]
+
+  @@index([status])
+  @@index([type])
+  @@map("reward_config")
+}
+
+model RewardHistory {
+  id             String       @id @default(uuid())
+  userId         String
+  rewardConfigId String
+  amount         Int
+  reason         String?
+  metadata       Json?
+  awardedAt      DateTime     @default(now())
+
+  user          User         @relation(fields: [userId], references: [id])
+  rewardConfig  RewardConfig @relation(fields: [rewardConfigId], references: [id])
+
+  @@index([userId])
+  @@index([rewardConfigId])
+  @@index([awardedAt])
+  @@map("reward_history")
 }

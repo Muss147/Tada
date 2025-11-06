@@ -2,11 +2,7 @@
  * Validations et types pour la gestion des utilisateurs
  */
 
-export const USER_ROLES = {
-  CONTRIBUTOR: "contributor",
-  CLIENT: "client",
-  ADMIN: "admin",
-} as const;
+import { USER_ROLES, isValidUserRole, type UserRole } from "@/lib/rbac/roles";
 
 export const KYC_STATUSES = {
   IN_PROGRESS: "in_progress",
@@ -14,8 +10,10 @@ export const KYC_STATUSES = {
   CANCELED: "canceled",
 } as const;
 
-export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
 export type KycStatus = typeof KYC_STATUSES[keyof typeof KYC_STATUSES];
+
+// Re-export for convenience
+export { USER_ROLES, isValidUserRole, type UserRole };
 
 export interface CreateUserInput {
   email: string;
@@ -62,12 +60,9 @@ export function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
-/**
- * Valide un rôle utilisateur
- */
-export function isValidRole(role: string): role is UserRole {
-  return Object.values(USER_ROLES).includes(role as UserRole);
-}
+// isValidRole is now imported as isValidUserRole from @/lib/rbac/roles
+// Keep this alias for backward compatibility
+export const isValidRole = isValidUserRole;
 
 /**
  * Valide un statut KYC

@@ -49,6 +49,9 @@ import {
   Loader2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { RoleBadge } from "@/components/users/role-badge";
+import { RoleSelector } from "@/components/users/role-selector";
+import { USER_ROLES, type UserRole } from "@/lib/rbac/roles";
 
 interface User {
   id: string;
@@ -80,7 +83,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
-    role: "contributor",
+    role: USER_ROLES.CONTRIBUTOR as UserRole,
     position: "",
     country: "",
     sector: "",
@@ -124,7 +127,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
         setFormData({
           email: "",
           name: "",
-          role: "contributor",
+          role: USER_ROLES.CONTRIBUTOR,
           position: "",
           country: "",
           sector: "",
@@ -276,18 +279,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
     return matchesSearch && matchesRole;
   });
 
-  const getRoleBadge = (role: string) => {
-    const config = {
-      admin: { label: "Admin", className: "bg-purple-100 text-purple-800" },
-      client: { label: "Client", className: "bg-blue-100 text-blue-800" },
-      contributor: { label: "Contributeur", className: "bg-green-100 text-green-800" },
-    };
-    const roleConfig = config[role as keyof typeof config] || {
-      label: role,
-      className: "bg-gray-100 text-gray-800",
-    };
-    return <Badge className={roleConfig.className}>{roleConfig.label}</Badge>;
-  };
+  // Role badge is now handled by RoleBadge component
 
   return (
     <div className="p-5 bg-white rounded-lg">
@@ -320,14 +312,15 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
           className="max-w-sm"
         />
         <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="Filtrer par rôle" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tous les rôles</SelectItem>
-            <SelectItem value="admin">Administrateurs</SelectItem>
-            <SelectItem value="client">Clients</SelectItem>
-            <SelectItem value="contributor">Contributeurs</SelectItem>
+            <SelectItem value={USER_ROLES.SYSTEM_ADMIN}>Administrateurs Système</SelectItem>
+            <SelectItem value={USER_ROLES.CLIENT_ADMIN}>Administrateurs Client</SelectItem>
+            <SelectItem value={USER_ROLES.CONTRIBUTOR}>Contributeurs</SelectItem>
+            <SelectItem value={USER_ROLES.VALIDATOR}>Validateurs</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -354,7 +347,9 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                     <div className="text-sm text-gray-500">{user.email}</div>
                   </div>
                 </TableCell>
-                <TableCell>{getRoleBadge(user.role)}</TableCell>
+                <TableCell>
+                  <RoleBadge role={user.role as UserRole} size="sm" />
+                </TableCell>
                 <TableCell className="text-sm text-gray-600">
                   {user.position || "-"}
                 </TableCell>
@@ -448,21 +443,12 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="role">Rôle *</Label>
-                  <Select
+                  <RoleSelector
                     value={formData.role}
                     onValueChange={(value) =>
                       setFormData({ ...formData, role: value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="contributor">Contributeur</SelectItem>
-                      <SelectItem value="client">Client</SelectItem>
-                      <SelectItem value="admin">Administrateur</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="position">Poste</Label>
@@ -619,21 +605,12 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="edit-role">Rôle *</Label>
-                  <Select
+                  <RoleSelector
                     value={formData.role}
                     onValueChange={(value) =>
                       setFormData({ ...formData, role: value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="contributor">Contributeur</SelectItem>
-                      <SelectItem value="client">Client</SelectItem>
-                      <SelectItem value="admin">Administrateur</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="edit-position">Poste</Label>
