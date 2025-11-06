@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { AudiencesFilterModal } from "../modals/audiences-filter-modal";
+import ProfileEnrichmentConfig from "../profile-enrichment-config";
 import type { Mission } from "../type";
 
 interface Section {
@@ -43,6 +44,7 @@ export function CreateMissionForm() {
   const [tempTitle, setTempTitle] = useState("");
   const [editingSection, setEditingSection] = useState<number | null>(null);
   const [tempContent, setTempContent] = useState("");
+  const [selectedEnrichmentAttributes, setSelectedEnrichmentAttributes] = useState<string[]>([]);
   const {
     activeFiltersCount,
     selectedFilters,
@@ -572,6 +574,14 @@ export function CreateMissionForm() {
           </Button>
         </div> */}
       </div>
+
+      {/* Configuration d'enrichissement de profil */}
+      {mode === "profile-enhancement" && (
+        <ProfileEnrichmentConfig
+          selectedAttributes={selectedEnrichmentAttributes}
+          onAttributesSelected={setSelectedEnrichmentAttributes}
+        />
+      )}
 
       <AudiencesFilterModal
         onOpenChange={setIsAudiencesFilterModalOpen}

@@ -16,7 +16,7 @@ import {
   QuestionData,
 } from "@/lib/utils";
 import { notFound } from "next/navigation";
-import { MyRuntimeProvider } from "./my-runtime-provider";
+import MyRuntimeProvider from "./my-runtime-provider";
 import { AssistantModal } from "@tada/ui/components/assistant-ui/assistant-modal";
 import { MarkdownPreviewCard } from "@/components/missions/boards/graphs/markdown-preview";
 import { ArrayChartCard } from "@/components/missions/boards/graphs/array-chart";
@@ -31,9 +31,8 @@ export default async function Page({
 }: {
   params: { orgId: string; missionId: string };
 }) {
-  const missionIdMock = "e7e2c79d-9a07-400b-8aac-458d96e3aae0";
   const mission = await prisma.mission.findUnique({
-    where: { id: missionIdMock },
+    where: { id: params.missionId },
     select: {
       id: true,
       name: true,

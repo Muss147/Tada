@@ -11,7 +11,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_DIRECT")
 }
 
 enum KycStatus {
@@ -43,6 +42,7 @@ model User {
   surveyResponses    SurveyResponse[]
   validationComments ValidationComment[]
   contributorData    ContributorData[]
+  attributeValues    ContributorAttributeValue[]
 
   @@map("user")
 }
@@ -73,9 +73,9 @@ model Organization {
 
 model Member {
   id             String       @id @default(uuid())
-  organizationId String       @db.Uuid
+  organizationId String       
   organization   Organization @relation(fields: [organizationId], references: [id])
-  userId         String       @db.Uuid
+  userId         String       
   user           User         @relation(fields: [userId], references: [id])
   role           String
   createdAt      DateTime     @default(now())
@@ -120,7 +120,7 @@ model Mission {
   isSuperAdminMission Boolean        @default(false)
   
   // Executive Summary - généré quand mission = "completed"
-  executiveSummary          String?   @db.Text // Résumé exécutif généré par l'IA
+  executiveSummary          String?    // Résumé exécutif généré par l'IA
   executiveSummaryUpdatedAt DateTime? // Dernière génération du résumé
   
   survey              Survey[]
@@ -134,6 +134,10 @@ model Mission {
   missionAssignment        MissionAssignment[]
   missionConfigContributor MissionConfigContributor[]
   contributorData          ContributorData[]
+
+  // Champs pour les missions d'enrichissement
+  enrichmentAttributes Json @default("[]") // IDs des attributs à collecter (stocké en JSON)
+  isEnrichmentMission  Boolean  @default(false) // Indique si c'est une mission d'enrichissement
 
   @@map("mission")
 }
@@ -204,13 +208,13 @@ model Project {
   name               String?
   tadaName           String?           @unique
   dashboardTitle     String?
-  description        String?           @db.Text
+  description        String?           
   backgroundColor    String            @default("#103751")
   titleColor         String            @default("white")
-  headerCode         String?           @db.Text
-  footerCode         String?           @db.Text
+  headerCode         String?           
+  footerCode         String?           
   logo               String?
-  logoLink           String?           @db.VarChar(1234)
+  logoLink           String?           
   public             Boolean           @default(false)
   passwordProtected  Boolean           @default(false)
   password           String?
@@ -296,7 +300,7 @@ model Chart {
   layout             Json                 @default("{\"lg\":[0,0,6,2],\"md\":[0,0,6,2],\"sm\":[0,0,4,2],\"xs\":[0,0,4,2],\"xxs\":[0,0,2,2]}")
   snapshotToken      String               @default(uuid())
   isLogarithmic      Boolean              @default(false)
-  content            String?              @db.Text
+  content            String?              
   ranges             Json? // Will be stored as JSON
   dashedLastPoint    Boolean              @default(false)
   chartSpec          Json?
@@ -329,7 +333,7 @@ model Dataset {
   chart              Chart?               @relation(fields: [chartId], references: [id])
   connectionId       String?
   draft              Boolean              @default(true)
-  query              String?              @db.Text
+  query              String?              
   xAxis              String?
   xAxisOperation     String?
   yAxis              String?
@@ -338,8 +342,8 @@ model Dataset {
   dateFormat         String?
   legend             String?
   conditions         Json? // Will be stored as JSON
-  formula            String?              @db.Text
-  fieldsSchema       String?              @db.Text // Encrypted JSON
+  formula            String?              
+  fieldsSchema       String?               // Encrypted JSON
   excludedFields     Json? // Will be stored as JSON
   averageByTotal     Boolean              @default(false)
   configuration      Json? // Will be stored as JSON
@@ -371,8 +375,8 @@ model ChartDatasetConfig {
   chart          Chart    @relation(fields: [chartId], references: [id])
   datasetId      String
   dataset        Dataset  @relation(fields: [datasetId], references: [id])
-  formula        String?  @db.Text
-  datasetColor   String?  @db.Text
+  formula        String?  
+  datasetColor   String?  
   fillColor      Json? // Will be stored as JSON
   fill           Boolean  @default(false)
   multiFill      Boolean  @default(false)
@@ -482,7 +486,7 @@ model Payment {
   subscription          Subscription @relation(fields: [subscriptionId], references: [id])
   stripePaymentIntentId String?
   stripeInvoiceId       String?
-  amount                Decimal      @db.Decimal(10, 2)
+  amount                Float      
   currency              String
   status                String
   description           String?
@@ -594,7 +598,7 @@ model MissionAssignment {
   completedAt DateTime?
   dueDate     DateTime?
 
-  notes    String? @db.Text
+  notes    String? 
   priority String  @default("medium") // low, medium, high, urgent
 
   createdAt DateTime @default(now())
@@ -671,12 +675,12 @@ model QualityControl {
   analyzerVersion String?
 
   // Résumé de l'analyse
-  summary         String? @db.Text
+  summary         String? 
   recommendations Json? // Recommandations d'amélioration
 
   // Décision finale
   decision       String? // accept, review, reject
-  decisionReason String?   @db.Text
+  decisionReason String?   
   reviewedBy     String?
   reviewedAt     DateTime?
 
@@ -698,7 +702,7 @@ model QualityIssue {
   type        QualityIssueType
   level       QualityIssueLevel
   title       String
-  description String            @db.Text
+  description String            
 
   // Localisation du problème
   fieldPath     String? // Chemin vers le champ problématique
@@ -749,7 +753,7 @@ model FeedbackEntry {
   // Contenu du feedback
   originalDecision  String?
   correctedDecision String?
-  explanation       String? @db.Text
+  explanation       String? 
 
   // Metadata
   providedBy String?
@@ -770,7 +774,7 @@ model QualityPattern {
 
   patternName String @unique
   patternType String // suspicious_behavior, quality_indicator, etc.
-  description String @db.Text
+  description String 
 
   // Configuration du pattern
   rules     Json // Règles de détection
@@ -798,7 +802,7 @@ model QualityConfiguration {
 
   // Versioning
   version     String  @default("1.0")
-  description String? @db.Text
+  description String? 
 
   // Activation
   isActive    Boolean   @default(true)
@@ -831,7 +835,7 @@ model QualityAnalysisLog {
 
   // Résultats
   status       String // success, error, timeout
-  errorMessage String? @db.Text
+  errorMessage String? 
 
   // Métriques de performance
   promptTokensUsed   Int?
@@ -869,7 +873,7 @@ model MissionChart {
 
   // Options d'affichage
   title       String?
-  description String? @db.Text
+  description String? 
 
   // Insights AI - générés quand mission = "completed"
   insights          Json? // Array d'insights générés par l'IA
@@ -898,7 +902,7 @@ model MissionChart {
 model ContributorData {
   id               String   @id @default(uuid())
   key              String   // Question formatée pour la recherche
-  value            String   @db.Text // Réponse du contributeur
+  value            String    // Réponse du contributeur
   missionId        String
   mission          Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
   userId           String
@@ -906,7 +910,7 @@ model ContributorData {
   
   // Métadonnées
   questionType     String?  // Type de la question d'origine
-  originalQuestion String?  @db.Text // Question originale non formatée
+  originalQuestion String?   // Question originale non formatée
   
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -918,4 +922,44 @@ model ContributorData {
   @@unique([missionId, userId, key]) // Éviter les doublons
   
   @@map("contributor_data")
+}
+
+// Modèle pour les attributs d'audience personnalisés
+model AudienceAttribute {
+  id               String   @id @default(cuid())
+  name             String   // Nom affiché (ex: "Compétences professionnelles")
+  key              String   @unique // Clé technique (ex: "professional_skills")
+  type             String   // Type: text, number, select, multiselect, date, boolean, range
+  category         String   // Catégorie: demographics, profile, professional, interests, technical, availability
+  description      String?  // Description de l'attribut
+  required         Boolean  @default(false) // Champ obligatoire
+  enrichmentOnly   Boolean  @default(false) // Collecté uniquement via missions d'enrichissement
+  options          String?  // Options pour select/multiselect (JSON)
+  active           Boolean  @default(true) // Attribut actif
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  values           ContributorAttributeValue[]
+
+  @@index([category])
+  @@index([active])
+  @@map("audience_attribute")
+}
+
+// Modèle pour les valeurs des attributs par contributeur
+model ContributorAttributeValue {
+  id          String   @id @default(cuid())
+  attributeId String
+  userId      String
+  value       String   // Valeur stockée (peut être JSON pour multiselect)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  attribute   AudienceAttribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([attributeId, userId])
+  @@index([userId])
+  @@index([attributeId])
+  @@map("contributor_attribute_value")
 }

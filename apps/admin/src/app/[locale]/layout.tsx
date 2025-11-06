@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Providers } from "./providers";
 import NavigationLoadingProviders from "./navigation-loading-providers";
+import { LayoutClientWrapper } from "./layout-client-wrapper";
 
 // Configuration de la police DM Sans
 const dmSans = DM_Sans({
@@ -42,21 +43,23 @@ export default function RootLayout({
   params: { locale: string };
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={params.locale} suppressHydrationWarning>
       <body
         className={cn(
           dmSans.variable,
           "whitespace-pre-line overscroll-none antialiased font-sans"
         )}
       >
-        <NavigationLoadingProviders>
-          <ThemeProvider attribute="class" defaultTheme="system">
-            <Providers params={params}>
-              <Toaster />
-              {children}
-            </Providers>
-          </ThemeProvider>
-        </NavigationLoadingProviders>
+        <LayoutClientWrapper fontVariable={dmSans.variable}>
+          <NavigationLoadingProviders>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <Providers params={params}>
+                <Toaster />
+                {children}
+              </Providers>
+            </ThemeProvider>
+          </NavigationLoadingProviders>
+        </LayoutClientWrapper>
       </body>
     </html>
   );
