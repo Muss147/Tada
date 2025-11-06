@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@tada/ui/components/button";
 import {
   Dialog,
@@ -27,7 +27,17 @@ import { X } from "lucide-react";
 interface AttributeManagerProps {
   isOpen: boolean;
   onClose: () => void;
-  attribute?: any;
+  attribute?: {
+    id?: string;
+    name: string;
+    key: string;
+    type: string;
+    category: string;
+    description?: string;
+    required: boolean;
+    enrichmentOnly: boolean;
+    options?: string[] | string;
+  };
 }
 
 export function AttributeManager({
@@ -36,17 +46,62 @@ export function AttributeManager({
   attribute,
 }: AttributeManagerProps) {
   const [formData, setFormData] = useState({
-    name: attribute?.name || "",
-    key: attribute?.key || "",
-    type: attribute?.type || "text",
-    category: attribute?.category || "demographics",
-    description: attribute?.description || "",
-    required: attribute?.required || false,
-    enrichmentOnly: attribute?.enrichmentOnly || false,
-    options: attribute?.options || [],
+    name: "",
+    key: "",
+    type: "text",
+    category: "demographics",
+    description: "",
+    required: false,
+    enrichmentOnly: false,
+    options: [] as string[],
   });
 
   const [newOption, setNewOption] = useState("");
+
+  // Mettre à jour le formulaire quand l'attribut change
+  useEffect(() => {
+    if (attribute) {
+      // Parser les options si c'est une chaîne JSON
+      let parsedOptions: string[] = [];
+      if (attribute.options) {
+        if (Array.isArray(attribute.options)) {
+          parsedOptions = attribute.options;
+        } else if (typeof attribute.options === 'string') {
+          try {
+            parsedOptions = JSON.parse(attribute.options);
+          } catch (e) {
+            console.error('Error parsing options:', e);
+            parsedOptions = [];
+          }
+        }
+      }
+
+      setFormData({
+        name: attribute.name || "",
+        key: attribute.key || "",
+        type: attribute.type || "text",
+        category: attribute.category || "demographics",
+        description: attribute.description || "",
+        required: attribute.required || false,
+        enrichmentOnly: attribute.enrichmentOnly || false,
+        options: parsedOptions,
+      });
+    } else {
+      // Réinitialiser le formulaire pour une nouvelle création
+      setFormData({
+        name: "",
+        key: "",
+        type: "text",
+        category: "demographics",
+        description: "",
+        required: false,
+        enrichmentOnly: false,
+        options: [],
+      });
+    }
+    // Réinitialiser l'erreur quand le modal s'ouvre/ferme
+    setError(null);
+  }, [attribute, isOpen]);
 
   const handleAddOption = () => {
     if (newOption.trim()) {
@@ -74,18 +129,25 @@ export function AttributeManager({
     setError(null);
 
     try {
-      const url = attribute
+      const url = attribute?.id
         ? `/api/audience-attributes/${attribute.id}`
         : "/api/audience-attributes";
       
-      const method = attribute ? "PUT" : "POST";
+      const method = attribute?.id ? "PUT" : "POST";
+
+      // Préparer les données pour l'API
+      const dataToSend = {
+        ...formData,
+        // S'assurer que les options sont envoyées comme un tableau
+        options: formData.options,
+      };
 
       const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
       if (!response.ok) {
