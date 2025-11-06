@@ -26,11 +26,21 @@ enum UserRole {
   validator
 }
 
+enum AdminSubRole {
+  super_admin           // Super Administrateur - Accès complet
+  operations_admin      // Administrateur des Opérations
+  customer_admin        // Administrateur Client
+  content_moderator     // Modérateur de Contenu
+  finance_admin         // Administrateur Financier
+  auditor              // Auditeur (lecture seule)
+}
+
 model User {
   id                 String              @id @default(uuid())
   email              String              @unique
   name               String
   role               UserRole            @default(contributor)
+  adminSubRole       AdminSubRole?       // Sous-rôle pour les system_admin
   position           String?
   country            String?
   sector             String?

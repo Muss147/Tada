@@ -53,13 +53,15 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { RoleBadge } from "@/components/users/role-badge";
 import { RoleSelector } from "@/components/users/role-selector";
-import { USER_ROLES, type UserRole } from "@/lib/rbac/roles";
+import { AdminSubRoleSelector } from "@/components/users/admin-subrole-selector";
+import { USER_ROLES, type UserRole, type AdminSubRole } from "@/lib/rbac/roles";
 
 interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
+  adminSubRole?: AdminSubRole | null;
   position?: string;
   country?: string;
   sector?: string;
@@ -184,6 +186,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
     email: "",
     name: "",
     role: USER_ROLES.CONTRIBUTOR as UserRole,
+    adminSubRole: null as AdminSubRole | null,
     position: "",
     country: "",
     sector: "",
@@ -243,6 +246,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
           email: "",
           name: "",
           role: USER_ROLES.CONTRIBUTOR,
+          adminSubRole: null,
           position: "",
           country: "",
           sector: "",
@@ -435,6 +439,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       email: user.email,
       name: user.name,
       role: user.role,
+      adminSubRole: user.adminSubRole || null,
       position: user.position || "",
       country: user.country || "",
       sector: "",
@@ -454,6 +459,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
       email: "",
       name: "",
       role: USER_ROLES.CONTRIBUTOR as UserRole,
+      adminSubRole: null,
       position: "",
       country: "",
       sector: "",
@@ -644,7 +650,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   <RoleSelector
                     value={formData.role}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, role: value })
+                      setFormData({ ...formData, role: value, adminSubRole: null })
                     }
                   />
                 </div>
@@ -659,6 +665,16 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   />
                 </div>
               </div>
+              {formData.role === USER_ROLES.SYSTEM_ADMIN && (
+                <div className="mt-4">
+                  <AdminSubRoleSelector
+                    value={formData.adminSubRole}
+                    onChange={(value) =>
+                      setFormData({ ...formData, adminSubRole: value })
+                    }
+                  />
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="job">Métier</Label>
@@ -800,7 +816,7 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   <RoleSelector
                     value={formData.role}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, role: value })
+                      setFormData({ ...formData, role: value, adminSubRole: null })
                     }
                   />
                 </div>
@@ -815,6 +831,16 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   />
                 </div>
               </div>
+              {formData.role === USER_ROLES.SYSTEM_ADMIN && (
+                <div className="mt-4">
+                  <AdminSubRoleSelector
+                    value={formData.adminSubRole}
+                    onChange={(value) =>
+                      setFormData({ ...formData, adminSubRole: value })
+                    }
+                  />
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="edit-job">Métier</Label>

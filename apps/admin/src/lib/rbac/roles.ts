@@ -11,6 +11,16 @@ export const USER_ROLES = {
   VALIDATOR: "validator",
 } as const;
 
+// Admin sub-roles (for system_admin only)
+export const ADMIN_SUB_ROLES = {
+  SUPER_ADMIN: "super_admin",
+  OPERATIONS_ADMIN: "operations_admin",
+  CUSTOMER_ADMIN: "customer_admin",
+  CONTENT_MODERATOR: "content_moderator",
+  FINANCE_ADMIN: "finance_admin",
+  AUDITOR: "auditor",
+} as const;
+
 // Organization member roles
 export const MEMBER_ROLES = {
   OWNER: "owner",
@@ -21,6 +31,7 @@ export const MEMBER_ROLES = {
 
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
 export type MemberRole = typeof MEMBER_ROLES[keyof typeof MEMBER_ROLES];
+export type AdminSubRole = typeof ADMIN_SUB_ROLES[keyof typeof ADMIN_SUB_ROLES];
 
 // Permission categories
 export const PERMISSIONS = {
@@ -61,6 +72,27 @@ export const PERMISSIONS = {
   // Audit & Monitoring
   AUDIT_VIEW: "audit:view",
   ANALYTICS_VIEW: "analytics:view",
+  
+  // Financial Operations
+  PAYMENTS_VIEW: "payments:view",
+  PAYMENTS_MANAGE: "payments:manage",
+  BILLING_VIEW: "billing:view",
+  BILLING_MANAGE: "billing:manage",
+  FINANCIAL_REPORTS: "financial:reports",
+  
+  // Content Moderation
+  CONTENT_MODERATE: "content:moderate",
+  SUBMISSIONS_VALIDATE: "submissions:validate",
+  FRAUD_MANAGEMENT: "fraud:manage",
+  
+  // Support & Customer Success
+  SUPPORT_TICKETS: "support:tickets",
+  CUSTOMER_ACCOUNTS: "customer:accounts",
+  
+  // System Configuration
+  SYSTEM_CONFIG: "system:config",
+  SECURITY_SETTINGS: "security:settings",
+  LOGS_ACCESS: "logs:access",
 } as const;
 
 export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
@@ -231,6 +263,164 @@ export const MEMBER_ROLE_METADATA = {
   },
 };
 
+// Admin sub-role permissions
+export const ADMIN_SUB_ROLE_PERMISSIONS: Record<AdminSubRole, Permission[]> = {
+  [ADMIN_SUB_ROLES.SUPER_ADMIN]: [
+    // Accès complet sans restriction
+    PERMISSIONS.USERS_CREATE,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.USERS_UPDATE,
+    PERMISSIONS.USERS_DELETE,
+    PERMISSIONS.USERS_IMPERSONATE,
+    PERMISSIONS.USERS_RESET_PASSWORD,
+    PERMISSIONS.ORGANIZATIONS_CREATE,
+    PERMISSIONS.ORGANIZATIONS_READ,
+    PERMISSIONS.ORGANIZATIONS_UPDATE,
+    PERMISSIONS.ORGANIZATIONS_DELETE,
+    PERMISSIONS.MEMBERS_CREATE,
+    PERMISSIONS.MEMBERS_READ,
+    PERMISSIONS.MEMBERS_UPDATE,
+    PERMISSIONS.MEMBERS_DELETE,
+    PERMISSIONS.MISSIONS_CREATE,
+    PERMISSIONS.MISSIONS_READ,
+    PERMISSIONS.MISSIONS_UPDATE,
+    PERMISSIONS.MISSIONS_DELETE,
+    PERMISSIONS.MISSIONS_ASSIGN,
+    PERMISSIONS.MISSIONS_VALIDATE,
+    PERMISSIONS.SETTINGS_READ,
+    PERMISSIONS.SETTINGS_UPDATE,
+    PERMISSIONS.PACKAGES_MANAGE,
+    PERMISSIONS.REWARDS_CONFIGURE,
+    PERMISSIONS.AUDIT_VIEW,
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.PAYMENTS_VIEW,
+    PERMISSIONS.PAYMENTS_MANAGE,
+    PERMISSIONS.BILLING_VIEW,
+    PERMISSIONS.BILLING_MANAGE,
+    PERMISSIONS.FINANCIAL_REPORTS,
+    PERMISSIONS.CONTENT_MODERATE,
+    PERMISSIONS.SUBMISSIONS_VALIDATE,
+    PERMISSIONS.FRAUD_MANAGEMENT,
+    PERMISSIONS.SUPPORT_TICKETS,
+    PERMISSIONS.CUSTOMER_ACCOUNTS,
+    PERMISSIONS.SYSTEM_CONFIG,
+    PERMISSIONS.SECURITY_SETTINGS,
+    PERMISSIONS.LOGS_ACCESS,
+  ],
+  
+  [ADMIN_SUB_ROLES.OPERATIONS_ADMIN]: [
+    // Gestion des opérations et missions
+    PERMISSIONS.MISSIONS_CREATE,
+    PERMISSIONS.MISSIONS_READ,
+    PERMISSIONS.MISSIONS_UPDATE,
+    PERMISSIONS.MISSIONS_DELETE,
+    PERMISSIONS.MISSIONS_ASSIGN,
+    PERMISSIONS.MISSIONS_VALIDATE,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.USERS_UPDATE, // Pour gérer les contributeurs
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.AUDIT_VIEW,
+    PERMISSIONS.CONTENT_MODERATE,
+    PERMISSIONS.SUBMISSIONS_VALIDATE,
+    PERMISSIONS.PAYMENTS_VIEW, // Suivi des paiements aux contributeurs
+  ],
+  
+  [ADMIN_SUB_ROLES.CUSTOMER_ADMIN]: [
+    // Gestion des clients et support
+    PERMISSIONS.ORGANIZATIONS_CREATE,
+    PERMISSIONS.ORGANIZATIONS_READ,
+    PERMISSIONS.ORGANIZATIONS_UPDATE,
+    PERMISSIONS.MEMBERS_CREATE,
+    PERMISSIONS.MEMBERS_READ,
+    PERMISSIONS.MEMBERS_UPDATE,
+    PERMISSIONS.MISSIONS_READ, // Consultation uniquement
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.BILLING_VIEW,
+    PERMISSIONS.BILLING_MANAGE,
+    PERMISSIONS.SUPPORT_TICKETS,
+    PERMISSIONS.CUSTOMER_ACCOUNTS,
+    PERMISSIONS.PAYMENTS_VIEW, // Historique paiements pour requêtes
+  ],
+  
+  [ADMIN_SUB_ROLES.CONTENT_MODERATOR]: [
+    // Modération et contrôle qualité
+    PERMISSIONS.MISSIONS_READ,
+    PERMISSIONS.SUBMISSIONS_VALIDATE,
+    PERMISSIONS.CONTENT_MODERATE,
+    PERMISSIONS.FRAUD_MANAGEMENT,
+    PERMISSIONS.AUDIT_VIEW,
+    PERMISSIONS.USERS_READ,
+  ],
+  
+  [ADMIN_SUB_ROLES.FINANCE_ADMIN]: [
+    // Gestion financière
+    PERMISSIONS.PAYMENTS_VIEW,
+    PERMISSIONS.PAYMENTS_MANAGE,
+    PERMISSIONS.BILLING_VIEW,
+    PERMISSIONS.BILLING_MANAGE,
+    PERMISSIONS.FINANCIAL_REPORTS,
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.ORGANIZATIONS_READ,
+  ],
+  
+  [ADMIN_SUB_ROLES.AUDITOR]: [
+    // Lecture seule pour audit
+    PERMISSIONS.AUDIT_VIEW,
+    PERMISSIONS.ANALYTICS_VIEW,
+    PERMISSIONS.MISSIONS_READ,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.ORGANIZATIONS_READ,
+    PERMISSIONS.FINANCIAL_REPORTS,
+  ],
+};
+
+// Admin sub-role metadata
+export const ADMIN_SUB_ROLE_METADATA = {
+  [ADMIN_SUB_ROLES.SUPER_ADMIN]: {
+    label: "Super Administrateur",
+    description: "Accès complet à toutes les fonctionnalités sans restriction",
+    color: "red",
+    icon: "Shield",
+    team: "DG / CTO / Responsable Sécurité IT",
+  },
+  [ADMIN_SUB_ROLES.OPERATIONS_ADMIN]: {
+    label: "Administrateur des Opérations",
+    description: "Gestion des missions, contributeurs et collecte de données",
+    color: "blue",
+    icon: "Settings",
+    team: "Responsable des opérations / Équipe Data & Insights",
+  },
+  [ADMIN_SUB_ROLES.CUSTOMER_ADMIN]: {
+    label: "Administrateur Client",
+    description: "Gestion des comptes clients et support",
+    color: "green",
+    icon: "Users",
+    team: "Sales & Account Management / Customer Success / Service Client",
+  },
+  [ADMIN_SUB_ROLES.CONTENT_MODERATOR]: {
+    label: "Modérateur de Contenu",
+    description: "Validation et modération des données collectées",
+    color: "orange",
+    icon: "CheckCircle",
+    team: "Équipe de modération / Analyste qualité",
+  },
+  [ADMIN_SUB_ROLES.FINANCE_ADMIN]: {
+    label: "Administrateur Financier",
+    description: "Gestion des paiements et transactions",
+    color: "purple",
+    icon: "DollarSign",
+    team: "Directeur Financier / Comptabilité",
+  },
+  [ADMIN_SUB_ROLES.AUDITOR]: {
+    label: "Auditeur",
+    description: "Accès en lecture seule aux rapports et statistiques",
+    color: "gray",
+    icon: "FileSearch",
+    team: "Consultant externe / Auditeur",
+  },
+};
+
 /**
  * Check if a user has a specific permission
  */
@@ -287,4 +477,61 @@ export function getCombinedPermissions(
   
   // Combine and deduplicate
   return Array.from(new Set([...userPermissions, ...memberPermissions]));
+}
+
+/**
+ * Check if an admin sub-role has a specific permission
+ */
+export function hasAdminSubRolePermission(
+  adminSubRole: AdminSubRole,
+  permission: Permission
+): boolean {
+  const permissions = ADMIN_SUB_ROLE_PERMISSIONS[adminSubRole];
+  return permissions.includes(permission);
+}
+
+/**
+ * Get all permissions for an admin sub-role
+ */
+export function getAdminSubRolePermissions(adminSubRole: AdminSubRole): Permission[] {
+  return ADMIN_SUB_ROLE_PERMISSIONS[adminSubRole] || [];
+}
+
+/**
+ * Check if an admin sub-role is valid
+ */
+export function isValidAdminSubRole(role: string): role is AdminSubRole {
+  return Object.values(ADMIN_SUB_ROLES).includes(role as AdminSubRole);
+}
+
+/**
+ * Get effective permissions for a system admin considering their sub-role
+ */
+export function getEffectiveAdminPermissions(
+  userRole: UserRole,
+  adminSubRole?: AdminSubRole | null
+): Permission[] {
+  // Only applies to system admins
+  if (userRole !== USER_ROLES.SYSTEM_ADMIN) {
+    return getUserPermissions(userRole);
+  }
+  
+  // If no sub-role specified, use super admin permissions (backward compatibility)
+  if (!adminSubRole) {
+    return getAdminSubRolePermissions(ADMIN_SUB_ROLES.SUPER_ADMIN);
+  }
+  
+  return getAdminSubRolePermissions(adminSubRole);
+}
+
+/**
+ * Check if a user (considering admin sub-role) has a specific permission
+ */
+export function hasEffectivePermission(
+  userRole: UserRole,
+  permission: Permission,
+  adminSubRole?: AdminSubRole | null
+): boolean {
+  const permissions = getEffectiveAdminPermissions(userRole, adminSubRole);
+  return permissions.includes(permission);
 }
