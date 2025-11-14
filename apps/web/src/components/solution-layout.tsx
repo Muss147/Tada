@@ -13,7 +13,7 @@ interface SolutionLayoutProps {
 
 const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution }) => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white space-y-8">
       <DynamicHero data={solution.hero} />
       <DynamicFeatures data={solution.features} />
       {/*  <DynamicHowItWorks data={solution.howItWorks} /> */}

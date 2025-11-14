@@ -992,5 +992,111 @@ export default {
     industry: {
       title: "Solutions Par Industrie",
     },
+    // NOUVEAU BLOC
+    featuresByIndustry: {
+      1: {
+        title: "Connaissances des consommateurs",
+        description: "Exploiter les connaissances des consommateurs pour affiner les produits et les stratégies de marketing.",
+      },
+      2: {
+        title: "Secteur public et politique",
+        description: "Accéder aux données communautaires pour améliorer les programmes et les politiques publiques.",
+      },
+      3: {
+        title: "Consultations",
+        description: "Recueillez des informations fiables rapidement et facilement, afin de fournir les réponses dont vos clients ont besoin.",
+      },
+      4: {
+        title: "Agences",
+        description: "Fournissez à vos clients des informations exploitables sur les consommateurs.",
+      },
+    },
+    featuresByUseCase: {
+      // FMCG
+      1: {
+        title: "Tracker de disponibilité",
+        description:
+          "Surveillez la disponibilité des produits sur les marchés pour optimiser vos chaînes d'approvisionnement.",
+      },
+      2: {
+        title: "Recensement commercial continu",
+        description:
+          "Collectez en continu des données sur les points de vente pour des décisions éclairées.",
+      },
+      3: {
+        title: "Insights qualitatifs",
+        description:
+          "Plongez dans les opinions et émotions des consommateurs grâce à l’analyse qualitative.",
+      },
+      4: {
+        title: "Analyse géospatiale",
+        description:
+          "Exploitez les données géolocalisées pour planifier vos actions stratégiques.",
+      },
+      // Public
+      5: {
+        title: "Analyse psychographique des groupes cibles",
+        description:
+          "Comprenez précisément votre audience pour créer des produits adaptés à leurs attentes.",
+      },
+      6: {
+        title: "Suivi de marque",
+        description:
+          "Suivez la performance et la perception de votre marque auprès des consommateurs.",
+      },
+      7: {
+        title: "Suivi des consommateurs",
+        description:
+          "Analysez les comportements, habitudes et motivations des consommateurs en temps réel.",
+      },
+      8: {
+        title: "Analyse des prix",
+        description:
+          "Déterminez les points de prix optimaux et les seuils d’acceptabilité pour maximiser vos marges.",
+      },
+      9: {
+        title: "Test visuel",
+        description:
+          "Testez vos logos, packagings ou campagnes pour créer des designs qui résonnent avec votre audience.",
+      },
+      10: {
+        title: "Suivi de campagnes",
+        description:
+          "Mesurez l’impact réel de vos campagnes sur la notoriété et la perception de marque.",
+      },
+      11: {
+        title: "Test média",
+        description:
+          "Évaluez l’efficacité de vos publicités et messages auprès de votre public cible.",
+      },
+      // Consultancies
+      12: {
+        title: "Analyse de satisfaction client",
+        description:
+          "Identifiez les leviers clés pour améliorer la satisfaction et la fidélisation de vos clients.",
+      },
+      13: {
+        title: "Développement produit",
+        description:
+          "Créez et optimisez vos produits grâce à des insights consommateurs précis et actionnables.",
+      },
+      14: {
+        title: "Tests à domicile (iHUT)",
+        description:
+          "Testez vos produits dans les conditions réelles d’utilisation pour valider, itérer et lancer en toute confiance.",
+      },
+      15: {
+        title: "Analyse de marché",
+        description:
+          "Prenez de meilleures décisions stratégiques grâce à une analyse approfondie du marché.",
+      },
+    },
+    categoriesByUseCase: {
+      all: "Tout",
+      fmcg: "FMCG", // ou “Biens de consommation rapide”, si tu veux traduire
+      public: "Secteur Public",
+      consultancies: "Cabinets de Conseil",
+    },
+    learn_more: "En savoir plus",
   },
 } as const;

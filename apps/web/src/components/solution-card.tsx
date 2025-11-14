@@ -1,27 +1,36 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useI18n } from "@/locales/client";
 
 export default function SolutionCard({
   title,
   description,
   image,
   link,
+  solutionFamily,
 }: {
   title: string;
   description: string;
   image: string;
   link: string;
+  solutionFamily: string;
 }) {
+  const t = useI18n();
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
       <div className="h-48 bg-gray-100 flex items-center justify-center">
         <Image
           src={image}
           alt={title}
-          width={80}
-          height={80}
-          className="w-20 h-20"
+          width={64}
+          height={64}
+          className={
+            solutionFamily === "industry"
+              ? "w-full h-full object-cover"
+              : "w-20 h-20"
+          }
         />
       </div>
       <div className="p-6">
@@ -31,7 +40,7 @@ export default function SolutionCard({
           href={link}
           className="text-premise-blue font-rational-medium flex items-center"
         >
-          Learn More
+          {t("solutions.learn_more")}
           <svg
             className="w-4 h-4 ml-2"
             fill="none"

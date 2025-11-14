@@ -1,0 +1,4 @@
+{
+  "/api/auth/[...all]/route": "app/api/auth/[...all]/route.js",
+  "/[locale]/(dashboard)/missions/[orgId]/create/page": "app/[locale]/(dashboard)/missions/[orgId]/create/page.js"
+}

@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import TabNavigation from "./ui/tab-navigation";
-import Link from "next/link";
-import Image from "next/image";
 import SolutionCard from "./solution-card";
+import { useI18n } from "@/locales/client";
 
 export default function SolutionsFilter({
   features,
@@ -14,6 +13,7 @@ export default function SolutionsFilter({
   categories: string[];
 }) {
   const [activeTab, setActiveTab] = useState("All");
+  const t = useI18n();
 
   const filteredFeatures =
     activeTab === "All"
@@ -28,15 +28,21 @@ export default function SolutionsFilter({
         setActiveTab={setActiveTab}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredFeatures.map((feature) => (
-          <SolutionCard
-            key={feature.id}
-            title={feature.title}
-            description={feature.description}
-            image={feature.image}
-            link={feature.link}
-          />
-        ))}
+        {filteredFeatures.map((feature) => {
+          // 🔑 clé de traduction basée sur l’ID
+          const translationKey = `solutions.featuresByUseCase.${feature.id}`;
+
+          return (
+            <SolutionCard
+              key={feature.id}
+              title={t(`${translationKey}.title`)}
+              description={t(`${translationKey}.description`)}
+              image={feature.image}
+              link={feature.link}
+              solutionFamily= "use-case"
+            />
+          );
+        })}
       </div>
     </div>
   );

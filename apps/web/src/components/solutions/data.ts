@@ -674,6 +674,1782 @@ export const solutions: Solution[] = [
     },
   },
   {
+    id: "psychographic-target-group-analysis",
+    name: "Psychographic Target Group Analysis",
+    title: "Psychographic Target Group Analysis",
+    description: "Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love.",
+    hero: {
+      headline: "Psychographic Target Group Analysis",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "psychographic-target-group-analysis",
+    name: "Psychographic Target Group Analysis",
+    title: "Psychographic Target Group Analysis",
+    description: "Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love.",
+    hero: {
+      headline: "Psychographic Target Group Analysis",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "brand-tracking",
+    name: "Brand tracking",
+    title: "Brand tracking",
+    description: "Don’t fly blind. Measure and track your brand's performance to stay on top of consumers' perceptions of you.",
+    hero: {
+      headline: "Brand tracking",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Don’t fly blind. Measure and track your brand's performance to stay on top of consumers' perceptions of you."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "consumer-tracking",
+    name: "Consumer tracking",
+    title: "Consumer tracking",
+    description: "Understand how consumers think and what drives their choices. From purchase frequency to product use, to drivers and barriers - we've got all the answers you need, in real time.",
+    hero: {
+      headline: "Consumer tracking",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Understand how consumers think and what drives their choices. From purchase frequency to product use, to drivers and barriers - we've got all the answers you need, in real time."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "pricing-analysis",
+    name: "Pricing analysis",
+    title: "Pricing analysis",
+    description: "Maximize profits by asking the right questions. How much are customers willing to spend on your product? What’s the optimal price point?",
+    hero: {
+      headline: "Pricing analysis",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Maximize profits by asking the right questions. How much are customers willing to spend on your product? What’s the optimal price point?"],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "visual-test",
+    name: "Visual test",
+    title: "Visual test",
+    description: "Let consumers be your co-creators. Ask what they think about your new logo, website or packaging and create designs that truly speak to your audience.",
+    hero: {
+      headline: "Visual test",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Let consumers be your co-creators. Ask what they think about your new logo, website or packaging and create designs that truly speak to your audience."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "campaign-tracking",
+    name: "Campaign Tracking",
+    title: "Campaign Tracking",
+    description: "Knowing the reach and the click-through rate is great. But what's the real impact of your campaign on your brand?",
+    hero: {
+      headline: "Campaign Tracking",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Knowing the reach and the click-through rate is great. But what's the real impact of your campaign on your brand?"],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "media-testing",
+    name: "Media Testing",
+    title: "Media Testing",
+    description: "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
+    hero: {
+      headline: "Media Testing",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "customer-satisfaction-analysis",
+    name: "Customer Satisfaction Analysis",
+    title: "Customer Satisfaction Analysis",
+    description: "Actually knowing what your target group wants is the key to customer satisfaction. We help ask the right questions and understand what matters.",
+    hero: {
+      headline: "Customer Satisfaction Analysis",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Actually knowing what your target group wants is the key to customer satisfaction. We help ask the right questions and understand what matters."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "product-development",
+    name: "Product Development",
+    title: "Product Development",
+    description: "Harness the power of strategic product development to create, refine, and deliver solutions that resonate with your audience, setting your brand apart.",
+    hero: {
+      headline: "Product Development",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Harness the power of strategic product development to create, refine, and deliver solutions that resonate with your audience, setting your brand apart."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "in-home-use-testing",
+    name: "In-Home Use Testing (iHUT)",
+    title: "In-Home Use Testing (iHUT)",
+    description: "Identify how your product will perform in the hands (and homes) of real consumers. Determine moments of truth and key drivers in order to validate, iterate and launch with confidence.",
+    hero: {
+      headline: "In-Home Use Testing (iHUT)",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Identify how your product will perform in the hands (and homes) of real consumers. Determine moments of truth and key drivers in order to validate, iterate and launch with confidence."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
+    id: "media-testing",
+    name: "Market analysis",
+    title: "Market analysis",
+    description: "Future-proof your decision-making and gain a competitive advantage through a comprehensive market analysis.",
+    hero: {
+      headline: "Market analysis",
+      subheadline:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+      benefits: ["Future-proof your decision-making and gain a competitive advantage through a comprehensive market analysis."],
+      ctaPrimary: "Request a demo",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondary: "",
+    },
+    features: {
+      title: "Adipisicing elit consectetur",
+      subtitle: "consectetur adipisicing elit consectetur adipisicing elit",
+      items: [
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur.",
+        },
+        {
+          icon: "CheckCircle",
+          title: "consectetur adipisicing elit",
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus consequuntur obcaecati consectetur sint provident laudantium.",
+        },
+      ],
+    },
+    howItWorks: {
+      title: "Ai Powered",
+      subtitle: "",
+      steps: [],
+    },
+    useCases: {
+      title:
+        "Lorem ipsum Lorem ipsum Lorem ipsum",
+      subtitle: "Geospatial Analytics",
+      otherSubtitle: "",
+      cases: [
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Ipsum",
+          title: "Lorem ipsum dolor",
+          subheadline: "",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum dolor",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate.",
+        },
+        {
+          icon: "Lorem",
+          title: "Ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione magni a est repellendus.",
+        },
+        {
+          icon: "Lorem",
+          title: "Lorem ipsum",
+          benefits: [],
+          description:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem assumenda, explicabo corrupti cumque ea sit, voluptate recusandae aperiam laborum ratione.",
+        },
+      ],
+    },
+    testimonials: {
+      title: "What our customers say",
+      subtitle:
+        "See how companies worldwide are using Market Research to drive strategic decisions.",
+      items: [
+        {
+          name: "Jennifer Walsh",
+          role: "Head of Market Research",
+          company: "Consumer Brands Co",
+          image:
+            "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The market intelligence we get from Premise has transformed our strategic planning. We now make decisions based on real-time global data.",
+          rating: 5,
+        },
+        {
+          name: "Robert Chen",
+          role: "VP of Strategy",
+          company: "Global Ventures",
+          image:
+            "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
+          rating: 5,
+        },
+        {
+          name: "Maria Gonzalez",
+          role: "Brand Manager",
+          company: "Lifestyle Brands",
+          image:
+            "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
+          content:
+            "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
+          rating: 5,
+        },
+      ],
+    },
+    cta: {
+      title: "Take the Guesswork Out of Your Next Decision",
+      subtitle: "",
+      primaryButton: "Request Demo",
+      secondaryButton: "Contact Sales",
+      ctaPrimaryLink: "/schedule-demo",
+      ctaSecondaryLink: "/contact",
+    },
+  },
+  {
     id: "international-development",
     name: "Public & Political Sector™",
     title: "Public & Political Sector™",
@@ -1119,8 +2895,8 @@ export const featuresByIndustry = [
     title: "Consumer Insights",
     description:
       "Leverage consumer insights to refine products and marketing strategies.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/consumer-insights",
+    image: "/images/consumer-insights.jpg", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/industry/consumer-insights",
   },
   {
     id: "2",
@@ -1128,8 +2904,8 @@ export const featuresByIndustry = [
     title: "Public & Political Sector",
     description:
       "Access community data to enhance public programs and policies.",
-    image: "https://ext.same-assets.com/829373065/3565711189.svg",
-    link: "/solutions/international-development",
+    image: "/images/international-development.jpg", // "https://ext.same-assets.com/829373065/3565711189.svg",
+    link: "/solutions/industry/international-development",
   },
   {
     id: "3",
@@ -1137,16 +2913,16 @@ export const featuresByIndustry = [
     title: "Consultancies",
     description:
       "Gather reliable insights quickly and easily, so you can deliver the answers your clients need.",
-    image: "https://ext.same-assets.com/829373065/2858633470.svg",
-    link: "/solutions/consultancies",
+    image: "/images/consultancies.jpg", // "https://ext.same-assets.com/829373065/2858633470.svg",
+    link: "/solutions/industry/consultancies",
   },
   {
     id: "4",
     industry: "Agencies",
     title: "Agencies",
     description: "Equip your clients with actionable consumer insights.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/agencies",
+    image: "/images/agencies.jpg", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/industry/agencies",
   },
 ];
 
@@ -1158,8 +2934,8 @@ export const featuresByUseCase = [
     title: "Availability Tracker",
     description:
       "Monitor product availability across markets to optimize supply chains.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/availability-tracker",
+    image: "/images/pulse.png",
+    link: "/solutions/use-case/availability-tracker",
   },
   {
     id: "2",
@@ -1167,8 +2943,8 @@ export const featuresByUseCase = [
     title: "Rolling Retail Census",
     description:
       "Continuously gather data on retail environments for informed decision-making.",
-    image: "https://ext.same-assets.com/829373065/3565711189.svg",
-    link: "/solutions/rolling-retail-census",
+    image: "/images/shopping-bag.png", // "https://ext.same-assets.com/829373065/3565711189.svg",
+    link: "/solutions/use-case/rolling-retail-census",
   },
   {
     id: "4",
@@ -1176,16 +2952,16 @@ export const featuresByUseCase = [
     title: "Qualitative Insights",
     description:
       "Dive deep into consumer sentiments with qualitative data analysis.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/ai-qualitative-insights-platform",
+    image: "/images/chart-trend.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/ai-qualitative-insights-platform",
   },
   {
     id: "3",
     category: "FMCG",
     title: "Geospatial Analytics",
     description: "Utilize location-based data for strategic planning",
-    image: "https://ext.same-assets.com/829373065/2858633470.svg",
-    link: "/solutions/geospatial-analytics",
+    image: "/images/chart-network.png", // "https://ext.same-assets.com/829373065/2858633470.svg",
+    link: "/solutions/use-case/geospatial-analytics",
   },
 
   //Not found
@@ -1195,8 +2971,8 @@ export const featuresByUseCase = [
     title: "Psychographic Target Group Analysis",
     description:
       "Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/psychographic-target-group-analysis",
+    image: "/images/chart-bubble.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/psychographic-target-group-analysis",
   },
   {
     id: "6",
@@ -1204,8 +2980,8 @@ export const featuresByUseCase = [
     title: "Brand tracking",
     description:
       "Don’t fly blind. Measure and track your brand's performance to stay on top of consumers' perceptions of you.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/brand-tracking",
+    image: "/images/radar.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/brand-tracking",
   },
   {
     id: "7",
@@ -1213,8 +2989,8 @@ export const featuresByUseCase = [
     title: "Consumer tracking",
     description:
       "Understand how consumers think and what drives their choices. From purchase frequency to product use, to drivers and barriers - we've got all the answers you need, in real time.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/consumer-tracking",
+    image: "/images/footsteps.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/consumer-tracking",
   },
   {
     id: "8",
@@ -1222,8 +2998,8 @@ export const featuresByUseCase = [
     title: "Pricing analysis",
     description:
       "Maximize profits by asking the right questions. How much are customers willing to spend on your product? What’s the optimal price point?",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/pricing-analysis",
+    image: "/images/chart-spline.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/pricing-analysis",
   },
 
   {
@@ -1232,8 +3008,8 @@ export const featuresByUseCase = [
     title: "Visual test",
     description:
       "Let consumers be your co-creators. Ask what they think about your new logo, website or packaging and create designs that truly speak to your audience.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/visual-test",
+    image: "/images/message-circle-image.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/visual-test",
   },
 
   {
@@ -1242,8 +3018,8 @@ export const featuresByUseCase = [
     title: "Campaign tracking",
     description:
       "Knowing the reach and the click-through rate is great. But what's the real impact of your campaign on your brand?",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/campaign-tracking",
+    image: "/images/tachometer.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/campaign-tracking",
   },
 
   {
@@ -1252,8 +3028,8 @@ export const featuresByUseCase = [
     title: "Media Testing",
     description:
       "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/media-testing",
+    image: "/images/newspaper.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/media-testing",
   },
   {
     id: "12",
@@ -1261,8 +3037,8 @@ export const featuresByUseCase = [
     title: "Customer satisfaction analysis",
     description:
       "Actually knowing what your target group wants is the key to customer satisfaction. We help ask the right questions and understand what matters.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/customer-satisfaction-analysis",
+    image: "/images/meh-alt.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/customer-satisfaction-analysis",
   },
   {
     id: "13",
@@ -1270,8 +3046,8 @@ export const featuresByUseCase = [
     title: "Product development",
     description:
       "Harness the power of strategic product development to create, refine, and deliver solutions that resonate with your audience, setting your brand apart.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/product-development",
+    image: "/images/git-branch.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/product-development",
   },
   {
     id: "14",
@@ -1279,8 +3055,8 @@ export const featuresByUseCase = [
     title: "In-Home Use Testing (iHUT)",
     description:
       "Identify how your product will perform in the hands (and homes) of real consumers. Determine moments of truth and key drivers in order to validate, iterate and launch with confidence.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/in-home-use-testing",
+    image: "/images/vial.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/in-home-use-testing",
   },
   {
     id: "15",
@@ -1288,8 +3064,8 @@ export const featuresByUseCase = [
     title: "Market analysis",
     description:
       "Future-proof your decision-making and gain a competitive advantage through a comprehensive market analysis.",
-    image: "https://ext.same-assets.com/829373065/2194203648.svg",
-    link: "/solutions/media-testing",
+    image: "/images/trending-down.png", // "https://ext.same-assets.com/829373065/2194203648.svg",
+    link: "/solutions/use-case/media-testing",
   },
 ];
 

@@ -975,5 +975,110 @@ export default {
     industry: {
       title: "Solutions by Industry",
     },
+    // NOUVEAU BLOC
+    featuresByIndustry: {
+      1: {
+        title: "Consumer Insights",
+        description: "Leverage consumer insights to refine products and marketing strategies.",
+      },
+      2: {
+        title: "Public & Political Sector",
+        description: "Access community data to enhance public programs and policies.",
+      },
+      3: {
+        title: "Consultancies",
+        description: "Gather reliable insights quickly and easily, so you can deliver the answers your clients need.",
+      },
+      4: {
+        title: "Agencies",
+        description: "Equip your clients with actionable consumer insights.",
+      },
+    },
+    featuresByUseCase: {
+      // FMCG
+      1: {
+        title: "Availability Tracker",
+        description:
+          "Monitor product availability across markets to optimize supply chains.",
+      },
+      2: {
+        title: "Rolling Retail Census",
+        description:
+          "Continuously gather data on retail environments for informed decision-making.",
+      },
+      3: {
+        title: "Qualitative Insights",
+        description:
+          "Dive deep into consumer sentiments with qualitative data analysis.",
+      },
+      4: {
+        title: "Geospatial Analytics",
+        description: "Utilize location-based data for strategic planning",
+      },
+      // Public
+      5: {
+        title: "Psychographic Target Group Analysis",
+        description:
+          "Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love.",
+      },
+      6: {
+        title: "Brand tracking",
+        description:
+          "Don’t fly blind. Measure and track your brand's performance to stay on top of consumers' perceptions of you.",
+      },
+      7: {
+        title: "Consumer tracking",
+        description:
+          "Understand how consumers think and what drives their choices. From purchase frequency to product use, to drivers and barriers - we've got all the answers you need, in real time.",
+      },
+      8: {
+        title: "Pricing analysis",
+        description:
+          "Maximize profits by asking the right questions. How much are customers willing to spend on your product? What’s the optimal price point?",
+      },
+      9: {
+        title: "Visual test",
+        description:
+          "Let consumers be your co-creators. Ask what they think about your new logo, website or packaging and create designs that truly speak to your audience.",
+      },
+      10: {
+        title: "Campaign tracking",
+        description:
+          "Knowing the reach and the click-through rate is great. But what's the real impact of your campaign on your brand?",
+      },
+      11: {
+        title: "Media Testing",
+        description:
+          "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
+      },
+      // Consultancies
+      12: {
+        title: "Customer satisfaction analysis",
+        description:
+          "Actually knowing what your target group wants is the key to customer satisfaction. We help ask the right questions and understand what matters.",
+      },
+      13: {
+        title: "Product development",
+        description:
+          "Harness the power of strategic product development to create, refine, and deliver solutions that resonate with your audience, setting your brand apart.",
+      },
+      14: {
+        title: "In-Home Use Testing (iHUT)",
+        description:
+          "Identify how your product will perform in the hands (and homes) of real consumers. Determine moments of truth and key drivers in order to validate, iterate and launch with confidence.",
+      },
+      15: {
+        title: "Market analysis",
+        description:
+          "Future-proof your decision-making and gain a competitive advantage through a comprehensive market analysis.",
+      },
+    },
+    categoriesByUseCase: {
+      all: "All",
+      fmcg: "FMCG",
+      public: "Public",
+      consultancies: "Consultancies",
+    },
+    learn_more: "Learn More",
   },
 } as const;

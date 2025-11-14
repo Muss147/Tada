@@ -15,15 +15,23 @@ export default async function DashboardLayout({
     headers: await headers(),
   });
 
-  if (!session || !session.user) {
-    notFound();
-  }
+  // Authentication check disabled - allow access without login
+  // if (!session || !session.user) {
+  //   notFound();
+  // }
+
+  // Mock user for development (remove when authentication is re-enabled)
+  const user = session?.user || {
+    id: "dev-user",
+    name: "Dev User",
+    email: "dev@example.com",
+  };
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header user={session.user as any} />
+        <Header user={user as any} />
         <main className="flex-1 overflow-y-auto p-4">
           <div className="px-2 h-full">{children}</div>
         </main>

@@ -84,6 +84,9 @@ const Header = () => {
                     </h3>
                     <div className="space-y-2">
                       {featuresByUseCase.slice(0, 3).map((solution) => {
+                        // on construit la clé à partir du titre ou de l’ID
+                        const translationKey = `solutions.featuresByUseCase.${solution.id}`;
+
                         return (
                           <Link
                             href={solution.link}
@@ -92,10 +95,10 @@ const Header = () => {
                           >
                             <div>
                               <div className="font-medium">
-                                {solution.title}
+                                {t(`${translationKey}.title`)} {/* {solution.title} */}
                               </div>
                               <div className="text-xs text-gray-500">
-                                {solution.description}
+                                {t(`${translationKey}.description`)} {/* {solution.description} */}
                               </div>
                             </div>
                           </Link>
@@ -103,7 +106,7 @@ const Header = () => {
                       })}
                     </div>
                     <Link
-                      href="/solutions"
+                      href="/solutions/use-case"
                       className="inline-block mt-3 text-sm text-primary font-medium hover:underline"
                     >
                       {t("home.header.menus.solutions_menu.all_use_cases")}
@@ -117,6 +120,7 @@ const Header = () => {
                     </h3>
                     <div className="space-y-2">
                       {featuresByIndustry.slice(0, 3).map((solution) => {
+                        const translationKey = `solutions.featuresByIndustry.${solution.id}`;
                         return (
                           <Link
                             href={solution.link}
@@ -125,10 +129,10 @@ const Header = () => {
                           >
                             <div>
                               <div className="font-medium">
-                                {solution.title}
+                                {t(`${translationKey}.title`)} 
                               </div>
                               <div className="text-xs text-gray-500">
-                                {solution.description}
+                                {t(`${translationKey}.description`)}
                               </div>
                             </div>
                           </Link>
@@ -136,7 +140,7 @@ const Header = () => {
                       })}
                     </div>
                     <Link
-                      href="/solutions"
+                      href="/solutions/industry"
                       className="inline-block mt-3 text-sm text-primary font-medium hover:underline"
                     >
                       {t("home.header.menus.solutions_menu.all_industries")}
