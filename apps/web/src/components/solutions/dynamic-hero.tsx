@@ -9,7 +9,7 @@ import Link from "next/link";
 interface HeroData {
   headline: string;        // <-- Ces valeurs sont maintenant des clés t()
   subheadline: string;
-  image: string;
+  image?: string;
   benefits: string[];
   ctaPrimary: string;
   ctaPrimaryLink?: string;
