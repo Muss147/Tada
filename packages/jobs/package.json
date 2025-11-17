@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7f0d13dfa1c0dea132beb9be6bb25606ebd447e0b7f8536e034b390ce5efc456
-size 336
+{
+  "name": "@v1/jobs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "biome check .",
+    "jobs": "bunx trigger.dev@beta dev",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@trigger.dev/sdk": "3.0.0-beta.56"
+  }
+}

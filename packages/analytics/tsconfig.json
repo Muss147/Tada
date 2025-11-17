@@ -1,3 +1,12 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1e13e56f475e1dad162fc27e04c3ee0b8797a4b5f2c125b999d43c79ddf9b0e3
-size 233
+{
+  "extends": "@v1/typescript/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@v1/ui/*": ["../ui/src/*"]
+    }
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

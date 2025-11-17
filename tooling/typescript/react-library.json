@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:85898b13f9809809596dd3f86bd75a521bdac45f0351c118782687f84584872d
-size 166
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "React Library",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

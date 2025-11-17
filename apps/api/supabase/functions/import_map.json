@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d0d71b3a9705fc3e11207270f6c02973c4bad5ca5472f510d4e48d23141afa9a
-size 273
+{
+  "imports": {
+    "react-email/components": "npm:@react-email/components@0.0.24",
+    "react": "npm:react@18.3.1",
+    "resend": "npm:resend@4.0.0",
+    "standardwebhooks": "npm:standardwebhooks@1.0.0",
+    "@v1/emails/*": "../../../../../packages/email/emails/*"
+  }
+}

@@ -1,3 +1,4 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:43b49f8f3d260c3b2697b1ee3896306bac0f9d7c7abdf0691c41c0b04dfb2773
-size 52
+{
+  "name": "@tada/typescript",
+  "private": true
+}

@@ -1,3 +1,24 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3ed57a13f29bba21632d42ad8b139ec92bee26a85186ae73dd1cb70ece9a6f6d
-size 553
+{
+  "name": "@tada/email",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "lint": "biome lint",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.15",
+    "@tada/ui": "workspace:*",
+    "react": "^18.3.1",
+    "react-email": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^18",
+    "typescript": "^5.5.4"
+  }
+}
