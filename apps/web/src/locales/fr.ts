@@ -120,7 +120,7 @@ export default {
       ]
     },
     testimonials : {
-      title: "Ne nous croyez pas sur parole – Écoutez nos clients",
+      title: "Ne nous croyez pas sur parole – Écoutez nos clients.",
       items: [
         {
           quote: "Nous avons utilisé Tada pour tester de nouveaux concepts de produits auprès de vendeurs informels. En moins d'une semaine, nous avions des données claires sur les SKU à prioriser — pas de conjectures, juste des preuves.",
