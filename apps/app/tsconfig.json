@@ -1,3 +1,19 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:a6462a02d13519a29af546a3697f38c1a183b9fc3949c4745016e7b559435708
-size 378
+{
+  "extends": "../../tooling/typescript/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "strict": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tailwind.config.ts"
+, "src/actions/missions/codets"  ],
+  "exclude": ["node_modules"]
+}

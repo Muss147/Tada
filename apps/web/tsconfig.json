@@ -1,3 +1,32 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:01d4b14907df7a96ca0d26078efb570f7d170283de163bee9e3052e10ae67897
-size 515
+{
+  "extends": "@tada/typescript/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "strict": true,
+    "allowJs": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tailwind.config.ts",
+    "out/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
