@@ -90,7 +90,9 @@ const DynamicHero: React.FC<DynamicHeroProps> = ({ data }) => {
 
           {/* Hero Visual */}
           <div className="mt-12 lg:mt-0 lg:col-span-6">
+            {data.image && (
             <Image src={data.image} width={450} height={320} alt="" className="max-h-[320px] w-full h-auto object-cover"/>
+            )}
             {/* <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-6">
                 <div className="bg-gray-50 rounded-lg p-4 mb-4">
