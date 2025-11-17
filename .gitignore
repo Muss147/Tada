@@ -1,0 +1,31 @@
+# Node
+node_modules/
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+.turbo/
+
+.env
+.env.local
+.env.*.local
+
+# Monorepo apps
+apps/*/.next/
+apps/*/node_modules/
+
+apps/*/dist/
+apps/*/build/
+*.log
+*.zip
+*.tar
+*.mp4
+*.mov
+
+# Mac
+.DS_Store
+
+# Bun
+bun.lockb
