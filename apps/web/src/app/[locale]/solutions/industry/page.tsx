@@ -33,10 +33,10 @@ export default async function SolutionsPage() {
             <div className="col-span-1 flex flex-col justify-center h-full">
               <div className="max-w-3xl">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-rational-bold leading-tight mb-6">
-                  {t("solutions.title")}
+                  {t("solutions.title" as any, {})}
                 </h1>
                 <p className="text-lg md:text-xl mb-8 ">
-                  {t("solutions.subtitle")}
+                  {t("solutions.subtitle" as any, {})}
                 </p>
 
                 <Button
@@ -44,7 +44,7 @@ export default async function SolutionsPage() {
                   className="inline-flex items-center justify-center group"
                 >
                   <Link href="/schedule-a-demo">
-                    {t("solutions.cta.title")}
+                    {t("solutions.cta.title" as any, {})}
                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
