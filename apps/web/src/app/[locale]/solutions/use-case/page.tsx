@@ -20,13 +20,13 @@ export const metadata = generateMetadata({
 
 export default async function SolutionsPage() {
   const t = await getI18n();
-  const categoriesByUseCase = [
-    t("solutions.categoriesByUseCase.all"),
-    t("solutions.categoriesByUseCase.activation"),
-    t("solutions.categoriesByUseCase.innovation"),
-    t("solutions.categoriesByUseCase.strategy"),
-    t("solutions.categoriesByUseCase.tracking"),
-  ];
+  const categoriesByUseCase = {
+    All: t("solutions.categoriesByUseCase.all"),
+    Perception: t("solutions.categoriesByUseCase.perception"),
+    Innovation: t("solutions.categoriesByUseCase.innovation"),
+    Strategy: t("solutions.categoriesByUseCase.strategy"),
+    Tracking: t("solutions.categoriesByUseCase.tracking"),
+  };
   return (
     <div className="flex flex-col">
       {/* Solutions Overview */}
@@ -39,15 +39,15 @@ export default async function SolutionsPage() {
             <div className="col-span-1 flex flex-col justify-center h-full">
               <div className="max-w-3xl">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-rational-bold leading-tight mb-6">
-                  {t("solutions.title")}
+                  {t("solutions.userCase.title")}
                 </h1>
                 <p className="text-lg md:text-xl mb-8 ">
-                  {t("solutions.subtitle")}
+                  {t("solutions.userCase.subtitle")}
                 </p>
 
                 <div className="flex flex-wrap md:flex-nowrap items-start justify-start gap-5 mb-8">
-                  <Image src="/images/G2_02.svg" width={210} height={30} alt="" className="max-w-[210px] w-full h-auto"/>
-                  <Image src="/images/capterra.svg" width={291} height={30} alt="" className="max-w-[291px] w-full h-auto"/>
+                  <Image src="/images/GDPR-Regulated_EN.svg" width={130} height={24} alt="" className="max-w-[130px] w-full h-auto"/>
+                  <Image src="/images/SSL-Encryption_EN.svg" width={161} height={24} alt="" className="max-w-[161px] w-full h-auto"/>
                 </div>
 
                 <Button
@@ -55,7 +55,7 @@ export default async function SolutionsPage() {
                   className="inline-flex items-center justify-center group"
                 >
                   <Link href="/schedule-a-demo">
-                    {t("solutions.cta.title")}
+                    {t("solutions.userCase.cta.title")}
                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
@@ -66,7 +66,7 @@ export default async function SolutionsPage() {
             </div>
           </div>
 
-          <DynamicTrustedBy />
+          <DynamicTrustedBy section="page" />
 
           <h2 className="text-2xl md:text-3xl font-rational-bold mb-12 text-center">
             {t("solutions.menu.title")}

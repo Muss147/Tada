@@ -38,6 +38,18 @@ export const Features: React.FC = () => {
             title={t("home.what_sets_tada_apart.features.title_4")}
             description={t("home.what_sets_tada_apart.features.description_4")}
           />
+
+          <FeatureBlock
+            icon="LayoutDashboard"
+            title={t("home.what_sets_tada_apart.features.title_5")}
+            description={t("home.what_sets_tada_apart.features.description_5")}
+          />
+
+          <FeatureBlock
+            icon="Coins"
+            title={t("home.what_sets_tada_apart.features.title_6")}
+            description={t("home.what_sets_tada_apart.features.description_6")}
+          />
         </div>
       </div>
     </section>

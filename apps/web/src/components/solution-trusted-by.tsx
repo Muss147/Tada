@@ -2,7 +2,9 @@
 "use client";
 
 import Image from "next/image";
+import { useI18n } from "@/locales/client";
 import { useEffect, useRef } from "react";
+import React from "react";
 
 const logos = [
   { src: "/images/cocacola.png", alt: "Coca-Cola" },
@@ -14,7 +16,11 @@ const logos = [
   { src: "/images/bcg-31.png", alt: "BCG" },
 ];
 
-export default function DynamicTrustedBy() {
+export default function DynamicTrustedBy({
+  section,
+}: {
+  section: string;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Animation continue du scroll horizontal
@@ -43,13 +49,21 @@ export default function DynamicTrustedBy() {
 
   // On duplique les logos pour un effet de boucle fluide
   const duplicatedLogos = [...logos, ...logos];
+  const t = useI18n();
 
   return (
     <section className="py-16 bg-white overflow-hidden mb-20 md:mb-24">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-10">
-          Trusted by <span className="font-bold">3,000+</span> world industry leaders
-          <br className="hidden md:block" /> to deliver the insights that matter
+          {t(`solutions.trustedBy.${section}` as any, {})
+            .split("\n")
+            .map((line, index) => (
+              <React.Fragment key={index}>
+                {/* Ajouter un saut de ligne seulement après la 1ère ligne */}
+                {line}
+                {index === 0 && <br className="hidden md:block" />}
+              </React.Fragment>
+            ))}
         </h2>
 
         <div

@@ -1,3 +1,5 @@
+import { title } from "process";
+
 export default {
   home: {
     header: {
@@ -46,44 +48,55 @@ export default {
         pricing: "Pricing",
       },
       hero_section: {
-        title_1:
-          "Unlock Real-Time Data for Better Decisions, Anytime, Anywhere.",
+        title_1: "Unlock Real-Time Data for Better Decisions, Anytime, Anywhere.",
         subtitle_1: "MARKET INSIGHTS",
-        description_1:
-          "Market research as it should be. Reliable results, an easy-to-use platform, and consultants who have your back. All in real-time. Our blend of technology and global community is uniquely placed to discover anything, anywhere, in record time.",
+        description_1: "Tada combines advanced technology with a deeply rooted contributor network across African cities, towns, and remote areas—delivering reliable insights that you can actually act on.",
         button_text_1: "Get Started Today",
-        title_2: "One platform. Infinite possibilities.",
+
+        title_2: "One Platform for Understanding Africa — End to End.",
         subtitle_2: "ANALYTICS PLATFORM",
-        description_2:
-          "The traditional research model is outdated—disjointed, unreliable, and slow.Tada offers a fully integrated research approach, uniting quantitative & qualitative testing, premium audiences, expert consultants, and cutting-edge AI tools, all seamlessly integrated in one platform.",
+        description_2: "Traditional research models were not built for Africa. Tada unifies quantitative and qualitative testing, field data, community voices, and AI tools—designed specifically for complex, fragmented, and fast-changing African markets.",
         button_text_2: "Get Started Today",
-        title_3: "From Question to Clarity in hours — Data You Can Rely On",
+
+        title_3: "From Question to Clarity in Hours - Across Africa's Most Dynamic Markets.",
         subtitle_3: "AI SOLUTIONS",
-        description_3:
-          "End-to-end human insights in hours, not weeks. Speed is everything. Get the answers you need, exactly when you need them—our platform delivers reliable insights from +300M consumers, every time",
+        description_3: "Whether you need insights from Lagos, Abidjan, Nairobi, Dakar, or remote regions beyond the grid, Tada delivers verified, on-the-ground data in hours, not weeks.",
         button_text_3: "Get Started Today",
         rating_text: "Customer Rating",
       },
     },
     footer: {
       logo_desc:
-        "AI-powered tech platform giving real-time & actionable insights",
+        "Africa’s leading AI-powered insights platform - delivering real-time, actionable data from the ground.",
       terms_of_use: "Terms of Use",
       privacy_policy: "Privacy Policy",
       cookie_policy: "Cookie Policy",
       all_rights_reserved: "All Rights Reserved by Tada",
     },
     hero: {
+      title: "Remove Uncertainty From\n Your Decisions - Anywhere in Africa",
+      description: "Whatever data you need across Africa’s fast-moving markets, Tada brings it to you instantly—verified, reliable, and actionable.",
       scrollTexts: {
-        one: "products recalled",
-        two: "to identify stock issues",
-        three: "to monitor our billboards",
-        four: "nationwide maintenance checks",
-        five: "real-time product data",
-        six: "eyes across the UK",
-        seven: "competitor pricing information",
-        eight: "to check the lights are on",
-        nine: "help verifying staff procedure",
+        one: "product availability data by region",
+        two: "to track public sentiment on social issues",
+        three: "to access market insights within hours",
+        four: "to monitor our billboards",
+        five: "to assess retail execution in stores",
+        six: "data on local needs in remote areas",
+        seven: "to compare performance across regions",
+        eight: "to measure the impact of local campaigns",
+        nine: "to measure visibility in villages and markets",
+        ten: "data for crisis response and management",
+        eleven: "to identify social or political risks",
+        twelve: "to test messages in local languages",
+        thirteen: "to understand consumer preferences",
+        forteen: "to evaluate humanitarian interventions",
+        fiveteen: "to validate recommendations with data",
+        sixteen: "to identify emerging cultural trends",
+        seventeen: "to test new product concepts quickly",
+        eighteen: "to analyze voting trends in real time",
+        nineteen: "to track community expectations",
+        twenty: "to understand reactions in real time",
       },
       bookDemo: "Book a Demo",
       prefix: "I need",
@@ -163,46 +176,40 @@ export default {
       ]
     },
     trusted_by: {
-      title: "Industry Leaders Trust Us for Real-Time Insights",
-      description:
-        "From FMCG to venture capital, businesses across every sector trust Tada for real-time, reliable insights. If you're not already using us, your competitors probably are.",
+      title: "Industry leaders trust us for real-time insights",
+      description: "From FMCG to venture capital, businesses across every sector trust Tada for real-time, reliable insights. If you're not already using us, your competitors probably are.",
     },
     global_demand: {
-      title: "Why researchers love Tada ",
-      description:
-        "Conduct AI-powered research with agency-level rigor—faster and at a fraction of the cost. With Tada's consumer insights platform, you can research, learn, and pivot with confidence, backed by real-time, data-driven insights.",
+      title: "Why researchers love Tada",
+      description: "Conduct AI-powered research with on-the-ground precision across Africa’s diverse regions. Tada gives you fast, reliable insights rooted in real communities—not panels disconnected from local realities.",
       stats: {
         submissions: "<1",
         subtitle: "Second",
-        submission_description:
-          "Get insights in less than 1 second after a survey response.",
-        contributors: "+300M",
-        subtitle_1: "Consumers",
-        contributors_description:
-          "Tap into Tada's trusted contributor network across +90 countries and territories.",
+        submission_description: "Insights update instantly as responses come in — even across Africa’s bandwidth-challenged regions.",
+        contributors: "+90",
+        subtitle_1: "Territories",
+        contributors_description: "A trusted contributor network with unmatched depth covering cities, towns, and remote rural communities across Africa and beyond.",
         points_of_interest: "+80%",
-        subtitle_2: "Smart Decisions",
-        points_of_interest_description:
-          "Tada's clients make 80% more data-driven decisions compared to traditional research methods.",
+        subtitle_2: "Data-Driven Decisions",
+        points_of_interest_description: "Organizations working across Africa make 80% smarter, faster decisions with Tada than with legacy research methods.",
       },
     },
     insights_for_any_industry: {
-      title: "Insights across every Industry",
-      description:
-        "Our insights are used by companies across all the verticals - from FMCG to consultancies and beyond.",
+      title: "Insights for Every Sector Shaping Africa’s Future",
+      description: "From consumer goods to development work and public policy, Tada empowers organizations operating in Africa to act with confidence, backed by real-time data from the ground.",
       stats: {
         submissions: "Consumer Brands",
         submission_description:
-          "Tada enables you to tap into deep consumer insights, refine your products, optimize marketing strategies, and boost customer loyalty.",
+          "Tada helps you understand African consumers in all their diversity—improving products, messaging, distribution, and loyalty.",
         submissions_2: "Public & Political Sector",
         submission_description_2:
-          "Tada helps you access real-time community data, shape policies, enhance public programs, and address global development challenges with precision.",
+          "Access community-level insights in real time: shape better policies, track programs, and respond quickly to social and economic challenges.",
         submissions_3: "Consultancies",
         submission_description_3:
-          "Tada empowers you to collect actionable insights in record time, delivering reliable, data-driven answers to your clients' most pressing questions.",
+          "Deliver high-quality, data-backed recommendations with insights collected across African markets in hours, not weeks.",
         submissions_4: "Agencies",
         submission_description_4:
-          "Tada equips you with powerful consumer insights, helping you inform campaigns, enhance brand strategies, and drive measurable impact for your clients.",
+          "Build smarter campaigns with real consumer voices—adapted to languages, regions, cultures, and rapidly changing trends.",
       },
     },
     how_tada_works: {
@@ -211,24 +218,30 @@ export default {
         "Tada's advanced market intelligence platform combines the power of machine learning with human insight and a team of dedicated research consultants. This unique blend allows us to rapidly gather and analyze local data from a trusted, global network.",
       button: "See How It Works",
       description_2:
-        "Understand what consumers truly think and feel, no matter where they are. With our multi-source, real-time approach, you can effortlessly make confident, data-backed decisions.",
+        "Understand what consumers truly think and feel, no matter where they are. With our multi-source, real-time approach, you can make confident, data-backed decisions effortlessly.",
     },
     what_sets_tada_apart: {
       title: "What Sets Us Apart?",
       description:
-        "With Tada, you don't have to choose. Get both quantitative and qualitative data, speed, and detail, all from +150 markets in one powerful tool.",
+        "Tada is built for the realities of African markets: fast-changing, hyper-local, and often under-measured.",
       features: {
-        title: "<25 min",
-        description: "Average time to gather data from 1,000 respondents.",
-        title_2: "Quality Data",
+        title: "Unmatched Reach",
+        description: "Real-time coverage in 50+ African countries — from megacities to remote rural zones.",
+        title_2: "Fastest Collection on the Continent",
         description_2:
-          "Sourced from intrinsically motivated respondents across +90 countries & locations.",
-        title_3: "Intuitive",
+          "<25 minutes to gather 1,000 responses in major African cities.",
+        title_3: "Data You Can Trust",
         description_3:
-          "No advanced expertise required—get insights fast and easily.",
-        title_4: "5x Cheaper",
+          "4-layer validation: AI fraud detection, GPS pinning, timestamping, and human verification.",
+        title_4: "Quant + Qual + Field Data Combined",
         description_4:
-          "Powered by AI and automation for cost-effective research.",
+          "Surveys, photos, videos, pricing, availability, product tests — all in one platform.",
+        title_5: "Built for Africa’s Realities",
+        description_5:
+          "Local languages, cultural nuance, bandwidth constraints, informal markets — we adapt to all contexts.",
+        title_6: "5× More Affordable",
+        description_6:
+          "Because high-quality data in Africa shouldn’t be a luxury.",
       },
     },
   },
@@ -1050,17 +1063,26 @@ export default {
     contact_email: "privacy@tadaiq.com",
   },
   solutions: {
-    title: "Actionable Intelligence and Insights Across Industries",
-    subtitle:
-      "Our data solutions provide real-time information, helping organizations make data-driven decisions with confidence and efficiency.",
-    cta: {
-      title: "Request a Demo",
+    userCase: {
+      title: "Use cases",
+      subtitle: "Every question deserves the proper insight. With Tada, you’ll find the research solution that fits your challenge — fast, reliable, and built for real-world decisions.",
+      cta: {
+        title: "Request a Demo",
+      },
     },
     menu: {
       title: "Our Solutions By Use Cases",
     },
     industry: {
       title: "Solutions by Industry",
+      subtitle: "Our data solutions provide real-time information, helping organizations make data-driven decisions with confidence and efficiency.",
+      cta: {
+        title: "Request a Demo",
+      },
+    },
+    trustedBy: {
+      page: "Trusted by leading global brands and institutions\n across Africa and beyond.",
+      layout: "Trusted by leading brands, agencies, and development\n organizations across Africa",
     },
     // NOUVEAU BLOC
     featuresByIndustry: {
@@ -1084,10 +1106,38 @@ export default {
       more_solution_title: "Discover methods for",
     },
     featuresByUseCase: {
-      // Activation
+      // Perception
       1: {
         title: "Media Testing",
         description: "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
+      },
+      16: {
+        title: "Shopper Activation Testing",
+        description: "Evaluate how shoppers react to your in-store and out-of-store activations across various African retail environments, including modern trade, informal trade, kiosks, markets, and supermarkets.",
+      },
+      17: {
+        title: "Public Engagement Effectiveness",
+        description: "Evaluate how communities respond to public information campaigns and social impact initiatives — ensuring your message resonates and motivates action across diverse African populations.",
+      },
+      18: {
+        title: "Behavior Change Activation",
+        description: "Test which messages, interventions, or incentives trigger real behavior change across African communities — from health behaviors to civic participation.",
+      },
+      19: {
+        title: "Market Activation Blueprint Testing",
+        description: "Test strategic activation blueprints — channel strategy, messaging pillars, audience prioritization — before presenting or deploying them across African markets.",
+      },
+      20: {
+        title: "Intervention Impact Simulation",
+        description: "Simulate community reactions to interventions — such as policy activations, social impact programs, and mobilization efforts — to estimate their impact before scaling them up.",
+      },
+      21: {
+        title: "Concept & Creative Route Screening",
+        description: "Screen multiple creative concepts early to choose the winning direction — ensuring your campaign starts with the strongest idea for African audiences.",
+      },
+      22: {
+        title: "Attention & Emotion Testing",
+        description: "Measure which creative assets capture attention and trigger emotional impact — the key drivers of engagement and recall in African markets.",
       },
       // Innovation
       2: {
@@ -1154,7 +1204,7 @@ export default {
     },
     categoriesByUseCase: {
       all: "All",
-      activation: "Activation",
+      perception: "Perception",
       innovation: "Innovation",
       strategy: "Strategy",
       tracking: "Tracking",
@@ -2521,30 +2571,34 @@ export default {
       title: "Media Testing",
       description: "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
       hero: {
-        headline: "Media Testing",
-        subheadline: "Evaluate how well your ads, claims or creative elements perform in reaching and influencing your target audience. Make informed decisions about your media planning and advertising budgets.",
+        headline: "Media Performance Testing",
+        subheadline: "Evaluate how well your ads, claims, and creative assets perform across real audiences in Africa. Understand what drives attention and action — and optimize your media investments with confidence.",
         benefits: [],
         ctaPrimary: "Request a demo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title: "Here's why you need Media Testing",
+        title: "Here’s why you need Media Testing",
         subheadline: `
-          Media testing studies are crucial as they deliver data-driven insights into advertising and marketing effectiveness. This will enable you to fully understand what is working where and how to better allocate your resources.
-          Ultimately you can ensure a better engagement with the target audience and more successful campaigns.`,
+          Media testing provides data-driven clarity on what works, where, and why — across Africa’s diverse markets.
+          It enables you to optimize creative, strengthen messaging, refine channel strategy, and ensure your campaigns resonate with the right audiences.`,
         subtitle: "Advantages of Media Testing",
         items: [
           {
-            title: "Identify which ads are most effective and allocate your resources more efficiently.",
+            title: "Identify which ads genuinely perform best across African regions and segments.",
             description: "",
           },
           {
-            title: "Increase sales, brand recognition and customer engagement.",
+            title: "Allocate your media and advertising budgets more efficiently, backed by evidence.",
             description: "",
           },
           {
-            title: " Know exactly what claim works with your target audience.",
+            title: "Increase sales, visibility, and brand engagement across TV, digital, OOH & social.",
+            description: "",
+          },
+          {
+            title: "Validate which claim resonates and aligns with cultural & linguistic realities.",
             description: "",
           },
         ],
@@ -2555,26 +2609,26 @@ export default {
           {
             eyebrow: "Ad Test",
             title: "Ensure advertising success with an Ad Test",
-            description: "Fine-tune your campaigns, ensuring they hit the bullseye with your audience. Discover what works best, boost engagement and maximize your ROI with by testing your ad before it airs.",
-            buttonLabel: "See how an ad test works",
+            description: "Measure attention, clarity, likability, and recall. Optimize your ads before launch to maximize performance across Africa’s diverse audiences.",
+            buttonLabel: "See how an Ad Test works.",
           },
           {
             eyebrow: "Claim Test",
-            title: "Captivate your audience with a winning claim",
-            description: "Craft winning messages that resonate with your audience, turning heads and driving action. Nail your messaging, boost brand impact and watch your growth.",
-            buttonLabel: "Learn how to craft claims",
+            title: "Craft winning messages that resonate",
+            description: "Identify the claim that feels credible, memorable, and relevant in each market. Strengthen your brand’s voice by tailoring language to local insights.",
+            buttonLabel: "Learn how to craft claims.",
           },
           {
-            eyebrow: "Shelf test",
-            title: "Elevate your shelf game",
-            description: "Perfect your product placement and make your product stand out to customers. Beat the competition with a Shelf Test.",
+            eyebrow: "Shelf Test",
+            title: "Elevate your shelf game.",
+            description: "Understand visibility and standout power in both modern retail and informal trade. Position your product where it captures shoppers' maximum attention.",
             buttonLabel: "Tips for shelf success",
           },
           {
             eyebrow: "Heatmaps",
-            title: "Know what caught your customers' eyes",
-            description: "Get inside the minds of your customers and see your product, logo, ads (or anything visual for that matter) through their eyes with a Heatmap.",
-            buttonLabel: "See beyond the surface",
+            title: "Know what catches your customers’ eyes.",
+            description: "Reveal the exact elements people notice first — logos, colors, claims, or visuals. Enhance creative impact by leveraging real consumer attention patterns.",
+            buttonLabel: "See beyond the surface.",
           },
         ],
       },
@@ -2629,50 +2683,23 @@ export default {
           },
         ],
       },
-      testimonials: {
-        title: "What our customers say",
-        subtitle: "See how companies worldwide are using Market Research to drive strategic decisions.",
-        items: [
-          {
-            name: "Jennifer Walsh",
-            role: "Head of Market Research",
-            company: "Consumer Brands Co",
-            image: "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=400",
-            content: "The market intelligence we get from Tada has transformed our strategic planning. We now make decisions based on real-time global data.",
-            rating: 5,
-          },
-          {
-            name: "Robert Chen",
-            role: "VP of Strategy",
-            company: "Global Ventures",
-            image: "https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=400",
-            content: "The consumer insights have been invaluable for our product development. We've reduced time-to-market by 40% with better market understanding.",
-            rating: 5,
-          },
-          {
-            name: "Maria Gonzalez",
-            role: "Brand Manager",
-            company: "Lifestyle Brands",
-            image: "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400",
-            content: "The competitive intelligence helps us stay ahead of market trends. Our brand positioning has never been more strategic and effective.",
-            rating: 5,
-          },
-        ],
-      },
       questions: {
         title: "Essential Media Testing questions",
         items: [
           {
             title: "For allocating your budget",
-            description: "Which ads performed better with the target audience? What claims are the most successful?",
+            description: `Which ads perform best across regions?\n
+              Which claims drive the strongest response?`,
           },
           {
             title: "For the perfect marketing strategy",
-            description: "What is the impact of new media on my marketing mix? How many consumers can I reach?",
+            description: `What is the ideal shelf strategy?\n
+              Where should the product be placed to maximize visibility?`,
           },
           {
             title: "For reaching the spotlight",
-            description: "What is my best shelf strategy? Where should I place my product to obtain maximum visibility?",
+            description: `Which channels deliver the highest recall?\n
+              How can creativity be adapted to increase engagement?`,
           },
         ],
       },
@@ -2685,6 +2712,1015 @@ export default {
         ctaSecondaryLink: "",
       },
     },
+    shopperActivationTesting: {
+      name: "Shopper Activation Testing",
+      title: "Shopper Activation Testing",
+      description: "Evaluate how shoppers react to your in-store and out-of-store activations across various African retail environments, including modern trade, informal trade, kiosks, markets, and supermarkets.",
+      hero: {
+        headline: "Shopper Activation Testing",
+        subheadline: "Evaluate how shoppers react to your in-store and out-of-store activations across various African retail environments, including modern trade, informal trade, kiosks, markets, and supermarkets.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Shopper Activation Testing",
+        subheadline: `Shopper behavior in Africa varies across channels and markets. Understanding visibility, impact, and conversion allows you to optimize activation formats for maximum sales lift.`,
+        subtitle: "Advantages of Shopper Activation Testing",
+        items: [
+          {
+            title: "Identify which activations convert best across retail channels.",
+            description: "",
+          },
+          {
+            title: "Improve product visibility in crowded or informal store environments.",
+            description: "",
+          },
+          {
+            title: "Optimize promotions, displays, and POS materials.",
+            description: "",
+          },
+          {
+            title: "Increase sales by aligning activations with shopper behavior.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Shopper Activation Testing",
+        items: [
+          {
+            eyebrow: "",
+            title: "Shelf & Display Evaluation",
+            description: "Measure standout power in supermarkets, kiosks, and markets.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "In-Store Shopper Intercepts",
+            description: "Capture real-time shopper feedback.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Promo & Price Appeal Testing",
+            description: "Evaluate the impact of promotions on purchase intent.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Visibility & Placement Scoring",
+            description: "Assess in-store placement in real environments.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Shelf Impact",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Visibility Score",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Display Performance",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Promo Conversion",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Price Sensitivity",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Purchase Intent",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Shopper Recall",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Brand Presence Index",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Shopper Activation questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which activations drive the biggest conversion?\n
+              Which retail channels deliver the most significant ROI?`,
+          },
+          {
+            title: "For the perfect marketing strategy",
+            description: `How does shopper response vary across different channels?\n
+              What display format performs best?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which activation boosts visibility the most?\n
+              What POS materials increase intent?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    publicEngagementEffectiveness: {
+      name: "Public Engagement Effectiveness",
+      title: "Public Engagement Effectiveness",
+      description: "Evaluate how communities respond to public information campaigns and social impact initiatives — ensuring your message resonates and motivates action across diverse African populations.",
+      hero: {
+        headline: "Public Engagement Effectiveness",
+        subheadline: "Evaluate how communities respond to public information campaigns and social impact initiatives — ensuring your message resonates and motivates action across diverse African populations.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Public Engagement Effectiveness",
+        subheadline: `Governments and NGOs must ensure their messages inspire awareness, trust, and action. This use case helps you validate formats, channels, and narratives to increase public engagement.`,
+        subtitle: "Advantages of Public Engagement Effectiveness",
+        items: [
+          {
+            title: "Identify which messages truly resonate with communities.",
+            description: "",
+          },
+          {
+            title: "Optimize behaviour-change campaigns for rural & urban contexts.",
+            description: "",
+          },
+          {
+            title: "Enhance channel selection for disseminating public information.",
+            description: "",
+          },
+          {
+            title: "Strengthen program impact with data-driven insight.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to Include in Public Engagement Effectiveness",
+        items: [
+          {
+            eyebrow: "",
+            title: "Message & Format Testing",
+            description: "Assess clarity, trustworthiness, and impact.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Channel Reach Analysis",
+            description: "Identify the best channels for community engagement.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Community Sentiment Measurement",
+            description: "Capture real-time reactions and feedback.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Engagement Simulation",
+            description: "Model likely uptake of messages and calls to action.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Message Recall",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Trust Score",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Engagement Intent",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Community Sentiment",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Channel Preference",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Clarity Score",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Action Likelihood",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Program Uptake Index",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Public Engagement questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which communication formats work best?\n
+              Where should we focus resources?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `Which narratives mobilize the most action?\n
+              How should messaging differ by region?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which channels generate the strongest public response?\n
+              What framing increases engagement?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    behaviorChangeActivation: {
+      name: "Behavior Change Activation",
+      title: "Behavior Change Activation",
+      description: "Test which messages, interventions, or incentives trigger real behavior change across African communities — from health behaviors to civic participation.",
+      hero: {
+        headline: "Behavior Change Activation",
+        subheadline: "Test which messages, interventions, or incentives trigger real behavior change across African communities — from health behaviors to civic participation.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Behavior Change Activation",
+        subheadline: `Public programs succeed when communities shift behavior. This use case helps you validate what drives intention, trust, and action across diverse populations.`,
+        subtitle: "Advantages of Behavior Change Activation",
+        items: [
+          {
+            title: "Identify interventions that trigger measurable shifts.",
+            description: "",
+          },
+          {
+            title: "Tailor messages to cultural and linguistic nuances.",
+            description: "",
+          },
+          {
+            title: "Optimize program design for maximum impact.",
+            description: "",
+          },
+          {
+            title: "Reduce resource waste by testing before scaling.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Behavior Change Activation",
+        items: [
+          {
+            eyebrow: "",
+            title: "Intervention Pre-Testing",
+            description: "Evaluate likely response before rollout.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Motivational & Barrier Analysis",
+            description: "Understand why communities do or don’t act.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Message & Incentive Testing",
+            description: "Measure the resonance of different nudges.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Behaviour Intent Surveys",
+            description: "Assess intention to comply, adopt, or participate.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Action Intent",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Trust & Credibility",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Perceived Barriers",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Motivation Strength",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Message Effectiveness",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Community Fit",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Program Readiness",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Impact Potential",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Behavior Change questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which intervention should we scale first?\n
+              What incentives drive the most decisive action?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `How do motivations differ across regions?\n
+              What messaging improves uptake?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which message boosts behavior intent the most?\n
+              Which formats create the strongest commitment?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    marketActivationBlueprintTesting: {
+      name: "Market Activation Blueprint Testing",
+      title: "Market Activation Blueprint Testing",
+      description: "Test strategic activation blueprints — channel strategy, messaging pillars, audience prioritization — before presenting or deploying them across African markets.",
+      hero: {
+        headline: "Market Activation Blueprint Testing",
+        subheadline: "Test strategic activation blueprints — channel strategy, messaging pillars, audience prioritization — before presenting or deploying them across African markets.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Market Activation Blueprint Testing",
+        subheadline: `Consulting teams design activation strategies but need validation from real consumers. This use case ensures your blueprint aligns with local realities — before client sign-off.`,
+        subtitle: "Advantages of Market Activation Blueprint Testing",
+        items: [
+          {
+            title: "Validate your strategic activation framework using field data to ensure its effectiveness and efficacy.",
+            description: "",
+          },
+          {
+            title: "Reduce project risk with objective consumer evidence.",
+            description: "",
+          },
+          {
+            title: "Adapt GTM pillars to reflect the nuances of the African market.",
+            description: "",
+          },
+          {
+            title: "Strengthen client recommendations with proof points.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Market Activation Blueprint Testing",
+        items: [
+          {
+            eyebrow: "",
+            title: "Blueprint Stress-Testing",
+            description: "Check resonance and feasibility across markets.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Channel & Audience Alignment",
+            description: "Validate which segments and touchpoints to prioritize.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Message & Proposition Testing",
+            description: "Ensure clarity and fit across regions.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Regional Sensitivity Analysis",
+            description: "Assess how blueprint performance varies across different countries.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Blueprint Fit",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Audience Alignment",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Channel Readiness",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Message Resonance",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Market Attractiveness",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Adoption Likelihood",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Strategic Coherence",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Activation Feasibility",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Blueprint Testing questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which activation components should be prioritized?\n
+              Which markets require adaptation?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `What elements need refinement to succeed locally?\n
+              Which channels best support the blueprint?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which strategic pillar resonates most?\n
+              Where is the blueprint strongest?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    interventionImpactSimulation: {
+      name: "Intervention Impact Simulation",
+      title: "Intervention Impact Simulation",
+      description: "Simulate community reactions to interventions — such as policy activations, social impact programs, and mobilization efforts — to estimate their impact before scaling them up.",
+      hero: {
+        headline: "Intervention Impact Simulation",
+        subheadline: "Simulate community reactions to interventions — such as policy activations, social impact programs, and mobilization efforts — to estimate their impact before scaling them up.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Intervention Impact Simulation",
+        subheadline: `Consultants often design large-scale programs without real-time behaviour data. Impact simulation helps you forecast adoption, identify barriers, and strengthen your strategy.`,
+        subtitle: "Advantages of Intervention Impact Simulation",
+        items: [
+          {
+            title: "Predict intervention outcomes before rollout.",
+            description: "",
+          },
+          {
+            title: "Identify barriers & enablers across regions.",
+            description: "",
+          },
+          {
+            title: "Strengthen recommendations with community data.",
+            description: "",
+          },
+          {
+            title: "Adapt the design for higher effectiveness.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Impact Simulation",
+        items: [
+          {
+            eyebrow: "",
+            title: "Hypothesis & Scenario Testing",
+            description: "Simulate different activation paths.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Barrier & Enabler Mapping",
+            description: "Identify what affects behaviour change.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Message & Channel Testing",
+            description: "Validate how to influence adoption.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Forecast Modelling Using Field Inputs",
+            description: "Estimate real-world impact.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Adoption Likelihood",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Barrier Strength",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Enabler Strength",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Channel Influence",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Message Effectiveness",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Community Readiness",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Impact Potential",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Intervention Fit",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Impact Simulation questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which intervention has the highest adoption potential?\n
+              What should we modify to improve impact?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `How do motivations vary across populations?\n
+              Which touchpoints drive the most substantial effect?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which message increases participation the most?\n
+              What scenario has the most significant real-world impact?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    conceptAndCreativeRouteScreening: {
+      name: "Concept & Creative Route Screening",
+      title: "Concept & Creative Route Screening",
+      description: "Screen multiple creative concepts early to choose the winning direction — ensuring your campaign starts with the strongest idea for African audiences.",
+      hero: {
+        headline: "Concept & Creative Route Screening",
+        subheadline: "Screen multiple creative concepts early to choose the winning direction — ensuring your campaign starts with the strongest idea for African audiences.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Concept & Creative Route Screening",
+        subheadline: `Agencies must justify creative decisions with evidence. This use case helps select the concept that resonates most with potential investors before investing in production.`,
+        subtitle: "Advantages of Creative Route Screening",
+        items: [
+          {
+            title: "Identify the route with the most appealing audience.",
+            description: "",
+          },
+          {
+            title: "Reduce creative risk by validating early.",
+            description: "",
+          },
+          {
+            title: "Adapt ideas to local cultural cues.",
+            description: "",
+          },
+          {
+            title: "Strengthen pitch credibility with data.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Creative Route Screening",
+        items: [
+          {
+            eyebrow: "",
+            title: "Concept A/B/C Testing",
+            description: "Compare early creative territories.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Cultural Fit Assessment",
+            description: "Check relevance across communities.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Message & Storyline Testing",
+            description: "Evaluate clarity and appeal.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Visual Preference Scan",
+            description: "Identify which aesthetic direction performs best.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Concept Appeal",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Cultural Relevance",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Message Strength",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Creative Clarity",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Emotional Resonance",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Attention Potential",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Preference Index",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Purchase/Engagement Intent",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Creative Screening questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which concept should we produce?\n
+              Which route gives the best ROI?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `How does each concept perform across markets?\n
+              Which narrative works best?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which idea drives emotional connection?\n
+              Which style captures attention?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    attentionAndEmotionTesting: {
+      name: "Attention & Emotion Testing",
+      title: "Attention & Emotion Testing",
+      description: "Measure which creative assets capture attention and trigger emotional impact — the key drivers of engagement and recall in African markets.",
+      hero: {
+        headline: "Attention & Emotion Testing",
+        subheadline: "Measure which creative assets capture attention and trigger emotional impact — the key drivers of engagement and recall in African markets.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Here’s why you need Attention & Emotion Testing",
+        subheadline: `High-performing creatives grab attention and evoke emotions. This use case reveals which storylines, visuals, and tones have the most significant emotional impact.`,
+        subtitle: "Advantages of Attention & Emotion Testing",
+        items: [
+          {
+            title: "Understand what captures attention instantly.",
+            description: "",
+          },
+          {
+            title: "Identify emotional triggers across segments.",
+            description: "",
+          },
+          {
+            title: "Optimize storylines and tone of voice.",
+            description: "",
+          },
+          {
+            title: "Maximize creative effectiveness across channels.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Methods to include in Attention & Emotion Testing",
+        items: [
+          {
+            eyebrow: "",
+            title: "Attention Scoring",
+            description: "Measure first-glance impact.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Emotional Response Mapping",
+            description: "Identify which emotions your creative generates.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Story Arc Assessment",
+            description: "Evaluate how engagement levels fluctuate throughout the narrative.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Visual Heatmaps",
+            description: "See what viewers focus on.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "KPIs to measure",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Attention Score",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Emotional Intensity",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Story Engagement",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Message Connection",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Visual Impact",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Recall Potential",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Narrative Flow Score",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Creative Strength Index",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Essential Attention & Emotion Testing questions",
+        items: [
+          {
+            title: "For allocating your budget",
+            description: `Which creative version stands out most?\n
+              Which storyline delivers the strongest ROI?`,
+          },
+          {
+            title: "For the perfect strategy",
+            description: `What emotion drives the best response?\n
+              Which visuals enhance impact?`,
+          },
+          {
+            title: "For reaching the spotlight",
+            description: `Which scene, hook, or element captures attention?\n
+              Which tone increases engagement?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+
     customerSatisfactionAnalysis: {
       name: "Customer Satisfaction Analysis",
       title: "Customer Satisfaction Analysis",

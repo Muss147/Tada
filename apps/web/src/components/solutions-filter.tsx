@@ -10,7 +10,7 @@ export default function SolutionsFilter({
   categories,
 }: {
   features: readonly any[];
-  categories: readonly string[];
+  categories: Record<string, string>;
 }) {
   const [activeTab, setActiveTab] = useState("All");
   const t = useI18n();

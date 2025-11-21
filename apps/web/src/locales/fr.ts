@@ -50,45 +50,56 @@ export default {
         title_1:
           "Débloquez des données en temps réel pour de meilleures décisions, n'importe quand, n'importe où.",
         subtitle_1: "INSIGHTS MARCHÉ",
-        description_1:
-          "L'étude de marché comme elle devrait être. Des résultats fiables, une plateforme facile à utiliser et des consultants qui vous soutiennent. Le tout en temps réel. Notre mélange de technologie et de communauté mondiale est uniquement positionné pour découvrir n'importe quoi, n'importe où, en temps record.",
+        description_1: "Tada associe une technologie de pointe à un réseau de contributeurs profondément enracinés dans les villes africaines et les zones reculées, afin de fournir des informations fiables sur lesquelles il est possible d'agir.",
         button_text_1: "Commencez aujourd'hui",
-        title_2: "Une plateforme. Des possibilités infinies.",
+
+        title_2: "Une plateforme unique pour comprendre l'Afrique de bout en bout.",
         subtitle_2: "PLATEFORME D'ANALYSE",
-        description_2:
-          "Le modèle de recherche traditionnel est obsolète — disjoint, imprécis et lent. Tada offre une approche de recherche intégrée, unifiée quantitative et qualitative, audiences premium, consultants experts et outils d'IA avancés, tous intégrés dans une seule plateforme.",
+        description_2: "Les modèles de recherche traditionnels n'ont pas été conçus pour l'Afrique. Tada unifie les tests quantitatifs et qualitatifs, les données de terrain, les voix des communautés et les outils d'intelligence artificielle, conçus spécifiquement pour les marchés africains complexes, fragmentés et en évolution rapide.",
         button_text_2: "Commencez aujourd'hui",
-        title_3:
-          "De la question à la clarté en quelques heures — Données fiables",
+
+        title_3: "De la question à la clarté en quelques heures - sur les marchés les plus dynamiques d'Afrique.",
         subtitle_3: "SOLUTIONS D'IA",
-        description_3:
-          "Des insights humains en quelques heures, pas en semaines. La vitesse est essentielle. Obtenez les réponses dont vous avez besoin, exactement quand vous en avez besoin — notre plateforme livre des insights fiables à partir de +300 millions de consommateurs, à chaque fois.",
+        description_3: "Qu'il s'agisse de Lagos, d'Abidjan, de Nairobi, de Dakar ou de régions éloignées, Tada fournit des données vérifiées sur le terrain en quelques heures, et non en quelques semaines.",
         button_text_3: "Commencez aujourd'hui",
         rating_text: "Note des clients",
       },
     },
     footer: {
       logo_desc:
-        "Plateforme technologique alimentée par l'IA fournissant des insights en temps réel et exploitables",
+        "La première plateforme africaine de connaissances alimentée par l'IA - qui fournit des données exploitables en temps réel depuis le terrain.",
       terms_of_use: "Conditions d'utilisation",
       privacy_policy: "Politique de confidentialité",
       cookie_policy: "Politique des cookies",
       all_rights_reserved: "Tous droits réservés par Tada",
     },
     hero: {
+      title: "Éliminez l'incertitude de\n vos décisions - n'importe où en Afrique",
+      description: "Quelles que soient les données dont vous avez besoin sur les marchés africains en constante évolution, Tada vous les fournit instantanément - vérifiées, fiables et exploitables.",
       scrollTexts: {
-        one: "de produits rappelés",
-        two: "d'identifier les problèmes de stock",
-        three: "de surveiller nos panneaux publicitaires",
-        four: "de contrôles de maintenance à l’échelle nationale",
-        five: "des données produits en temps réel",
-        six: "des yeux à travers le Royaume-Uni",
-        seven: "des informations sur les prix des concurrents",
-        eight: "de vérifier que les lumières sont allumées",
-        nine: "d'aide à vérifier les procédures du personnel",
+        one: "données sur la disponibilité produit par région",
+        two: "suivre le sentiment public sur les enjeux sociaux",
+        three: "accéder à des insights marchés en quelques heures",
+        four: "suivre nos panneaux publicitaires",
+        five: "évaluer l’exécution retail en magasin",
+        six: "données sur les besoins locaux en zones reculées",
+        seven: "comparer la performance de plusieurs régions",
+        eight: "mesurer l’impact de nos campagnes locales",
+        nine: "mesurer la visibilité en villages et marchés",
+        ten: "données pour la réponse et la gestion de crise",
+        eleven: "identifier les risques sociaux ou politiques",
+        twelve: "tester des messages en langues locales",
+        thirteen: "comprendre les préférences des consommateurs",
+        forteen: "évaluer les interventions humanitaires",
+        fiveteen: "valider des recommandations avec des données",
+        sixteen: "identifier les tendances culturelles émergentes",
+        seventeen: "tester de nouveaux concepts produit rapidement",
+        eighteen: "analyser les tendances de vote en temps réel",
+        nineteen: "suivre les attentes des communautés locales",
+        twenty: "comprendre les réactions en temps réel",
       },
       bookDemo: "Demander une démo",
-      prefix: "J’ai besoin",
+      prefix: "J’ai besoin de",
     },
     capabilities : {
       title: "Donnez à vos équipes les moyens d'agir grâce à des outils qui ont fait leurs preuves",
@@ -172,40 +183,35 @@ export default {
     },
     global_demand: {
       title: "Pourquoi les chercheurs adorent Tada",
-      description:
-        "Menez des recherches alimentées par l'IA avec la rigueur d'une agence—plus rapidement et à une fraction du coût. Avec la plateforme d'insights consommateurs de Tada, vous pouvez rechercher, apprendre et pivoter en toute confiance, soutenu par des insights en temps réel basés sur les données.",
+      description: "Effectuez des recherches alimentées par l'IA avec une précision de terrain dans les diverses régions d'Afrique. Tada vous offre des informations rapides et fiables, ancrées dans des communautés réelles, et non des panels déconnectés des réalités locales.",
       stats: {
         submissions: "<1",
         subtitle: "Seconde",
-        submission_description:
-          "Obtenez des insights en moins d'1 seconde après une réponse d'enquête.",
-        contributors: "+300M",
-        subtitle_1: "Consommateurs",
-        contributors_description:
-          "Exploitez le réseau de contributeurs de confiance de Tada à travers +90 pays et territoires.",
+        submission_description: "Les informations sont mises à jour instantanément au fur et à mesure que les réponses arrivent, même dans les régions d'Afrique où la bande passante est insuffisante.",
+        contributors: "+90",
+        subtitle_1: "Territoires",
+        contributors_description: "Un réseau de contributeurs de confiance avec une profondeur inégalée couvrant les villes, les villages et les communautés rurales éloignées à travers l'Afrique et au-delà.",
         points_of_interest: "+80%",
-        subtitle_2: "Décisions intelligentes",
-        points_of_interest_description:
-          "Les clients de Tada prennent 80% plus de décisions basées sur les données comparé aux méthodes de recherche traditionnelles.",
+        subtitle_2: "Décisions fondées sur des données",
+        points_of_interest_description: "Les organisations travaillant en Afrique prennent des décisions 80 % plus intelligentes et plus rapides avec Tada qu'avec les méthodes de recherche traditionnelles.",
       },
     },
     insights_for_any_industry: {
-      title: "Insights pour tous les secteurs",
-      description:
-        "Nos insights sont utilisés par des entreprises de tous les secteurs - des biens de consommation aux cabinets de conseil et au-delà.",
+      title: "Des Insights pour chaque secteur qui façonne l'avenir de l'Afrique",
+      description: "Des biens de consommation au travail de développement et à la politique publique, Tada permet aux organisations opérant en Afrique d'agir en toute confiance, en s'appuyant sur des données en temps réel provenant du terrain.",
       stats: {
         submissions: "Marques de consommation",
         submission_description:
-          "Tada vous permet d'exploiter des insights consommateurs profonds, d'affiner vos produits, d'optimiser les stratégies marketing et de renforcer la fidélité client.",
+          "Tada vous aide à comprendre les consommateurs africains dans toute leur diversité, ce qui vous permet d'améliorer vos produits, vos messages, votre distribution et votre fidélité.",
         submissions_2: "Secteur public et politique",
         submission_description_2:
-          "Tada vous aide à accéder aux données communautaires en temps réel, façonner les politiques, améliorer les programmes publics et relever les défis de développement mondial avec précision.",
+          "Accédez en temps réel à des informations sur les communautés : élaborez de meilleures politiques, suivez les programmes et répondez rapidement aux défis sociaux et économiques.",
         submissions_3: "Cabinets de conseil",
         submission_description_3:
-          "Tada vous permet de collecter des insights exploitables en temps record, livrant des réponses fiables et basées sur les données aux questions les plus pressantes de vos clients.",
+          "Fournir des recommandations de haute qualité, étayées par des données, grâce à des informations recueillies sur les marchés africains, en quelques heures, et non en quelques semaines.",
         submissions_4: "Agences",
         submission_description_4:
-          "Tada vous équipe d'insights consommateurs puissants, vous aidant à informer les campagnes, améliorer les stratégies de marque et générer un impact mesurable pour vos clients.",
+          "Élaborer des campagnes plus intelligentes avec les voix réelles des consommateurs, adaptées aux langues, aux régions, aux cultures et aux tendances qui évoluent rapidement.",
       },
     },
     how_tada_works: {
@@ -214,25 +220,31 @@ export default {
         "La plateforme d'intelligence de marché avancée de Tada combine la puissance de l'apprentissage automatique avec l'insight humain et une équipe de consultants en recherche dédiés. Ce mélange unique nous permet de rassembler et d'analyser rapidement des données locales d'un réseau mondial de confiance.",
       button: "Voir comment ça marche",
       description_2:
-        "Comprenez ce que les consommateurs pensent et ressentent vraiment, peu importe où ils se trouvent. Avec notre approche multi-sources en temps réel, vous pouvez facilement prendre des décisions confiantes et basées sur les données.",
+        "Comprenez ce que les consommateurs pensent et ressentent vraiment, où qu'ils soient. Grâce à notre approche multi-sources et en temps réel, vous pouvez prendre des décisions sûres et étayées par des données, sans effort.",
     },
     what_sets_tada_apart: {
       title: "Ce qui nous distingue ?",
       description:
-        "Avec Tada, vous n'avez pas à choisir. Obtenez à la fois des données quantitatives et qualitatives, la rapidité et le détail, le tout depuis +150 marchés dans un seul outil puissant.",
+        "Tada est conçu pour les réalités des marchés africains : en évolution rapide, hyperlocaux et souvent sous-évalués.",
       features: {
-        title: "<25 min",
+        title: "Une portée inégalée",
         description:
-          "Temps moyen pour rassembler des données de 1 000 répondants.",
-        title_2: "Données de qualité",
+          "Couverture en temps réel dans plus de 50 pays africains - des mégalopoles aux zones rurales reculées.",
+        title_2: "Collection la plus rapide du continent",
         description_2:
-          "Provenant de répondants intrinsèquement motivés à travers +90 pays et localités.",
-        title_3: "Intuitif",
+          "<25 minutes pour recueillir 1 000 réponses dans les principales villes africaines.",
+        title_3: "Des données fiables",
         description_3:
-          "Aucune expertise avancée requise—obtenez des insights rapidement et facilement.",
-        title_4: "5x moins cher",
+          "Validation à 4 niveaux : Détection de la fraude par l'IA, épinglage GPS, horodatage et vérification humaine.",
+        title_4: "Quant + Qual + Données de terrain combinées",
         description_4:
-          "Alimenté par l'IA et l'automatisation pour une recherche rentable.",
+          "Sondages, photos, vidéos, prix, disponibilité, tests de produits - le tout sur une seule plateforme.",
+        title_5: "Construit pour les réalités de l'Afrique",
+        description_5:
+          "Langues locales, nuances culturelles, contraintes de bande passante, marchés informels - nous nous adaptons à tous les contextes.",
+        title_6: "5× plus abordable",
+        description_6:
+          "Parce que des données de qualité en Afrique ne devraient pas être un luxe.",
       },
     },
   },
@@ -1067,17 +1079,26 @@ export default {
     contact_email: "privacy@tadaiq.com",
   },
   solutions: {
-    title: "Intelligence Actionnable et Insights à Travers les Industries",
-    subtitle:
-      "Nos solutions de données fournissent des informations en temps réel, permettant aux organisations de prendre des décisions basées sur les données avec confiance et efficacité.",
-    cta: {
-      title: "Demander un Demo",
+    userCase: {
+      title: "Cas d'utilisation",
+      subtitle: "Chaque question mérite un éclairage approprié. Avec Tada, vous trouverez la solution de recherche qui répond à votre défi - rapide, fiable et conçue pour des décisions concrètes.",
+      cta: {
+        title: "Demander une démo",
+      },
     },
     menu: {
       title: "Nos Solutions Par Cas d'Utilisation",
     },
     industry: {
       title: "Solutions Par Industrie",
+      subtitle: "Every question deserves the proper insight. With Tada, you’ll find the research solution that fits your challenge — fast, reliable, and built for real-world decisions.",
+      cta: {
+        title: "Demander une démo",
+      },
+    },
+    trustedBy: {
+      page: "Les grandes marques mondiales et les institutions\n de toute l'Afrique et d'ailleurs lui font confiance.",
+      layout: "Des marques, des agences et des organisations de développement de premier plan dans toute l'Afrique lui font confiance.",
     },
     // NOUVEAU BLOC
     featuresByIndustry: {
@@ -1101,10 +1122,38 @@ export default {
       more_solution_title: "Découvrez les méthodes de",
     },
     featuresByUseCase: {
-      // Activation
+      // Perception
       1: {
         title: "Test des médias",
         description: "Évaluer l'efficacité de vos publicités, messages ou éléments créatifs pour attirer et toucher votre public cible.",
+      },
+      16: {
+        title: "Test d'Activation des Acheteurs",
+        description: "Évaluez la réaction des acheteurs à vos activations en magasin et hors magasin dans divers environnements de vente au détail africains, y compris le commerce moderne, le commerce informel, les kiosques, les marchés et les supermarchés.",
+      },
+      17: {
+        title: "Efficacité de l'Engagement Public",
+        description: "Évaluez la manière dont les communautés réagissent aux campagnes d'information publique et aux initiatives d'impact social — en veillant à ce que votre message résonne et motive l'action auprès des diverses populations africaines.",
+      },
+      18: {
+        title: "Activation du Changement de Comportement",
+        description: "Testez quels messages, interventions ou incitations déclenchent un réel changement de comportement au sein des communautés africaines — des comportements de santé à la participation civique.",
+      },
+      19: {
+        title: "Test de Plan d'Activation de Marché",
+        description: "Testez des plans d'activation stratégiques — stratégie de canal, piliers de messagerie, priorisation de l'audience — avant de les présenter ou de les déployer sur les marchés africains.",
+      },
+      20: {
+        title: "Simulation d'Impact des Interventions",
+        description: "Simulez les réactions des communautés aux interventions — telles que les activations de politiques, les programmes d'impact social et les efforts de mobilisation — pour estimer leur impact avant de les étendre.",
+      },
+      21: {
+        title: "Filtrage de Concept & de Piste Créative",
+        description: "Filtrez plusieurs concepts créatifs très tôt pour choisir la direction gagnante — garantissant que votre campagne démarre avec l'idée la plus forte pour les audiences africaines.",
+      },
+      22: {
+        title: "Test d'Attention et d'Émotion",
+        description: "Mesurez quels actifs créatifs captent l'attention et déclenchent un impact émotionnel — les moteurs clés de l'engagement et de la mémorisation sur les marchés africains.",
       },
       // Innovation
       2: {
@@ -1171,7 +1220,7 @@ export default {
     },
     categoriesByUseCase: {
       all: "Tout",
-      activation: "Activation",
+      perception: "Perception",
       innovation: "Innovation",
       strategy: "Stratégie",
       tracking: "Suivi",
@@ -2560,6 +2609,986 @@ export default {
         secondaryButton: "",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondaryLink: "",
+      },
+    },
+    shopperActivationTesting: {
+      name: "Test d'Activation des Acheteurs",
+      title: "Test d'Activation des Acheteurs",
+      description: "Évaluez la réaction des acheteurs à vos activations en magasin et hors magasin dans divers environnements de vente au détail africains, y compris le commerce moderne, le commerce informel, les kiosques, les marchés et les supermarchés.",
+      hero: {
+        headline: "Test d'Activation des Acheteurs",
+        subheadline: "Évaluez la réaction des acheteurs à vos activations en magasin et hors magasin dans divers environnements de vente au détail africains, y compris le commerce moderne, le commerce informel, les kiosques, les marchés et les supermarchés.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin du Test d'Activation des Acheteurs",
+        subheadline: `Le comportement des acheteurs en Afrique varie selon les canaux et les marchés. Comprendre la visibilité, l'impact et la conversion vous permet d'optimiser les formats d'activation pour un maximum d'augmentation des ventes.`,
+        subtitle: "Avantages du Test d'Activation des Acheteurs",
+        items: [
+          {
+            title: "Identifier les activations qui convertissent le mieux à travers les canaux de vente au détail.",
+            description: "",
+          },
+          {
+            title: "Améliorer la visibilité des produits dans les environnements de magasin encombrés ou informels.",
+            description: "",
+          },
+          {
+            title: "Optimiser les promotions, les présentoirs et les matériaux de PDV.",
+            description: "",
+          },
+          {
+            title: "Augmenter les ventes en alignant les activations sur le comportement des acheteurs.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans le Test d'Activation des Acheteurs",
+        items: [
+          {
+            eyebrow: "",
+            title: "Évaluation des Rayons et des Présentoirs",
+            description: "Mesurer la puissance de se démarquer dans les supermarchés, les kiosques et les marchés.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Interception d'Acheteurs en Magasin",
+            description: "Capturer le feedback des acheteurs en temps réel.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Test d'Attrait des Promotions et des Prix",
+            description: "Évaluer l'impact des promotions sur l'intention d'achat.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Évaluation de la Visibilité et du Placement",
+            description: "Évaluer le placement en magasin dans des environnements réels.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Impact en Rayon",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Score de Visibilité",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Performance des Présentoirs",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Conversion Promotionnelle",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Sensibilité aux Prix",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Intention d'Achat",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Rappel par l'Acheteur",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Indice de Présence de la Marque",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur l'Activation des Acheteurs",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quelles activations génèrent la plus grande conversion ?\n
+              Quels canaux de vente au détail offrent le retour sur investissement le plus significatif ?`,
+          },
+          {
+            title: "Pour la stratégie marketing parfaite",
+            description: `Comment la réponse de l'acheteur varie-t-elle selon les différents canaux ?\n
+              Quel format de présentoir est le plus performant ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quelle activation augmente le plus la visibilité ?\n
+              Quels matériaux de PDV augmentent l'intention ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    publicEngagementEffectiveness: {
+      name: "Efficacité de l'Engagement Public",
+      title: "Efficacité de l'Engagement Public",
+      description: "Évaluez la manière dont les communautés réagissent aux campagnes d'information publique et aux initiatives d'impact social — en veillant à ce que votre message résonne et motive l'action auprès des diverses populations africaines.",
+      hero: {
+        headline: "Efficacité de l'Engagement Public",
+        subheadline: "Évaluez la manière dont les communautés réagissent aux campagnes d'information publique et aux initiatives d'impact social — en veillant à ce que votre message résonne et motive l'action auprès des diverses populations africaines.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin de l'Efficacité de l'Engagement Public",
+        subheadline: `Les gouvernements et les ONG doivent s'assurer que leurs messages inspirent la sensibilisation, la confiance et l'action. Ce cas d'usage vous aide à valider les formats, les canaux et les narratifs pour augmenter l'engagement public.`,
+        subtitle: "Avantages de l'Efficacité de l'Engagement Public",
+        items: [
+          {
+            title: "Identifier les messages qui résonnent vraiment avec les communautés.",
+            description: "",
+          },
+          {
+            title: "Optimiser les campagnes de changement de comportement pour les contextes ruraux et urbains.",
+            description: "",
+          },
+          {
+            title: "Améliorer la sélection des canaux pour la diffusion de l'information publique.",
+            description: "",
+          },
+          {
+            title: "Renforcer l'impact du programme grâce à des insights basés sur les données.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à Inclure dans l'Efficacité de l'Engagement Public",
+        items: [
+          {
+            eyebrow: "",
+            title: "Test de Message et de Format",
+            description: "Évaluer la clarté, la fiabilité et l'impact.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Analyse de la Portée des Canaux",
+            description: "Identifier les meilleurs canaux pour l'engagement communautaire.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Mesure du Sentiment Communautaire",
+            description: "Capturer les réactions et le feedback en temps réel.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Simulation d'Engagement",
+            description: "Modéliser l'adoption probable des messages et des appels à l'action.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Rappel du Message",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Score de Confiance",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Intention d'Engagement",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Sentiment Communautaire",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Préférence de Canal",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Score de Clarté",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Probabilité d'Action",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Indice d'Adoption du Programme",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur l'Engagement Public",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quels formats de communication fonctionnent le mieux ?\n
+              Où devrions-nous concentrer les ressources ?`,
+          },
+          {
+            title: "Pour la stratégie parfaite",
+            description: `Quels narratifs mobilisent le plus d'action ?\n
+              Comment la messagerie devrait-elle différer selon les régions ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quels canaux génèrent la réponse publique la plus forte ?\n
+              Quel cadrage augmente l'engagement ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    behaviorChangeActivation: {
+      name: "Activation du Changement de Comportement",
+      title: "Activation du Changement de Comportement",
+      description: "Testez quels messages, interventions ou incitations déclenchent un réel changement de comportement au sein des communautés africaines — des comportements de santé à la participation civique.",
+      hero: {
+        headline: "Activation du Changement de Comportement",
+        subheadline: "Testez quels messages, interventions ou incitations déclenchent un réel changement de comportement au sein des communautés africaines — des comportements de santé à la participation civique.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin de l'Activation du Changement de Comportement",
+        subheadline: `Les programmes publics réussissent lorsque les communautés changent de comportement. Ce cas d'usage vous aide à valider ce qui motive l'intention, la confiance et l'action à travers diverses populations.`,
+        subtitle: "Avantages de l'Activation du Changement de Comportement",
+        items: [
+          {
+            title: "Identifier les interventions qui déclenchent des changements mesurables.",
+            description: "",
+          },
+          {
+            title: "Adapter les messages aux nuances culturelles et linguistiques.",
+            description: "",
+          },
+          {
+            title: "Optimiser la conception du programme pour un impact maximal.",
+            description: "",
+          },
+          {
+            title: "Réduire le gaspillage de ressources en testant avant de mettre à l'échelle.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans l'Activation du Changement de Comportement",
+        items: [
+          {
+            eyebrow: "",
+            title: "Pré-test des Interventions",
+            description: "Évaluer la réponse probable avant le déploiement.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Analyse des Motivations et des Barrières",
+            description: "Comprendre pourquoi les communautés agissent ou n'agissent pas.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Test de Message et d'Incitations",
+            description: "Mesurer la résonance des différentes incitations.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Sondages sur l'Intention de Comportement",
+            description: "Évaluer l'intention de se conformer, d'adopter ou de participer.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Intention d'Action",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Confiance et Crédibilité",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Barrières Perçues",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Force de la Motivation",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Efficacité du Message",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Adéquation Communautaire",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Préparation du Programme",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Potentiel d'Impact",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur le Changement de Comportement",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quelle intervention devrions-nous mettre à l'échelle en premier ?\n
+              Quelles incitations suscitent l'action la plus décisive ?`,
+          },
+          {
+            title: "Pour la stratégie parfaite",
+            description: `Comment les motivations diffèrent-elles selon les régions ?\n
+              Quel message améliore l'adoption ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quel message augmente le plus l'intention de comportement ?\n
+              Quels formats créent l'engagement le plus fort ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    marketActivationBlueprintTesting: {
+      name: "Test de Plan d'Activation de Marché",
+      title: "Test de Plan d'Activation de Marché",
+      description: "Testez des plans d'activation stratégiques — stratégie de canal, piliers de messagerie, priorisation de l'audience — avant de les présenter ou de les déployer sur les marchés africains.",
+      hero: {
+        headline: "Test de Plan d'Activation de Marché",
+        subheadline: "Testez des plans d'activation stratégiques — stratégie de canal, piliers de messagerie, priorisation de l'audience — avant de les présenter ou de les déployer sur les marchés africains.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin du Test de Plan d'Activation de Marché",
+        subheadline: `Les équipes de conseil conçoivent des stratégies d'activation mais ont besoin de la validation de vrais consommateurs. Ce cas d'usage garantit que votre plan s'aligne sur les réalités locales — avant l'approbation du client.`,
+        subtitle: "Avantages du Test de Plan d'Activation de Marché",
+        items: [
+          {
+            title: "Validez votre cadre d'activation stratégique en utilisant des données de terrain pour garantir son efficacité et son efficience.",
+            description: "",
+          },
+          {
+            title: "Réduire le risque de projet avec des preuves objectives des consommateurs.",
+            description: "",
+          },
+          {
+            title: "Adapter les piliers GTM (Go-to-Market) pour refléter les nuances du marché africain.",
+            description: "",
+          },
+          {
+            title: "Renforcer les recommandations clients avec des preuves tangibles.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans le Test de Plan d'Activation de Marché",
+        items: [
+          {
+            eyebrow: "",
+            title: "Test de Résistance du Plan (Blueprint Stress-Testing)",
+            description: "Vérifier la résonance et la faisabilité sur les marchés.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Alignement Canal et Audience",
+            description: "Valider les segments et les points de contact à prioriser.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Test de Message et de Proposition",
+            description: "Assurer la clarté et l'adéquation à travers les régions.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Analyse de Sensibilité Régionale",
+            description: "Évaluer comment la performance du plan varie selon les différents pays.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Adéquation du Plan",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Alignement de l'Audience",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Préparation du Canal",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Résonance du Message",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Attractivité du Marché",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Probabilité d'Adoption",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Cohérence Stratégique",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Faisabilité de l'Activation",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur le Test de Plan",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quels composants d'activation devraient être priorisés ?\n
+              Quels marchés nécessitent une adaptation ?`,
+          },
+          {
+            title: "Pour la stratégie parfaite",
+            description: `Quels éléments doivent être affinés pour réussir localement ?\n
+              Quels canaux soutiennent le mieux le plan ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quel pilier stratégique résonne le plus ?\n
+              Où le plan est-il le plus solide ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    interventionImpactSimulation: {
+      name: "Simulation d'Impact des Interventions",
+      title: "Simulation d'Impact des Interventions",
+      description: "Simulez les réactions des communautés aux interventions — telles que les activations de politiques, les programmes d'impact social et les efforts de mobilisation — pour estimer leur impact avant de les étendre.",
+      hero: {
+        headline: "Simulation d'Impact des Interventions",
+        subheadline: "Simulez les réactions des communautés aux interventions — telles que les activations de politiques, les programmes d'impact social et les efforts de mobilisation — pour estimer leur impact avant de les étendre.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin de la Simulation d'Impact des Interventions",
+        subheadline: `Les consultants conçoivent souvent des programmes à grande échelle sans données comportementales en temps réel. La simulation d'impact vous aide à prévoir l'adoption, à identifier les barrières et à renforcer votre stratégie.`,
+        subtitle: "Avantages de la Simulation d'Impact des Interventions",
+        items: [
+          {
+            title: "Prédire les résultats de l'intervention avant le déploiement.",
+            description: "",
+          },
+          {
+            title: "Identifier les barrières et les catalyseurs à travers les régions.",
+            description: "",
+          },
+          {
+            title: "Renforcer les recommandations avec des données communautaires.",
+            description: "",
+          },
+          {
+            title: "Adapter la conception pour une efficacité accrue.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans la Simulation d'Impact",
+        items: [
+          {
+            eyebrow: "",
+            title: "Test d'Hypothèses et de Scénarios",
+            description: "Simuler différents chemins d'activation.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Cartographie des Barrières et des Catalyseurs",
+            description: "Identifier ce qui affecte le changement de comportement.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Test de Message et de Canal",
+            description: "Valider comment influencer l'adoption.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Modélisation de Prévision Utilisation des Entrées de Terrain",
+            description: "Estimer l'impact dans le monde réel.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Probabilité d'Adoption",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Force de la Barrière",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Force du Catalyseur",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Influence du Canal",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Efficacité du Message",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Préparation Communautaire",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Potentiel d'Impact",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Adéquation de l'Intervention",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur la Simulation d'Impact",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quelle intervention a le plus grand potentiel d'adoption ?\n
+              Que devrions-nous modifier pour améliorer l'impact ?`,
+          },
+          {
+            title: "Pour la stratégie parfaite",
+            description: `Comment les motivations varient-elles selon les populations ?\n
+              Quels points de contact génèrent l'effet le plus substantiel ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quel message augmente le plus la participation ?\n
+              Quel scénario a l'impact le plus significatif dans le monde réel ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    conceptAndCreativeRouteScreening: {
+      name: "Filtrage de Concept et de Piste Créative",
+      title: "Filtrage de Concept et de Piste Créative",
+      description: "Filtrez plusieurs concepts créatifs très tôt pour choisir la direction gagnante — garantissant que votre campagne démarre avec l'idée la plus forte pour les audiences africaines.",
+      hero: {
+        headline: "Filtrage de Concept et de Piste Créative",
+        subheadline: "Filtrez plusieurs concepts créatifs très tôt pour choisir la direction gagnante — garantissant que votre campagne démarre avec l'idée la plus forte pour les audiences africaines.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin du Filtrage de Concept et de Piste Créative",
+        subheadline: `Les agences doivent justifier les décisions créatives avec des preuves. Ce cas d'usage aide à sélectionner le concept qui résonne le plus auprès des investisseurs potentiels avant d'investir dans la production.`,
+        subtitle: "Avantages du Filtrage de Piste Créative",
+        items: [
+          {
+            title: "Identifier la piste qui attire le plus l'audience.",
+            description: "",
+          },
+          {
+            title: "Réduire le risque créatif en validant tôt.",
+            description: "",
+          },
+          {
+            title: "Adapter les idées aux signaux culturels locaux.",
+            description: "",
+          },
+          {
+            title: "Renforcer la crédibilité du pitch avec des données.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans le Filtrage de Piste Créative",
+        items: [
+          {
+            eyebrow: "",
+            title: "Test de Concept A/B/C",
+            description: "Comparer les territoires créatifs précoces.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Évaluation de l'Adéquation Culturelle",
+            description: "Vérifier la pertinence à travers les communautés.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Test de Message et de Scénario",
+            description: "Évaluer la clarté et l'attrait.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Analyse de Préférence Visuelle",
+            description: "Identifier la direction esthétique la plus performante.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Attrait du Concept",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Pertinence Culturelle",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Force du Message",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Clarté Créative",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Résonance Émotionnelle",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Potentiel d'Attention",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Indice de Préférence",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Intention d'Achat/Engagement",
+            benefits: [],
+            description: "",
+          },
+        ],
+      },
+      questions: {
+        title: "Questions Essentielles sur le Filtrage Créatif",
+        items: [
+          {
+            title: "Pour l'allocation de votre budget",
+            description: `Quel concept devrions-nous produire ?\n
+              Quelle piste donne le meilleur retour sur investissement ?`,
+          },
+          {
+            title: "Pour la stratégie parfaite",
+            description: `Comment chaque concept performe-t-il sur les marchés ?\n
+              Quel narratif fonctionne le mieux ?`,
+          },
+          {
+            title: "Pour attirer l'attention",
+            description: `Quelle idée suscite une connexion émotionnelle ?\n
+              Quel style capte l'attention ?`,
+          },
+        ],
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    attentionAndEmotionTesting: {
+      name: "Test d'Attention et d'Émotion",
+      title: "Test d'Attention et d'Émotion",
+      description: "Mesurez quels actifs créatifs captent l'attention et déclenchent un impact émotionnel — les moteurs clés de l'engagement et de la mémorisation sur les marchés africains.",
+      hero: {
+        headline: "Test d'Attention et d'Émotion",
+        subheadline: "Mesurez quels actifs créatifs captent l'attention et déclenchent un impact émotionnel — les moteurs clés de l'engagement et de la mémorisation sur les marchés africains.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Voici pourquoi vous avez besoin du Test d'Attention et d'Émotion",
+        subheadline: `Les créations très performantes attirent l'attention et suscitent des émotions. Ce cas d'usage révèle quels scénarios, visuels et tons ont l'impact émotionnel le plus significatif.`,
+        subtitle: "Avantages du Test d'Attention et d'Émotion",
+        items: [
+          {
+            title: "Comprendre ce qui capte l'attention instantanément.",
+            description: "",
+          },
+          {
+            title: "Identifier les déclencheurs émotionnels à travers les segments.",
+            description: "",
+          },
+          {
+            title: "Optimiser les scénarios et le ton de voix.",
+            description: "",
+          },
+          {
+            title: "Maximiser l'efficacité créative à travers les canaux.",
+            description: "",
+          },
+        ],
+      },
+      zigZag: {
+        title: "Méthodes à inclure dans le Test d'Attention et d'Émotion",
+        items: [
+          {
+            eyebrow: "",
+            title: "Évaluation de l'Attention",
+            description: "Mesurer l'impact au premier coup d'œil.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Cartographie de la Réponse Émotionnelle",
+            description: "Identifier les émotions générées par votre création.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Évaluation de l'Arc Narratif",
+            description: "Évaluer comment les niveaux d'engagement fluctuent tout au long du récit.",
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Cartes Thermiques Visuelles",
+            description: "Voir sur quoi les spectateurs se concentrent.",
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Indicateurs clés de performance (KPI) à mesurer",
+        subtitle: "",
+        otherSubtitle: "",
+        nbrOfItems: 4,
+        cases: [
+          {
+            title: "Score d'Attention",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Intensité Émotionnelle",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Engagement dans l'Histoire",
+            subheadline: "",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Connexion au Message",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Impact Visuel",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Potentiel de Rappel",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Score de Flux Narratif",
+            benefits: [],
+            description: "",
+          },
+          {
+            title: "Indice de Force Créative",
+            benefits: [],
+            description: "",
+          },
+        ],
       },
     },
     customerSatisfactionAnalysis: {

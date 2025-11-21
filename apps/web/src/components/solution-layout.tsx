@@ -22,7 +22,7 @@ const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution, family }) => 
   return (
     <div className="min-h-screen bg-white space-y-8">
       <DynamicHero data={solution.hero} />
-      <DynamicTrustedBy />
+      <DynamicTrustedBy section="layout" />
       <DynamicFeatures data={solution.features} />
       {/*  <DynamicHowItWorks data={solution.howItWorks} /> */}
       <DynamicZigZag data={solution.zigZag} />

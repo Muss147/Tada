@@ -210,12 +210,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* autres sections */}
-      <section className="py-16 bg-white">
-        <ScrollingTextHero />
-      </section>
-      {/* autres sections */}
-
       {/* How Tada Works */}
       <section className="py-16 bg-white">
         <div className="container-custom">
@@ -268,14 +262,21 @@ export default async function Home() {
 
       {/* What Sets Tada Apart */}
       <Features />
+      
       <section className="py-16 bg-white">
-        <div className="container-custom ">
+        <div className="container-custom p-0 sm:p-4">
           <p className="text-4xl md:text-5xl font-bold  text-center mb-8">
             {t("home.testimonials.title")}
           </p>
           <DefaultTestimonial />
         </div>
       </section>
+
+      {/* autres sections */}
+      <section className="py-16 bg-white">
+        <ScrollingTextHero />
+      </section>
+      {/* autres sections */}
     </div>
   );
 }
