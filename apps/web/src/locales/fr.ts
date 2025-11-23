@@ -90,7 +90,7 @@ export default {
         eleven: "identifier les risques sociaux ou politiques",
         twelve: "tester des messages en langues locales",
         thirteen: "comprendre les préférences des consommateurs",
-        forteen: "évaluer les interventions humanitaires",
+        fourteen: "évaluer les interventions humanitaires",
         fiveteen: "valider des recommandations avec des données",
         sixteen: "identifier les tendances culturelles émergentes",
         seventeen: "tester de nouveaux concepts produit rapidement",
@@ -1090,50 +1090,50 @@ export default {
       title: "Nos Solutions Par Cas d'Utilisation",
     },
     industry: {
-      title: "Solutions Par Industrie",
-      subtitle: "Every question deserves the proper insight. With Tada, you’ll find the research solution that fits your challenge — fast, reliable, and built for real-world decisions.",
+      title: "Tada pour chaque industrie",
+      subtitle: "Chaque secteur d'activité a des questions qui comptent. De la stratégie à l'exécution, Tada fournit en temps réel les informations dont les équipes ont besoin pour prendre des décisions en toute confiance, agir plus rapidement et garder une longueur d'avance. Découvrez comment notre plateforme s'adapte à votre monde et vous aide à prendre de meilleures décisions, où que vous soyez.",
       cta: {
         title: "Demander une démo",
       },
     },
     trustedBy: {
-      page: "Les grandes marques mondiales et les institutions\n de toute l'Afrique et d'ailleurs lui font confiance.",
-      layout: "Des marques, des agences et des organisations de développement de premier plan dans toute l'Afrique lui font confiance.",
+      page: "Les grandes marques mondiales et les institutions\n de toute l'Afrique et d'ailleurs nous font confiance.",
+      layout: "Des marques, des agences et des organisations de développement de premier plan dans toute l'Afrique nous font confiance.",
     },
     // NOUVEAU BLOC
     featuresByIndustry: {
       1: {
-        title: "Connaissances des consommateurs",
-        description: "Exploiter les connaissances des consommateurs pour affiner les produits et les stratégies de marketing.",
+        title: "Tada pour les Marques Grand Public",
+        description: "Insight de confiance pour meilleurs produits, stratégie affûtée, et croissance en Afrique.",
       },
       2: {
-        title: "Secteur public et politique",
-        description: "Accéder aux données communautaires pour améliorer les programmes et les politiques publiques.",
+        title: "Tada pour le Secteur Public et Politique",
+        description: "Insights fiables en temps réel pour comprendre communautés, politiques et impact en Afrique.",
       },
       3: {
-        title: "Consultations",
-        description: "Recueillez des informations fiables rapidement et facilement, afin de fournir les réponses dont vos clients ont besoin.",
+        title: "Tada pour les Cabinets de Conseil",
+        description: "Insights rapides pour valider les hypothèses, renforcer les conseils clients.",
       },
       4: {
-        title: "Agences",
-        description: "Fournissez à vos clients des informations exploitables sur les consommateurs.",
+        title: "Tada pour les Agences",
+        description: "Insights audience pour créa forte, gagner pitchs et campagnes percutantes.",
       },
       // More title section
-      more_solution_title: "Découvrez les méthodes de",
+      more_solution_title: "Découvrez les méthodes pour",
     },
     featuresByUseCase: {
       // Perception
       1: {
         title: "Test des médias",
-        description: "Évaluer l'efficacité de vos publicités, messages ou éléments créatifs pour attirer et toucher votre public cible.",
+        description: "Évaluer l'efficacité de vos publicités, messages et créations auprès de l'audience cible.",
       },
       16: {
         title: "Test d'Activation des Acheteurs",
-        description: "Évaluez la réaction des acheteurs à vos activations en magasin et hors magasin dans divers environnements de vente au détail africains, y compris le commerce moderne, le commerce informel, les kiosques, les marchés et les supermarchés.",
+        description: "Évaluer réaction des acheteurs aux activations in/out-store en retail africain.",
       },
       17: {
         title: "Efficacité de l'Engagement Public",
-        description: "Évaluez la manière dont les communautés réagissent aux campagnes d'information publique et aux initiatives d'impact social — en veillant à ce que votre message résonne et motive l'action auprès des diverses populations africaines.",
+        description: "Évaluer la réponse des communautés aux campagnes publiques et sociales pour motiver l'action.",
       },
       18: {
         title: "Activation du Changement de Comportement",
@@ -4287,71 +4287,121 @@ export default {
       },
     },
     consumerBrands: {
-      name: "Marques Grand Public",
-      title: "Marques Grand Public",
+      name: "Tada pour les Marques Grand Public",
+      title: "Tada pour les Marques Grand Public",
       description:
-        "Tirez parti des insights consommateurs pour affiner les produits et les stratégies marketing.",
+        "Des insights fiables et en temps réel pour comprendre les communautés, guider les politiques et générer un impact à travers l'Afrique.",
       hero: {
-        headline: "Données PGC pour votre entreprise",
-        subheadline:
-          "Obtenez des insights PGC (Produits de Grande Consommation) fiables : Tada propose des méthodes de pointe pour votre marché dynamique. Qu'il s'agisse de tester de nouveaux designs ou de suivre la santé de la marque, laissez-nous nous occuper du travail fastidieux pendant que vous innovez.",
+        headline: "Tada pour les Marques Grand Public",
+        subheadline: "Tada aide les gouvernements, les multilatéraux et les agences de développement à recueillir des insights en temps réel auprès des citoyens et des communautés. Que vous conceviez une politique, évaluiez des besoins ou surveilliez un impact, nous vous donnons de la clarté grâce à des données de terrain, à l'intelligence géospatiale et à l'insight humain.",
         benefits: [],
-        ctaPrimary: "Réserver une démo",
+        ctaPrimary: "Demander une démo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title: "Comment Tada simplifie votre parcours",
+        title: "Comment Tada Simplifie Votre Parcours",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Insights centrés sur le consommateur",
-            description:
-              "Tada propose des solutions d'études de marché flexibles adaptées à votre entreprise, vous aidant à prendre des décisions rapides et à innover même avec un temps et des ressources limités.",
+            title: "",
+            description: "Comprendre ce que les communautés pensent, ressentent et ont réellement besoin.",
           },
           {
-            icon: "CheckCircle",
-            title: "Analyse de la dynamique du marché",
-            description:
-              "Les services d'études de marché de Tada vous donnent des informations importantes sur les stratégies des concurrents et les tendances du marché, vous aidant à rester compétitif dans le positionnement des produits et la dynamique du marché.",
+            title: "",
+            description: "Détecter tôt les changements de confiance, de satisfaction et de perception.",
           },
           {
-            icon: "CheckCircle",
-            title: "Stratégie basée sur les données",
-            description:
-              "Avec Tada, vous bénéficiez d'une qualité de données et d'une rentabilité inégalées, vous permettant d'optimiser les investissements en recherche et de prendre des décisions percutantes sans compromis.",
+            title: "",
+            description: "Comprendre les disparités régionales sans attendre des semaines.",
+          },
+          {
+            title: "",
+            description: "Valider les programmes publics avant le déploiement national.",
+          },
+          {
+            title: "",
+            description: "Suivre l'efficacité des politiques en temps réel.",
+          },
+          {
+            title: "",
+            description: "Renforcer la transparence et la responsabilité avec des données fiables.",
+          },
+        ],
+      },
+      zigZag: {
+        title: "",
+        items: [
+          {
+            eyebrow: "",
+            title: "Recherche Soutenue par des Conseils d'Experts, Adaptée à Vos Besoins",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Suivi du sentiment et de la confiance des citoyens à travers les régions.</li>
+                <li>Cartographie géospatiale de l'accès, des infrastructures et des disparités.</li>
+                <li>Évaluation des besoins des communautés et des groupes vulnérables.</li>
+                <li>Évaluation des programmes et analyse de l'efficacité.</li>
+                <li>Test de communication politique et de narratifs.</li>
+                <li>Analyses approfondies régionales pour des interventions ciblées.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Ce que Vous Pouvez Accomplir Avec Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Concevoir des politiques ancrées dans les besoins réels de la communauté.</li>
+                <li>Améliorer l'impact du programme grâce à un feedback continu.</li>
+                <li>Établir la confiance à travers diverses populations.</li>
+                <li>Allouer les ressources de manière plus efficace et précise.</li>
+                <li>Réduire les risques grâce à une prise de décision basée sur des preuves.</li>
+                <li>Renforcer les cadres de suivi et d'évaluation.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
         ],
       },
       useCases: {
-        title: "Découvrez les méthodes pour les études de marché PGC",
-        subtitle: "Découvrez les cas d'usage les plus courants pour des décisions basées sur les données dans le secteur des PGC.",
+        title: "Solutions de Recherche Sur Mesure pour Tous Vos Besoins",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Test visuel",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Découvrez les logos, les designs d'emballage et les concepts visuels les plus prometteurs avant de lancer votre campagne. Prenez des décisions stratégiques et investissez judicieusement vos ressources en obtenant des informations précieuses.",
+            description: "Surveiller comment les citoyens perçoivent les institutions ou programmes clés.",
           },
           {
-            title: "Trouver le bon prix",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Obtenez une compréhension approfondie de la sensibilité au prix des clients. Plongez dans le comportement des consommateurs pour déterminer la stratégie de prix optimale pour votre produit ou service.",
+            description: "Comprendre les barrières d'accès aux services publics.",
           },
           {
-            title: "Suivi de la santé de la marque (Brand Health Tracking)",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Améliorez le suivi de la santé de votre marque grâce à des insights sur la disponibilité mentale et l'engagement de la catégorie. Explorez la cognition et le comportement des consommateurs pour élaborer des stratégies exploitables pour un succès durable de la marque.",
+            description: "Valider la communication publique avant la distribution nationale.",
           },
           {
-            title: "Planification média et campagne",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Évaluez l'efficacité de vos publicités, allégations ou éléments créatifs pour engager et influencer votre public cible. Faites des choix éclairés concernant la planification média et l'allocation des budgets publicitaires.",
+            description: "Mesurer les différences de perception liées au genre, à l'âge ou à la géographie.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Identifier les communautés mal desservies qui nécessitent un soutien.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Suivre les progrès vers les objectifs de développement en temps réel.",
           },
         ],
       },
@@ -4359,37 +4409,168 @@ export default {
         title: "Vous avez des questions ? Nous avons les réponses !",
         items: [
           {
-            question: "Quels types spécifiques de services d'études de marché proposez-vous pour les entreprises PGC ?",
-            answer: `Chez Tada, nous proposons une gamme complète de services d'études de marché adaptés spécifiquement aux entreprises PGC, en tirant parti de l'expertise de consultants et d'une technologie de pointe. Nos services comprennent :
-              1. Insights Consommateurs : Accès en temps réel aux opinions des consommateurs, permettant aux entreprises PGC de comprendre les préférences, les habitudes et les comportements à travers diverses données démographiques.
-
-              2. Test de Produit : Évaluez les nouveaux produits avant le lancement ou améliorez les produits existants en recueillant des retours sur l'emballage, le goût, la fonctionnalité et l'attrait général.
-
-              3. Suivi de Marque : Surveillez la notoriété, la perception et la fidélité de la marque au fil du temps pour évaluer la position sur le marché et l'efficacité des stratégies de marque.
-
-              4. Test de Publicité et de Campagne : Testez l'efficacité des campagnes marketing et des publicités pour vous assurer que le message résonne auprès des publics cibles avant le déploiement complet.
-
-              5. Analyse des Concurrents : Obtenez des insights sur les stratégies, les offres de produits et le positionnement sur le marché des concurrents pour éclairer les décisions commerciales et maintenir un avantage concurrentiel.
-
-              6. Segmentation du Marché : Identifiez et ciblez des segments de consommateurs spécifiques, assurant des stratégies sur mesure pour divers besoins du marché.
-
-              Grâce à la technologie de recherche avancée de Tada, les entreprises PGC peuvent obtenir des insights rapides, fiables et exploitables, tous guidés par une équipe d'experts dédiés à l'optimisation des résultats de la recherche pour une croissance stratégique.`,
+            question: "Tada peut-il atteindre des régions rurales ou difficiles d'accès ?",
+            answer: "Oui — notre réseau inclut les communautés rurales, périurbaines et éloignées.",
           },
           {
-            question: "Quel est le délai typique pour la réalisation d'un projet d'étude de marché pour les produits PGC ?",
-            answer: "La rapidité de nos enquêtes garantit que vous recevez les données rapidement sans compromettre la qualité. Le temps de réalisation dépend du groupe cible et peut varier de quelques minutes à plusieurs jours. La plupart des enquêtes sont complétées le jour même de leur lancement. Notre structure tarifaire est transparente et personnalisable, s'adaptant à la portée et à l'échelle de vos projets. Pour des détails spécifiques sur les prix, visitez notre page de tarification.",
+            question: "À quelle vitesse les données peuvent-elles être collectées ?",
+            answer: "La plupart des insights arrivent en quelques heures.",
           },
           {
-            question: "Offrez-vous un soutien pour la mise en place d'enquêtes PGC ?",
-            answer: "Bien sûr que oui ! Nos experts dédiés en études de marché vous guideront à chaque étape du processus. Vous préférez le faire vous-même ? Aucun problème ! Tada fonctionne à la fois comme un outil DIY (Faites-le vous-même) complet et comme une agence de recherche offrant un service complet.",
+            question: "Les données sont-elles sécurisées ?",
+            answer: "Oui — nous respectons des normes strictes de confidentialité et d'éthique.",
           },
           {
-            question: "À quoi ressemblent les résultats de l'enquête PGC ?",
-            answer: "Vos résultats seront présentés sous forme de superbes graphiques interactifs que vous trouverez dans le tableau de bord. Analysez et filtrez vos résultats par âge, sexe ou tout autre critère de votre choix. Jouez avec vos résultats, filtrez chaque question pour obtenir les insights dont vous avez besoin. Créez des liens et exportez des rapports personnalisés à partager avec vos collègues.",
+            question: "Pouvons-nous segmenter les résultats par région ou par données démographiques ?",
+            answer: "Absolument — la segmentation est intégrée à la plateforme.",
+          },
+        ]
+      },
+      cta: {
+        title: "Laissez-nous vous convaincre !",
+        subtitle: "",
+        primaryButton: "Planifiez une démo maintenant",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    publicAndPoliticalSector: {
+      name: "Secteur Public et Politique",
+      title: "Secteur Public et Politique",
+      description: "Des insights fiables et en temps réel pour comprendre les communautés, guider les politiques et générer un impact à travers l'Afrique.",
+      hero: {
+        headline: "Secteur Public et Politique",
+        subheadline: "Tada aide les gouvernements, les multilatéraux et les agences de développement à recueillir des insights en temps réel auprès des citoyens et des communautés. Que vous conceviez une politique, évaluiez des besoins ou surveilliez un impact, nous vous donnons de la clarté grâce à des données de terrain, à l'intelligence géospatiale et à l'insight humain.",
+        benefits: [],
+        ctaPrimary: "Demander une démo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "Comment Tada Simplifie Votre Parcours",
+        subtitle: "",
+        items: [
+          {
+            title: "",
+            description: "Comprendre ce que les communautés pensent, ressentent et ont réellement besoin.",
           },
           {
-            question: "Où Tada est-il disponible ?",
-            answer: "Nous sommes là où se trouvent vos consommateurs cibles. Tada mène des études de marché dans plus de 190 pays à travers le monde.",
+            title: "",
+            description: "Détecter tôt les changements de confiance, de satisfaction et de perception.",
+          },
+          {
+            title: "",
+            description: "Comprendre les disparités régionales sans attendre des semaines.",
+          },
+          {
+            title: "",
+            description: "Valider les programmes publics avant le déploiement national.",
+          },
+          {
+            title: "",
+            description: "Suivre l'efficacité des politiques en temps réel.",
+          },
+          {
+            title: "",
+            description: "Renforcer la transparence et la responsabilité avec des données fiables.",
+          },
+        ],
+      },
+      zigZag: {
+        title: "",
+        items: [
+          {
+            eyebrow: "",
+            title: "Recherche Soutenue par des Conseils d'Experts, Adaptée à Vos Besoins",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Suivi du sentiment et de la confiance des citoyens à travers les régions.</li>
+                <li>Cartographie géospatiale de l'accès, des infrastructures et des disparités.</li>
+                <li>Évaluation des besoins des communautés et des groupes vulnérables.</li>
+                <li>Évaluation des programmes et analyse de l'efficacité.</li>
+                <li>Test de communication politique et de narratifs.</li>
+                <li>Analyses approfondies régionales pour des interventions ciblées.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "Ce que Vous Pouvez Accomplir Avec Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Concevoir des politiques ancrées dans les besoins réels de la communauté.</li>
+                <li>Améliorer l'impact du programme grâce à un feedback continu.</li>
+                <li>Établir la confiance à travers diverses populations.</li>
+                <li>Allouer les ressources de manière plus efficace et précise.</li>
+                <li>Réduire les risques grâce à une prise de décision basée sur des preuves.</li>
+                <li>Renforcer les cadres de suivi et d'évaluation.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Solutions de Recherche Sur Mesure pour Tous Vos Besoins",
+        subtitle: "",
+        otherSubtitle: "",
+        cases: [
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Surveiller comment les citoyens perçoivent les institutions ou programmes clés.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Comprendre les barrières d'accès aux services publics.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Valider la communication publique avant la distribution nationale.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Mesurer les différences de perception liées au genre, à l'âge ou à la géographie.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Identifier les communautés mal desservies qui nécessitent un soutien.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Suivre les progrès vers les objectifs de développement en temps réel.",
+          },
+        ],
+      },
+      accordion: {
+        title: "Vous avez des questions ? Nous avons les réponses !",
+        items: [
+          {
+            question: "Tada peut-il atteindre des régions rurales ou difficiles d'accès ?",
+            answer: "Oui — notre réseau inclut les communautés rurales, périurbaines et éloignées.",
+          },
+          {
+            question: "À quelle vitesse les données peuvent-elles être collectées ?",
+            answer: "La plupart des insights arrivent en quelques heures.",
+          },
+          {
+            question: "Les données sont-elles sécurisées ?",
+            answer: "Oui — nous respectons des normes strictes de confidentialité et d'éthique.",
+          },
+          {
+            question: "Pouvons-nous segmenter les résultats par région ou par données démographiques ?",
+            answer: "Absolument — la segmentation est intégrée à la plateforme.",
           },
         ]
       },
@@ -4403,47 +4584,47 @@ export default {
       },
     },
     consultancies: {
-      name: "Cabinets de Conseil",
-      title: "Cabinets de Conseil",
+      name: "Tada pour les Cabinets de Conseil",
+      title: "Tada pour les Cabinets de Conseil",
       description:
-        "Recueillez des insights fiables rapidement et facilement, afin de pouvoir fournir les réponses dont vos clients ont besoin.",
+        "Des insights plus rapides pour valider les hypothèses, renforcer les recommandations et générer un impact client avec confiance.",
       hero: {
         headline:
-          "Des insights consommateurs exploitables pour gagner, livrer et stimuler le succès client",
+          "Tada pour les Cabinets de Conseil",
         subheadline:
-          "Chez Tada, nous aidons les équipes de consultants à recueillir des insights fiables rapidement et facilement, afin que vous puissiez fournir les réponses dont vos clients ont besoin. Grâce aux conseils d'experts à chaque étape de votre projet, vous pouvez respecter les délais sans sacrifier la qualité.",
+          "Tada fournit aux équipes de conseil des insights en temps réel sur les consommateurs, les marchés et le terrain pour soutenir les recommandations stratégiques. Que vous validiez une hypothèse, évaluiez une opportunité ou testiez un chemin de croissance, nous vous apportons la clarté dont vous avez besoin précisément quand vous en avez besoin.",
         benefits: [],
-        ctaPrimary: "Réserver une démo",
+        ctaPrimary: "Demander une démo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title: "Gagnez du temps et des efforts grâce à nos conseils d'experts",
+        title: "Comment Tada Simplifie Votre Parcours",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Gagnez des appels d'offres",
-            description:
-              "Augmentez vos chances de remporter de nouveaux projets ; nous couvrons une partie des coûts de vos enquêtes d'appel d'offres.",
+            title: "",
+            description: "Valider les hypothèses en quelques heures, pas en semaines.",
           },
           {
-            icon: "CheckCircle",
-            title: "Améliorez les projets clients",
-            description:
-              "Obtenez des données primaires précieuses pour simplifier l'analyse de marché pour les projets de vos clients.",
+            title: "",
+            description: "Renforcer les propositions avec des preuves factuelles.",
           },
           {
-            icon: "CheckCircle",
-            title: "Publiez des rapports de qualité",
-            description:
-              "Assurez-vous que vos publications, livres blancs et autres efforts de RP sont étayés par des données solides.",
+            title: "",
+            description: "Cartographier les opportunités de catégorie ou régionales avec confiance.",
           },
           {
-            icon: "CheckCircle",
-            title: "Innovez votre stratégie",
-            description:
-              "Apportez de nouvelles perspectives à vos ateliers, conférences et au-delà.",
+            title: "",
+            description: "Réduire les risques en testant les hypothèses avant les présentations.",
+          },
+          {
+            title: "",
+            description: "Soutenir les clients avec des données de terrain auxquelles ils n'ont pas accès.",
+          },
+          {
+            title: "",
+            description: "Fournir la stratégie plus rapidement et avec plus de précision.",
           },
         ],
       },
@@ -4452,41 +4633,75 @@ export default {
         items: [
           {
             eyebrow: "",
-            title: "Notre plateforme technologique basée sur l'IA fournit des insights en temps réel et exploitables",
-            description: "",
-            buttonLabel: "Réserver une démo",
+            title: "Recherche Soutenue par des Conseils d'Experts, Adaptée à Vos Besoins",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Outils de validation rapide d'hypothèses.</li>
+                <li>Suivi des tendances de catégorie et de la concurrence.</li>
+                <li>Cartographie du paysage de marché et des opportunités.</li>
+                <li>Suivi de l'écosystème de vente au détail et recensement des points de vente.</li>
+                <li>Test et priorisation du chemin de croissance.</li>
+                <li>Intégration d'insights qualitatifs et quantitatifs.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
-        ]
+          {
+            eyebrow: "",
+            title: "Ce que Vous Pouvez Accomplir Avec Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Renforcer les recommandations clients avec de vrais insights.</li>
+                <li>Identifier les opportunités plus tôt que les concurrents.</li>
+                <li>Améliorer la précision dans la priorisation et l'évaluation des marchés.</li>
+                <li>Fournir une stratégie étayée par des preuves dans des délais serrés.</li>
+                <li>Gagner plus de propositions avec des données fraîches et testées sur le terrain.</li>
+                <li>Réduire les risques sur les projets d'entrée sur le marché et de croissance.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
       },
       useCases: {
-        title: "Tendances mondiales et comportement des consommateurs à portée de main",
-        subheadline: "Grâce à notre plateforme intuitive basée sur l'IA, Tada fournit des insights en temps réel et exploitables pour vous garder à l'avant-garde. Utilisez notre option de livraison express pour obtenir les données dont vous avez besoin dans des délais serrés sans sacrifier la qualité. Laissez Tada être votre partenaire pour fournir des insights percutants pour chaque projet de conseil.",
-        subtitle: "Solutions de recherche sur mesure pour tous vos besoins",
+        title: "Solutions de Recherche Sur Mesure pour Tous Vos Besoins",
+        subheadline: "",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Analyse des prix",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Évaluez l'adéquation au marché et le potentiel de revenus pour identifier des opportunités de croissance significatives pour votre client.",
+            description: "Valider les hypothèses lors de la portée initiale du projet.",
           },
           {
-            title: "Analyse du Groupe Cible",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Augmentez les conversions de votre client en évaluant les fonctionnalités clés de son parcours client.",
+            description: "Mesurer la probabilité d'adoption de nouvelles offres ou services.",
           },
           {
-            title: "Test visuel",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Fournissez des insights sur les perceptions de l'audience d'un concept ou d'une campagne pour mieux informer vos clients.",
+            description: "Comparer l'attractivité des marchés à travers les pays.",
           },
           {
-            title: "Test de concept",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Identifiez les concepts ayant le plus grand potentiel de marché pour guider vos clients actuels et futurs.",
+            description: "Comprendre la volonté de payer dans les segments clés.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Suivre les narratifs concurrentiels ou les changements de catégorie.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Évaluer les narratifs stratégiques avant les ateliers clients.",
           },
         ],
       },
@@ -4494,28 +4709,20 @@ export default {
         title: "Vous avez des questions ? Nous avons les réponses !",
         items: [
           {
-            question: "Quels types spécifiques de services d'études de marché proposez-vous aux équipes de consultants ?",
-            answer: `Chez Tada, nous permettons aux équipes de consultants d'améliorer leurs offres clients et de proposer des stratégies basées sur les données grâce à notre plateforme d'études de marché agile et complète. Nos solutions sur mesure permettent aux cabinets de conseil de :
-              Obtenir des Insights Consommateurs : Accédez aux opinions des consommateurs en temps réel pour comprendre les préférences, les motivations et les comportements à travers diverses données démographiques.
-              Mener des Tests de Concept Rapides : Validez de nouvelles idées et affinez les concepts créatifs grâce à des boucles de feedback rapides, garantissant que les campagnes résonnent avec les publics cibles.
-              Optimiser les Stratégies de Marque : Suivez la notoriété, la perception et le sentiment de la marque pour mesurer l'impact de la campagne et guider le développement stratégique de la marque.
-              Évaluer les Stratégies de Prix : Évaluez la volonté de payer des consommateurs, la sensibilité aux prix et les prix optimaux pour maximiser les revenus et la rentabilité.
-              Mener des Analyses de Concurrents : Obtenez des insights sur les stratégies, les forces et les faiblesses des concurrents pour éclairer le positionnement concurrentiel et la différenciation du marché.
-              Identifier les Tendances et Opportunités : Découvrez les tendances émergentes, les changements culturels et les besoins non satisfaits des consommateurs pour guider l'innovation et le développement de campagnes.
-              
-              En tirant parti de la technologie de recherche avancée de Tada et des conseils d'experts, les cabinets de conseil peuvent prendre des décisions basées sur les données, optimiser les stratégies client et obtenir des résultats exceptionnels.`,
+            question: "Pouvons-nous utiliser Tada dans des sprints courts ?",
+            answer: "Oui — la plupart des études fournissent des résultats en quelques heures.",
           },
           {
-            question: "Quel est le délai typique pour la réalisation d'un projet d'étude de marché pour les cabinets de conseil ?",
-            answer: "La rapidité de nos enquêtes garantit que vous recevez les données rapidement sans compromettre la qualité. Notre structure tarifaire est transparente et personnalisable, s'adaptant à la portée et à l'échelle de vos projets. Pour des détails spécifiques sur les prix, visitez notre page de tarification.",
+            question: "Pouvons-nous mener des études multi-pays ?",
+            answer: "Absolument — sur plus de 90 marchés africains.",
           },
           {
-            question: "Offrez-vous un soutien pour la mise en place d'enquêtes pour les équipes de consultants ?",
-            answer: "Bien sûr que oui ! Nos experts dédiés en études de marché vous guideront à chaque étape du processus. Vous préférez le faire vous-même ? Aucun problème ! Tada fonctionne à la fois comme un outil DIY (Faites-le vous-même) complet et comme une agence de recherche offrant un service complet.",
+            question: "Avons-nous besoin d'une expertise en recherche ?",
+            answer: "Non — Tada est conçu pour les consultants.",
           },
           {
-            question: "À quoi ressemblent les résultats de l'enquête pour les cabinets de conseil ?",
-            answer: "Vos résultats seront présentés sous forme de superbes graphiques interactifs que vous trouverez dans le tableau de bord. Analysez et filtrez vos résultats par âge, sexe ou tout autre critère de votre choix. Jouez avec vos résultats, filtrez chaque question pour obtenir les insights dont vous avez besoin. Créez des liens et exportez des rapports personnalisés à partager avec vos collègues.",
+            question: "Les insights peuvent-ils être exportés directement dans des diapositives ?",
+            answer: "Oui — entièrement optimisé pour les flux de travail des consultants.",
           },
         ]
       },
@@ -4529,46 +4736,45 @@ export default {
       },
     },
     agencies: {
-      name: "Agences",
-      title: "Agences",
-      description: "Fournissez à vos clients des insights consommateurs exploitables.",
+      name: "Tada pour les Agences",
+      title: "Tada pour les Agences",
+      description: "De vrais insights d'audience pour façonner une création plus forte, gagner des appels d'offres et livrer des campagnes qui résonnent vraiment.",
       hero: {
-        headline: "Fournissez à vos clients des insights consommateurs exploitables",
+        headline: "Tada pour les Agences",
         subheadline:
-          "Chez Tada, nous aidons les équipes d'agences et leurs clients dans tous les secteurs à répondre aux questions les plus importantes. Grâce à nos méthodologies avancées et à notre technologie de pointe optimisée par l'IA, la collecte d'insights consommateurs n'a jamais été aussi efficace.",
+          "Tada aide les agences à comprendre comment les gens réagissent aux idées, aux scénarios et aux campagnes — avant que quoi que ce soit ne soit lancé. Que vous fassiez un pitch, élaboriez des pistes créatives ou optimisiez les médias, nous vous apportons la clarté dont vous avez besoin pour produire un travail qui gagne les cœurs et fait bouger les marchés.",
         benefits: [],
-        ctaPrimary: "Réserver une démo",
+        ctaPrimary: "Demander une démo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title:
-          "Recherche soutenue par des conseils d'experts adaptés à vos besoins commerciaux",
+        title: "Comment Tada Simplifie Votre Parcours",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Gagnez des appels d'offres",
-            description:
-              "Remportez les projets que vous visez. Nous couvrons une partie des coûts de vos enquêtes d'appel d'offres pour augmenter vos chances de gagner.",
+            title: "",
+            description: "Concevoir des idées qui résonnent dès le départ.",
           },
           {
-            icon: "CheckCircle",
-            title: "Analyse du Groupe Cible",
-            description:
-              "Découvrez les motivations, les attitudes et les préférences de messagerie du public cible pour aider votre client à établir des liens plus profonds.",
+            title: "",
+            description: "Valider les pistes créatives avant la production.",
           },
           {
-            icon: "CheckCircle",
-            title: "Pré-test",
-            description:
-              "Quelle création est la plus performante, la plus compréhensible ou la plus mémorable ? Vous avez l'intuition, nous avons les données.",
+            title: "",
+            description: "Optimiser les campagnes en temps réel pendant leur diffusion.",
           },
           {
-            icon: "CheckCircle",
-            title: "Suivi (Tracking)",
-            description:
-              "Suivez la performance de la marque, les tendances et les campagnes en temps réel, avec une analyse comparative des concurrents pour aider votre client à optimiser les stratégies et à générer des résultats.",
+            title: "",
+            description: "Améliorer les présentations commerciales avec de nouvelles preuves consommateurs.",
+          },
+          {
+            title: "",
+            description: "Comprendre les nuances culturelles à travers les régions.",
+          },
+          {
+            title: "",
+            description: "Prendre des décisions créatives plus solides avec moins de conjectures.",
           },
         ],
       },
@@ -4577,47 +4783,75 @@ export default {
         items: [
           {
             eyebrow: "",
-            title: "Notre plateforme technologique basée sur l'IA fournit des insights consommateurs en temps réel",
-            description: "",
-            buttonLabel: "Réserver une démo",
+            title: "Recherche Soutenue par des Conseils d'Experts, Adaptée à Vos Besoins",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Test rapide de concept et de piste créative.</li>
+                <li>Outils de mesure émotionnelle et d'attention.</li>
+                <li>Validation de la clarté du message et du narratif.</li>
+                <li>Suivi de la performance de campagne multi-marchés.</li>
+                <li>Test visuel et de design à travers différents contextes.</li>
+                <li>Évaluation de la visibilité et de l'exécution en magasin.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
-        ]
+          {
+            eyebrow: "",
+            title: "Ce que Vous Pouvez Accomplir Avec Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Créer un travail qui atteint la bonne audience.</li>
+                <li>Améliorer le retour sur investissement grâce à une optimisation média et créative plus intelligente.</li>
+                <li>Réduire les risques de production grâce à des choix créatifs validés.</li>
+                <li>Renforcer les présentations commerciales avec un storytelling basé sur des preuves.</li>
+                <li>Fournir des campagnes plus performantes pour vos clients.</li>
+                <li>Construire une culture créative axée sur la recherche.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
       },
       useCases: {
-        title: "Accès à des insights en temps réel",
-        subheadline: "Que vous ayez besoin d'insights provenant de publics de niche et B2B ou d'échantillons de consommateurs représentatifs, Tada vous connecte à une représentation du monde réel sur plus de 190 marchés, capturant des voix de consommateurs authentiques à l'échelle mondiale qui donnent vie à votre recherche. Laissez Tada être votre partenaire pour fournir des résultats percutants pour chacun des projets de vos clients.",
-        subtitle: "Solutions de recherche sur mesure pour tous vos besoins",
+        title: "Solutions de Recherche Sur Mesure pour Tous Vos Besoins",
+        subheadline: "",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Suivi de la Santé de la Marque (Brand Health Tracking)",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Fournissez à vos clients des insights sur la performance de leur marque et les perceptions des consommateurs.",
+            description: "Comparer les storyboards avant la production.",
           },
           {
-            title: "Test visuel",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Fournissez des insights sur ce que les consommateurs pensent des designs de votre client.",
+            description: "Tester la réponse émotionnelle aux premières idées créatives.",
           },
           {
-            title: "Analyse du Groupe Cible",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Offrez une compréhension claire de l'audience de votre client, de ses motivations et de ses déclencheurs pour façonner sa stratégie de communication.",
+            description: "Valider les narratifs de marque avant les présentations stratégiques.",
           },
           {
-            title: "Suivi de Campagne (Campaign Tracking)",
-            subheadline: "Méthode",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Mesurez l'impact de la campagne de votre client pendant et après son déroulement pour surveiller son impact et son succès.",
+            description: "Mesurer instantanément la clarté et le rappel du message.",
           },
           {
-            title: "Test média",
-            subheadline: "Solution Commerciale",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Évaluez l'efficacité de la communication de votre client et son impact sur leur public cible.",
+            description: "Optimiser les campagnes pendant qu'elles sont encore actives.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Comprendre les interprétations régionales des signaux créatifs.",
           },
         ],
       },
@@ -4625,28 +4859,20 @@ export default {
         title: "Vous avez des questions ? Nous avons les réponses !",
         items: [
           {
-            question: "Quels types spécifiques de services d'études de marché proposez-vous aux agences ?",
-            answer: `Chez Tada, nous permettons aux équipes d'agences d'élever leurs projets de recherche grâce à notre plateforme agile et complète. Nos solutions sur mesure permettent aux agences de :
-              Obtenir des Insights Consommateurs : Accédez aux opinions des consommateurs en temps réel pour comprendre les préférences, les motivations et les comportements à travers diverses données démographiques.
-              Mener des Tests de Concept Rapides : Validez de nouvelles idées et affinez les concepts créatifs grâce à des boucles de feedback rapides, garantissant que les campagnes résonnent avec les publics cibles.
-              Optimiser les Stratégies de Marque : Suivez la notoriété, la perception et le sentiment de la marque pour mesurer l'impact de la campagne et guider le développement stratégique de la marque.
-              Tester l'Efficacité Publicitaire : Évaluez la performance des publicités et la résonance du message sur divers canaux et formats, assurant un impact et un ROI optimaux.
-              Mener des Analyses de Concurrents : Obtenez des insights sur les stratégies, les forces et les faiblesses des concurrents pour éclairer le positionnement concurrentiel et la différenciation du marché.
-              Identifier les Tendances et Opportunités : Découvrez les tendances émergentes, les changements culturels et les besoins non satisfaits des consommateurs pour guider l'innovation et le développement de campagnes.
-              
-              En tirant parti de la technologie de recherche avancée de Tada et des conseils d'experts, les agences peuvent prendre des décisions basées sur les données, optimiser les stratégies de campagne et livrer des résultats exceptionnels pour leurs clients.`,
+            question: "Pouvons-nous tester des coupes brutes ou des croquis initiaux ?",
+            answer: "Oui — n'importe quel format créatif fonctionne.",
           },
           {
-            question: "Quel est le délai typique pour la réalisation d'un projet d'étude de marché pour les agences ?",
-            answer: "La rapidité de nos enquêtes garantit que vous recevez les données rapidement sans compromettre la qualité. Notre structure tarifaire est transparente et personnalisable, s'adaptant à la portée et à l'échelle de vos projets. Pour des détails spécifiques sur les prix, visitez notre page de tarification.",
+            question: "Pouvons-nous mener des études pendant les présentations commerciales ?",
+            answer: "Absolument — un délai d'exécution rapide le rend facile.",
           },
           {
-            question: "Offrez-vous un soutien pour la mise en place d'enquêtes pour les agences ?",
-            answer: "Bien sûr que oui ! Nos experts dédiés en études de marché vous guideront à chaque étape du processus. Vous préférez le faire vous-même ? Aucun problème ! Tada fonctionne à la fois comme un outil DIY (Faites-le vous-même) complet et comme une agence de recherche offrant un service complet.",
+            question: "Pouvons-nous tester dans plusieurs langues ou régions ?",
+            answer: "Oui — à l'échelle de l'Afrique.",
           },
           {
-            question: "À quoi ressemblent les résultats de l'enquête pour les équipes d'agences ?",
-            answer: "Vos résultats seront présentés sous forme de superbes graphiques interactifs que vous trouverez dans le tableau de bord. Analysez et filtrez vos résultats par âge, sexe ou tout autre critère de votre choix. Jouez avec vos résultats, filtrez chaque question pour obtenir les insights dont vous avez besoin. Créez des liens et exportez des rapports personnalisés à partager avec vos collègues.",
+            question: "Avons-nous besoin d'une expertise en recherche ?",
+            answer: "Pas du tout — nous vous guidons étape par étape.",
           },
         ]
       },

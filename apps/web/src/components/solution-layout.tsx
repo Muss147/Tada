@@ -1,3 +1,6 @@
+
+"use client";
+
 import React from "react";
 import { Solution } from "./solutions/data";
 import DynamicHero from "./solutions/dynamic-hero";
@@ -12,6 +15,7 @@ import DynamicMore from "./solutions/dynamic-more";
 import DynamicCTA from "./solutions/dynamic-cta";
 import DynamicAccordion from "./solutions/dynamic-accordion";
 import { strict } from "assert";
+import { useI18n } from "@/locales/client";
 
 interface SolutionLayoutProps {
   solution: Solution;
@@ -19,10 +23,30 @@ interface SolutionLayoutProps {
 }
 
 const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution, family }) => {
+  const t = useI18n();
+  
   return (
     <div className="min-h-screen bg-white space-y-8">
       <DynamicHero data={solution.hero} />
-      <DynamicTrustedBy section="layout" />
+      
+      <div className="py-16 bg-white overflow-hidden mb-20 md:mb-24">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-10">
+            {t("solutions.trustedBy.layout" as any, {})
+              .split("\n")
+              .map((line, index) => (
+                <React.Fragment key={index}>
+                  {/* Ajouter un saut de ligne seulement après la 1ère ligne */}
+                  {line}
+                  {index === 0 && <br className="hidden md:block" />}
+                </React.Fragment>
+              ))}
+          </h2>
+          
+          <DynamicTrustedBy />
+
+        </div>
+      </div>
       <DynamicFeatures data={solution.features} />
       {/*  <DynamicHowItWorks data={solution.howItWorks} /> */}
       <DynamicZigZag data={solution.zigZag} />
@@ -30,7 +54,7 @@ const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution, family }) => 
       {/*  <DynamicTestimonials data={solution.testimonials} /> */}
       <DynamicQuestions data={solution.questions} />
       <DynamicAccordion data={solution.accordion} />
-      <DynamicMore title={solution.title} category={solution.category} family={family} />
+      <DynamicMore title={solution.title} category={solution.category} industry={solution.industry} family={family} />
       <DynamicCTA data={solution.cta} />
     </div>
   );

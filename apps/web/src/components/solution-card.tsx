@@ -14,7 +14,7 @@ export default function SolutionCard({
   description: string;
   image: string;
   link: string;
-  solutionFamily: string;
+  solutionFamily?: string;
 }) {
   const t = useI18n();
 

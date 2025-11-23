@@ -65,9 +65,9 @@ export default function DynamicZigZag({ data }: DynamicZigZagProps) {
                   {t(item.title as any, {})}
                 </h3>
 
-                <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                  {t(item.description as any, {})}
-                </p>
+                <div className="text-gray-600 text-lg leading-relaxed mb-6" dangerouslySetInnerHTML={{
+                  __html: t(item.description as any, {}),
+                }} />
 
                 {item.buttonLabel && t(item.buttonLabel as any, {}) !== item.buttonLabel && (
                 <Button asChild className="group inline-flex items-center">

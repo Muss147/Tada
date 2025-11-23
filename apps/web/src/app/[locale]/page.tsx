@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/hero-section";
 import { Button } from "@tada/ui/components/button";
 import { ShoppingBag, Building2, TrendingUp, Briefcase } from "lucide-react";
 import ScrollingTextHero from "@/components/ScrollingTextHero";
+import DynamicTrustedBy from "@/components/solution-trusted-by";
 
 export const metadata = generateMetadata({
   title: "Tada - Insight, Everywhere, Instantly",
@@ -49,20 +50,20 @@ export default async function Home() {
     },
   ];
   return (
-    <div className="flex flex-col px-4 md:px-16">
+    <div className="flex flex-col px-4 md:px-16 space-y-16">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Trusted By Section */}
-      <section className="py-12 bg-white">
+      <section className="py-16 bg-white">
         <div className="container-custom">
-          <p className="text-2xl md:text-5xl font-bold text-center mb-10">
+          <p className="text-2xl md:text-5xl font-bold text-center mb-10 block max-w-4xl mx-auto">
             {t("home.trusted_by.title")}
           </p>
-          <p className="md:text-center text-gray-600 font-bold mb-10 md:text-xl">
+          <p className="text-center text-gray-600 font-bold mb-10 md:text-xl">
             {t("home.trusted_by.description")}
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+          {/* <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             <Image
               src="/images/cocacola.png"
               alt="Coca-Cola"
@@ -112,13 +113,15 @@ export default async function Home() {
               height={60}
               className="h-12 w-auto"
             />
-          </div>
+          </div> */}
+
+          <DynamicTrustedBy />
         </div>
       </section>
 
       {/* Global Demand Section */}
-      <section className="py-16 bg-[#141a25] text-white">
-        <div className="container-custom">
+      <section className="">
+        <div className="container-custom px-4 py-12 sm:p-16 bg-[#141a25] text-white">
           <p className="text-2xl md:text-5xl font-bold text-center mb-4">
             {t("home.global_demand.title")}
           </p>
@@ -159,53 +162,47 @@ export default async function Home() {
       </section>
 
       <section className="py-16 bg-white">
-        <div className="overflow-hidden bg-white ">
-          <div className="mx-auto max-w-7xl md:px-6 lg:px-8">
-            <div className="">
-              <div className="px-6 lg:px-0 lg:pt-4 lg:pr-4">
-                <div className="">
-                  <p className="mt-2 text-2xl md:text-5xl font-bold mb-4  ">
-                    {t("home.insights_for_any_industry.title")}
-                  </p>
-                  <p className="mt-6 text-lg/8 text-gray-600">
-                    {t("home.insights_for_any_industry.description")}
-                  </p>
+        <div className="container-custom space-y-12">
+          <div className="text-center">
+            <p className="mt-2 text-2xl md:text-5xl font-bold mb-4 block max-w-4xl mx-auto">
+              {t("home.insights_for_any_industry.title")}
+            </p>
+            <p className="text-gray-600 max-w-6xl mx-auto md:text-xl">
+              {t("home.insights_for_any_industry.description")}
+            </p>
+          </div>
 
-                  <div className="relative overflow-hidden pt-16">
-                    <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                      <img
-                        alt="App screenshot"
-                        src="/images/pexels-mikhail-nilov-9301249.jpg"
-                        width={2432}
-                        height={1442}
-                        className="mb-[-12%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
-                      />
+          <div className="relative">
+            <div className="mx-auto max-w-7xl">
+              <img
+                alt="App screenshot"
+                src="/images/pexels-mikhail-nilov-9301249.jpg"
+                width={2432}
+                height={500}
+                className="w-full max-h-[500px] rounded-xl shadow-2xl ring-1 ring-gray-900/10 object-cover"
+              />
 
-                      <div aria-hidden="true" className="relative">
-                        <div className="absolute -inset-x-20 bottom-0 bg-linear-to-t from-white pt-[7%]" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mx-auto mt-16 max-w-7xl px-6 sm:mt-20 md:mt-24 lg:px-8">
-                    <dl className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base/7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
-                      {features.map((feature) => (
-                        <div key={feature.name} className="relative pl-9">
-                          <dt className="inline font-semibold text-gray-900">
-                            <feature.icon
-                              aria-hidden="true"
-                              className="absolute top-1 left-1 size-5 text-primary"
-                            />
-                            {feature.name}
-                          </dt>{" "}
-                          <dd className="inline">{feature.description}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                </div>
+              <div aria-hidden="true" className="relative">
+                <div className="absolute -inset-x-20 bottom-0 bg-linear-to-t from-white" />
               </div>
             </div>
+          </div>
+
+          <div className="mx-auto max-w-7xl px-6 sm:mt-20 md:mt-24 lg:px-8">
+            <dl className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base/7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
+              {features.map((feature) => (
+                <div key={feature.name} className="relative pl-9">
+                  <dt className="inline font-semibold text-gray-900">
+                    <feature.icon
+                      aria-hidden="true"
+                      className="absolute top-1 left-1 size-5 text-primary"
+                    />
+                    {feature.name}
+                  </dt>{" "}
+                  <dd className="inline">{feature.description}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
@@ -265,7 +262,7 @@ export default async function Home() {
       
       <section className="py-16 bg-white">
         <div className="container-custom p-0 sm:p-4">
-          <p className="text-4xl md:text-5xl font-bold  text-center mb-8">
+          <p className="text-4xl md:text-5xl font-bold text-center mb-8 block max-w-4xl mx-auto">
             {t("home.testimonials.title")}
           </p>
           <DefaultTestimonial />

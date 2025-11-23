@@ -5,6 +5,7 @@ export interface Solution {
   name: string;
   title: string;
   category?: string;
+  industry?: string;
   description: string;
   hero: {
     headline: string;
@@ -3409,6 +3410,7 @@ export const solutions: Solution[] = [
     id: "consumer-brands",
     name: "solutions.consumerBrands.name",
     title: "solutions.consumerBrands.title",
+    industry: "Consumer Brands",
     description: "solutions.consumerBrands.description",
     hero: {
       headline: "solutions.consumerBrands.hero.headline",
@@ -3440,6 +3442,42 @@ export const solutions: Solution[] = [
           title: "solutions.consumerBrands.features.items.2.title",
           description: "solutions.consumerBrands.features.items.2.description",
         },
+        {
+          icon: "Lightbulb",
+          title: "solutions.consumerBrands.features.items.3.title",
+          description: "solutions.consumerBrands.features.items.3.description",
+        },
+        {
+          icon: "CircleUser",
+          title: "solutions.consumerBrands.features.items.4.title",
+          description: "solutions.consumerBrands.features.items.4.description",
+        },
+        {
+          icon: "HeartPulse",
+          title: "solutions.consumerBrands.features.items.5.title",
+          description: "solutions.consumerBrands.features.items.5.description",
+        },
+      ],
+    },
+    zigZag: {
+      title: "solutions.consumerBrands.zigZag.title",
+      items: [
+        {
+          eyebrow: "solutions.consumerBrands.zigZag.items.0.eyebrow",
+          title: "solutions.consumerBrands.zigZag.items.0.title",
+          description: "solutions.consumerBrands.zigZag.items.0.description",
+          buttonLabel: "solutions.consumerBrands.zigZag.items.0.buttonLabel",
+          buttonLink: "",
+          image: "/images/ad-test.png",
+        },
+        {
+          eyebrow: "solutions.consumerBrands.zigZag.items.1.eyebrow",
+          title: "solutions.consumerBrands.zigZag.items.1.title",
+          description: "solutions.consumerBrands.zigZag.items.1.description",
+          buttonLabel: "solutions.consumerBrands.zigZag.items.1.buttonLabel",
+          buttonLink: "",
+          image: "/images/claim-test.png",
+        },
       ],
     },
     useCases: {
@@ -3450,37 +3488,47 @@ export const solutions: Solution[] = [
       cases: [
         {
           icon: "HeartPulse",
-          title: "solutions.consumerBrands.useCases.cases.0.title",
-          subheadline: "solutions.consumerBrands.useCases.cases.0.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consumerBrands.useCases.cases.0.description",
         },
         {
           icon: "Lightbulb",
-          title: "solutions.consumerBrands.useCases.cases.1.title",
-          subheadline: "solutions.consumerBrands.useCases.cases.1.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consumerBrands.useCases.cases.1.description",
         },
         {
           icon: "SquareCheck",
-          title: "solutions.consumerBrands.useCases.cases.2.title",
-          subheadline: "solutions.consumerBrands.useCases.cases.2.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consumerBrands.useCases.cases.2.description",
         },
         {
           icon: "Megaphone",
-          title: "solutions.consumerBrands.useCases.cases.3.title",
-          subheadline: "solutions.consumerBrands.useCases.cases.3.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consumerBrands.useCases.cases.3.description",
         },
+        {
+          icon: "SquareCheck",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.consumerBrands.useCases.cases.5.description",
+        },
+        {
+          icon: "Megaphone",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.consumerBrands.useCases.cases.5.description",
+        },
       ],
-    },
-    questions: {
-      title: "solutions.consumerBrands.questions.title",
-      items: [],
     },
     accordion: {
       title: "solutions.consumerBrands.accordion.title",
@@ -3501,10 +3549,6 @@ export const solutions: Solution[] = [
           question: "solutions.consumerBrands.accordion.items.3.question",
           answer: "solutions.consumerBrands.accordion.items.3.answer",
         },
-        {
-          question: "solutions.consumerBrands.accordion.items.4.question",
-          answer: "solutions.consumerBrands.accordion.items.4.answer",
-        }
       ]
     },
     cta: {
@@ -3517,9 +3561,164 @@ export const solutions: Solution[] = [
     },
   },
   {
+    id: "public-and-political-sector",
+    name: "solutions.publicAndPoliticalSector.name",
+    title: "solutions.publicAndPoliticalSector.title",
+    industry: "Public & Political Sector",
+    description: "solutions.publicAndPoliticalSector.description",
+    hero: {
+      headline: "solutions.publicAndPoliticalSector.hero.headline",
+      subheadline: "solutions.publicAndPoliticalSector.hero.subheadline",
+      image: "/images/consumer-brands.jpg",
+      benefits: [],
+      ctaPrimary: "solutions.publicAndPoliticalSector.hero.ctaPrimary",
+      ctaPrimaryLink: "/schedule-a-demo",
+      ctaSecondary: "solutions.publicAndPoliticalSector.hero.ctaSecondary",
+    },
+    features: {
+      title: "solutions.publicAndPoliticalSector.features.title",
+      subheadline: "solutions.publicAndPoliticalSector.features.subheadline",
+      subtitle: "solutions.publicAndPoliticalSector.features.subtitle",
+      nbrOfItems: 3,
+      items: [
+        {
+          icon: "Lightbulb",
+          title: "solutions.publicAndPoliticalSector.features.items.0.title",
+          description: "solutions.publicAndPoliticalSector.features.items.0.description",
+        },
+        {
+          icon: "CircleUser",
+          title: "solutions.publicAndPoliticalSector.features.items.1.title",
+          description: "solutions.publicAndPoliticalSector.features.items.1.description",
+        },
+        {
+          icon: "HeartPulse",
+          title: "solutions.publicAndPoliticalSector.features.items.2.title",
+          description: "solutions.publicAndPoliticalSector.features.items.2.description",
+        },
+        {
+          icon: "Lightbulb",
+          title: "solutions.publicAndPoliticalSector.features.items.3.title",
+          description: "solutions.publicAndPoliticalSector.features.items.3.description",
+        },
+        {
+          icon: "CircleUser",
+          title: "solutions.publicAndPoliticalSector.features.items.4.title",
+          description: "solutions.publicAndPoliticalSector.features.items.4.description",
+        },
+        {
+          icon: "HeartPulse",
+          title: "solutions.publicAndPoliticalSector.features.items.5.title",
+          description: "solutions.publicAndPoliticalSector.features.items.5.description",
+        },
+      ],
+    },
+    zigZag: {
+      title: "solutions.publicAndPoliticalSector.zigZag.title",
+      items: [
+        {
+          eyebrow: "solutions.publicAndPoliticalSector.zigZag.items.0.eyebrow",
+          title: "solutions.publicAndPoliticalSector.zigZag.items.0.title",
+          description: "solutions.publicAndPoliticalSector.zigZag.items.0.description",
+          buttonLabel: "solutions.publicAndPoliticalSector.zigZag.items.0.buttonLabel",
+          buttonLink: "",
+          image: "/images/ad-test.png",
+        },
+        {
+          eyebrow: "solutions.publicAndPoliticalSector.zigZag.items.1.eyebrow",
+          title: "solutions.publicAndPoliticalSector.zigZag.items.1.title",
+          description: "solutions.publicAndPoliticalSector.zigZag.items.1.description",
+          buttonLabel: "solutions.publicAndPoliticalSector.zigZag.items.1.buttonLabel",
+          buttonLink: "",
+          image: "/images/claim-test.png",
+        },
+      ],
+    },
+    useCases: {
+      title: "solutions.publicAndPoliticalSector.useCases.title",
+      subtitle: "solutions.publicAndPoliticalSector.useCases.subtitle",
+      otherSubtitle: "solutions.publicAndPoliticalSector.useCases.otherSubtitle",
+      nbrOfItems: 3,
+      cases: [
+        {
+          icon: "HeartPulse",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.0.description",
+        },
+        {
+          icon: "Lightbulb",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.1.description",
+        },
+        {
+          icon: "SquareCheck",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.2.description",
+        },
+        {
+          icon: "Megaphone",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.3.description",
+        },
+        {
+          icon: "SquareCheck",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.5.description",
+        },
+        {
+          icon: "Megaphone",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.publicAndPoliticalSector.useCases.cases.5.description",
+        },
+      ],
+    },
+    accordion: {
+      title: "solutions.publicAndPoliticalSector.accordion.title",
+      items: [
+        {
+          question: "solutions.publicAndPoliticalSector.accordion.items.0.question",
+          answer: "solutions.publicAndPoliticalSector.accordion.items.0.answer",
+        },
+        {
+          question: "solutions.publicAndPoliticalSector.accordion.items.1.question",
+          answer: "solutions.publicAndPoliticalSector.accordion.items.1.answer",
+        },
+        {
+          question: "solutions.publicAndPoliticalSector.accordion.items.2.question",
+          answer: "solutions.publicAndPoliticalSector.accordion.items.2.answer",
+        },
+        {
+          question: "solutions.publicAndPoliticalSector.accordion.items.3.question",
+          answer: "solutions.publicAndPoliticalSector.accordion.items.3.answer",
+        },
+      ]
+    },
+    cta: {
+      title: "solutions.publicAndPoliticalSector.cta.title",
+      subtitle: "solutions.publicAndPoliticalSector.cta.subtitle",
+      primaryButton: "solutions.publicAndPoliticalSector.cta.primaryButton",
+      secondaryButton: "solutions.publicAndPoliticalSector.cta.secondaryButton",
+      ctaPrimaryLink: "/schedule-a-demo",
+      ctaSecondaryLink: "",
+    },
+  },
+  {
     id: "consultancies",
     name: "solutions.consultancies.name",
     title: "solutions.consultancies.title",
+    industry: "Consultancies",
     description: "solutions.consultancies.description",
     hero: {
       headline: "solutions.consultancies.hero.headline",
@@ -3551,16 +3750,39 @@ export const solutions: Solution[] = [
           title: "solutions.consultancies.features.items.2.title",
           description: "solutions.consultancies.features.items.2.description",
         },
+        {
+          icon: "Lightbulb",
+          title: "solutions.consultancies.features.items.3.title",
+          description: "solutions.consultancies.features.items.3.description",
+        },
+        {
+          icon: "CircleUser",
+          title: "solutions.consultancies.features.items.4.title",
+          description: "solutions.consultancies.features.items.4.description",
+        },
+        {
+          icon: "HeartPulse",
+          title: "solutions.consultancies.features.items.5.title",
+          description: "solutions.consultancies.features.items.5.description",
+        },
       ],
     },
     zigZag: {
       title: "solutions.consultancies.zigZag.title",
       items: [
         {
-          eyebrow: "solutions.consultancies.zigZag.items.0.eyebrow",
+          eyebrow: "",
           title: "solutions.consultancies.zigZag.items.0.title",
-          description: "",
-          buttonLabel: "solutions.consultancies.zigZag.items.0.buttonLabel",
+          description: "solutions.consultancies.zigZag.items.0.description",
+          buttonLabel: "",
+          buttonLink: "",
+          image: "/images/ad-test.png",
+        },
+        {
+          eyebrow: "",
+          title: "solutions.consultancies.zigZag.items.1.title",
+          description: "solutions.consultancies.zigZag.items.1.description",
+          buttonLabel: "",
           buttonLink: "",
           image: "/images/ad-test.png",
         },
@@ -3574,31 +3796,45 @@ export const solutions: Solution[] = [
       cases: [
         {
           icon: "HeartPulse",
-          title: "solutions.consultancies.useCases.cases.0.title",
-          subheadline: "solutions.consultancies.useCases.cases.0.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consultancies.useCases.cases.0.description",
         },
         {
           icon: "Lightbulb",
-          title: "solutions.consultancies.useCases.cases.1.title",
-          subheadline: "solutions.consultancies.useCases.cases.1.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consultancies.useCases.cases.1.description",
         },
         {
           icon: "SquareCheck",
-          title: "solutions.consultancies.useCases.cases.2.title",
-          subheadline: "solutions.consultancies.useCases.cases.2.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consultancies.useCases.cases.2.description",
         },
         {
           icon: "Megaphone",
-          title: "solutions.consultancies.useCases.cases.3.title",
-          subheadline: "solutions.consultancies.useCases.cases.3.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.consultancies.useCases.cases.3.description",
+        },
+        {
+          icon: "Megaphone",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.consultancies.useCases.cases.4.description",
+        },
+        {
+          icon: "Megaphone",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.consultancies.useCases.cases.5.description",
         },
       ],
     },
@@ -3636,6 +3872,7 @@ export const solutions: Solution[] = [
     id: "agencies",
     name: "solutions.agencies.name",
     title: "solutions.agencies.title",
+    industry: "Agencies",
     description: "solutions.agencies.description",
     hero: {
       headline: "solutions.agencies.hero.headline",
@@ -3667,16 +3904,39 @@ export const solutions: Solution[] = [
           title: "solutions.agencies.features.items.2.title",
           description: "solutions.agencies.features.items.2.description",
         },
+        {
+          icon: "Lightbulb",
+          title: "solutions.agencies.features.items.3.title",
+          description: "solutions.agencies.features.items.3.description",
+        },
+        {
+          icon: "CircleUser",
+          title: "solutions.agencies.features.items.4.title",
+          description: "solutions.agencies.features.items.4.description",
+        },
+        {
+          icon: "HeartPulse",
+          title: "solutions.agencies.features.items.5.title",
+          description: "solutions.agencies.features.items.5.description",
+        },
       ],
     },
     zigZag: {
       title: "solutions.agencies.zigZag.title",
       items: [
         {
-          eyebrow: "solutions.agencies.zigZag.items.0.eyebrow",
+          eyebrow: "",
           title: "solutions.agencies.zigZag.items.0.title",
-          description: "",
-          buttonLabel: "solutions.agencies.zigZag.items.0.buttonLabel",
+          description: "solutions.agencies.zigZag.items.0.description",
+          buttonLabel: "",
+          buttonLink: "",
+          image: "/images/ad-test.png",
+        },
+        {
+          eyebrow: "",
+          title: "solutions.agencies.zigZag.items.1.title",
+          description: "solutions.agencies.zigZag.items.1.description",
+          buttonLabel: "",
           buttonLink: "",
           image: "/images/ad-test.png",
         },
@@ -3690,38 +3950,45 @@ export const solutions: Solution[] = [
       cases: [
         {
           icon: "HeartPulse",
-          title: "solutions.agencies.useCases.cases.0.title",
-          subheadline: "solutions.agencies.useCases.cases.0.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.agencies.useCases.cases.0.description",
         },
         {
           icon: "Lightbulb",
-          title: "solutions.agencies.useCases.cases.1.title",
-          subheadline: "solutions.agencies.useCases.cases.1.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.agencies.useCases.cases.1.description",
         },
         {
           icon: "SquareCheck",
-          title: "solutions.agencies.useCases.cases.2.title",
-          subheadline: "solutions.agencies.useCases.cases.2.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.agencies.useCases.cases.2.description",
         },
         {
           icon: "Megaphone",
-          title: "solutions.agencies.useCases.cases.3.title",
-          subheadline: "solutions.agencies.useCases.cases.3.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.agencies.useCases.cases.3.description",
         },
         {
           icon: "ChartNetwork",
-          title: "solutions.agencies.useCases.cases.4.title",
-          subheadline: "solutions.agencies.useCases.cases.4.subheadline",
+          title: "",
+          subheadline: "",
           benefits: [],
           description: "solutions.agencies.useCases.cases.4.description",
+        },
+        {
+          icon: "ChartNetwork",
+          title: "",
+          subheadline: "",
+          benefits: [],
+          description: "solutions.agencies.useCases.cases.5.description",
         },
       ],
     },
@@ -3763,25 +4030,25 @@ export const featuresByIndustry = [
     industry: "Consumer Brands",
     title: "solutions.consumerBrands.title",
     description:
-      "Leverage consumer insights to refine products and marketing strategies.",
+      "Insight you can trust to build better products, sharpen strategy, and grow your brand across every African market.",
     image: "/images/consumer-insights.jpg", // "https://ext.same-assets.com/829373065/2194203648.svg",
     link: "/solutions/industry/consumer-brands",
   },
   {
     id: "2",
     industry: "Public & Political Sector",
-    title: "solutions.marketAnalysis.title",
+    title: "solutions.publicAndPoliticalSector.title",
     description:
-      "Access community data to enhance public programs and policies.",
+      "Reliable, real-time insights to understand communities, guide policy, and deliver impact across Africa.",
     image: "/images/international-development.jpg", // "https://ext.same-assets.com/829373065/3565711189.svg",
-    link: "/solutions/industry/international-development",
+    link: "/solutions/industry/public-and-political-sector",
   },
   {
     id: "3",
     industry: "Consultancies",
     title: "solutions.consultancies.title",
     description:
-      "Gather reliable insights quickly and easily, so you can deliver the answers your clients need.",
+      "Faster insights to validate hypotheses, strengthen recommendations, and deliver client impact with confidence.",
     image: "/images/consultancies.jpg", // "https://ext.same-assets.com/829373065/2858633470.svg",
     link: "/solutions/industry/consultancies",
   },
@@ -3789,7 +4056,7 @@ export const featuresByIndustry = [
     id: "4",
     industry: "Agencies",
     title: "solutions.agencies.title",
-    description: "Equip your clients with actionable consumer insights.",
+    description: "Real audience insights to shape stronger creative, win pitches, and deliver campaigns that truly resonate.",
     image: "/images/agencies.jpg", // "https://ext.same-assets.com/829373065/2194203648.svg",
     link: "/solutions/industry/agencies",
   },
@@ -3874,6 +4141,7 @@ export const featuresByUseCase = [
   {
     id: "2",
     category: "Innovation",
+    industry: "",
     title: "solutions.visualTest.title",
     description:
       "Let consumers be your co-creators. Ask what they think about your new logo, website or packaging and create designs that truly speak to your audience.",
@@ -3883,6 +4151,7 @@ export const featuresByUseCase = [
   {
     id: "3",
     category: "Innovation",
+    industry: "",
     title: "solutions.productDevelopment.title",
     description:
       "Harness the power of strategic product development to create, refine, and deliver solutions that resonate with your audience, setting your brand apart.",
@@ -3892,6 +4161,7 @@ export const featuresByUseCase = [
   {
     id: "4",
     category: "Innovation",
+    industry: "",
     title: "solutions.inHomeUseTesting.title",
     description:
       "Identify how your product will perform in the hands (and homes) of real consumers. Determine moments of truth and key drivers in order to validate, iterate and launch with confidence.",
@@ -3902,6 +4172,7 @@ export const featuresByUseCase = [
   {
     id: "5",
     category: "Strategy",
+    industry: "",
     title: "solutions.targetGroupAnalysis.title",
     description:
       "Gen Z or Millenials? Yoga lovers or CrossFit fans? Get a clear understanding of your target audience to create great products that they will actually need and love.",
@@ -3911,6 +4182,7 @@ export const featuresByUseCase = [
   {
     id: "6",
     category: "Strategy",
+    industry: "",
     title: "solutions.pricingAnalysis.title",
     description:
       "Maximize profits by asking the right questions. How much are customers willing to spend on your product? What’s the optimal price point?",
@@ -3920,6 +4192,7 @@ export const featuresByUseCase = [
   {
     id: "7",
     category: "Strategy",
+    industry: "",
     title: "solutions.marketAnalysis.title",
     description:
       "Future-proof your decision-making and gain a competitive advantage through a comprehensive market analysis.",
@@ -3930,6 +4203,7 @@ export const featuresByUseCase = [
   {
     id: "8",
     category: "Tracking",
+    industry: "",
     title: "solutions.brandTracking.title",
     description:
       "Don’t fly blind. Measure and track your brand's performance to stay on top of consumers' perceptions of you.",
@@ -3939,6 +4213,7 @@ export const featuresByUseCase = [
   {
     id: "9",
     category: "Tracking",
+    industry: "",
     title: "solutions.consumerTracking.title",
     description:
       "Understand how consumers think and what drives their choices. From purchase frequency to product use, to drivers and barriers - we've got all the answers you need, in real time.",
@@ -3948,6 +4223,7 @@ export const featuresByUseCase = [
   {
     id: "10",
     category: "Tracking",
+    industry: "",
     title: "solutions.campaignTracking.title",
     description:
       "Knowing the reach and the click-through rate is great. But what's the real impact of your campaign on your brand?",
@@ -3957,6 +4233,7 @@ export const featuresByUseCase = [
   {
     id: "11",
     category: "Tracking",
+    industry: "",
     title: "solutions.customerSatisfactionAnalysis.title",
     description:
       "Actually knowing what your target group wants is the key to customer satisfaction. We help ask the right questions and understand what matters.",
@@ -3967,6 +4244,7 @@ export const featuresByUseCase = [
   {
     id: "12",
     category: "Tracking",
+    industry: "",
     title: "solutions.availabilityTracker.title",
     description:
       "Increase Sales and Distribution With Actionable Same-Day Data",
@@ -3976,6 +4254,7 @@ export const featuresByUseCase = [
   {
     id: "13",
     category: "Tracking",
+    industry: "",
     title: "solutions.rollingRetailCensus.title",
     description:
       "Continuously gather data on retail environments for informed decision-making.",
@@ -3985,6 +4264,7 @@ export const featuresByUseCase = [
   {
     id: "14",
     category: "Innovation",
+    industry: "",
     title: "solutions.aiQualitativeInsightsPlatform.title",
     description:
       "Dive deep into consumer sentiments with qualitative data analysis.",
@@ -3994,6 +4274,7 @@ export const featuresByUseCase = [
   {
     id: "15",
     category: "Tracking",
+    industry: "",
     title: "solutions.geospatialAnalytics.title",
     description: "Utilize location-based data for strategic planning",
     image: "/images/chart-network.png", // "https://ext.same-assets.com/829373065/2858633470.svg",

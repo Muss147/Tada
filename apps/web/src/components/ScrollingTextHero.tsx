@@ -22,6 +22,17 @@ export default function ScrollingTextHero() {
     t("home.hero.scrollTexts.seven"),
     t("home.hero.scrollTexts.eight"),
     t("home.hero.scrollTexts.nine"),
+    t("home.hero.scrollTexts.ten"),
+    t("home.hero.scrollTexts.eleven"),
+    t("home.hero.scrollTexts.twelve"),
+    t("home.hero.scrollTexts.thirteen"),
+    t("home.hero.scrollTexts.fourteen"),
+    t("home.hero.scrollTexts.fiveteen"),
+    t("home.hero.scrollTexts.sixteen"),
+    t("home.hero.scrollTexts.seventeen"),
+    t("home.hero.scrollTexts.eighteen"),
+    t("home.hero.scrollTexts.nineteen"),
+    t("home.hero.scrollTexts.twenty"),
   ];
   
   useEffect(() => {
@@ -32,9 +43,9 @@ export default function ScrollingTextHero() {
   }, []);
 
   return (
-    <section className="space-y-10 bg-white">
-      <div className="">
-        <p className="mt-2 text-2xl md:text-5xl font-bold mb-4  ">
+    <div className="space-y-12">
+      <div className="container-custom text-center">
+        <p className="mt-2 text-2xl md:text-5xl font-bold mb-4">
           {t("home.hero.title")
             .split("\n")
             .map((line, index) => (
@@ -60,34 +71,32 @@ export default function ScrollingTextHero() {
             <p className="text-2xl md:text-3xl font-light flex-shrink-0">{t("home.hero.prefix")}</p>
 
             {/* Zone de texte animée */}
-            <div className="relative h-[50px] sm:h-[150px] overflow-hidden w-full min-w-[600px] flex items-center justify-center sm:justify-start sm:ps-8">
+            <div className="sm:relative h-[50px] sm:h-[500px] overflow-hidden w-full min-w-[270px] md:min-w-[600px] flex items-center justify-center sm:justify-start sm:ps-8">
               {texts.map((text, i) => {
-                const offset = (i - index + texts.length) % texts.length;
+                // Distance circulaire entre i et l'index actif
+                const distance = ((i - index + texts.length) % texts.length);
+                
+                // Convertir pour obtenir une plage centrée autour de 0
+                const offset = distance > texts.length / 2 ? distance - texts.length : distance;
 
-                // calcul de la position verticale
-                let y = 0;
-                let opacity = 1;
-                let scale = 1;
+                // On n'affiche que les 5 précédents et 5 suivants
+                if (Math.abs(offset) > 5) return null;
 
-                if (offset === 0) {
-                  y = 0;
-                  opacity = 1;
-                  scale = 1.1;
-                } else if (offset === 1 || offset === texts.length - 1) {
-                  y = offset === 1 ? 40 : -40;
-                  opacity = 0.3;
-                  scale = 0.9;
-                } else {
-                  y = offset < texts.length / 2 ? -80 : 80;
-                  opacity = 0;
-                }
+                // Position verticale (chaque élément décale de 40px)
+                const y = offset * 40;
+
+                // Opacité NON progressive
+                const opacity = offset === 0 ? 1 : 0.3;
+
+                // Scale optionnel (tu peux remettre 1 partout si tu veux)
+                const scale = offset === 0 ? 1.1 : 0.9;
 
                 return (
                   <motion.p
                     key={text}
                     animate={{ y, opacity, scale }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute md:text-2xl font-semibold leading-tight"
+                    className="absolute md:text-2xl font-semibold leading-tight !whitespace-normal !sm:whitespace-nowrap px-4 sm:px-0"
                     style={{
                       filter: opacity < 1 ? "blur(1.2px)" : "none",
                       whiteSpace: "nowrap",
@@ -101,7 +110,7 @@ export default function ScrollingTextHero() {
           </div>
 
           {/* Bouton d’action */}
-          <div className="mt-8 md:mt-0">
+          <div className="relative mt-8 md:mt-0">
             <Button
               asChild
               className="flex items-center justify-center group"
@@ -114,6 +123,6 @@ export default function ScrollingTextHero() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

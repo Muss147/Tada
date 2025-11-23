@@ -6,22 +6,22 @@ import SolutionCard from "./../solution-card";
 
 import {
   featuresByUseCase,
-  featuresByIndustry,
 } from "@/components/solutions/data";
 
 interface DynamicMoreProps {
   title: string;
   category?: string;
   family?: string;
+  industry?: string;
 }
 
-const DynamicMore: React.FC<DynamicMoreProps> = ({ title, category, family }) => {
+const DynamicMore: React.FC<DynamicMoreProps> = ({ title, category, family, industry }) => {
   const t = useI18n();
 
   // Filtrage des features à afficher
   const filteredSolutions = family === "industry" 
-    ? featuresByIndustry.filter(
-      (feature) => feature.title !== title
+    ? featuresByUseCase.filter(
+      (feature) => feature.industry === industry
     )
     : featuresByUseCase.filter(
       (feature) => feature.category === category && feature.title !== title
@@ -39,7 +39,7 @@ const DynamicMore: React.FC<DynamicMoreProps> = ({ title, category, family }) =>
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             {family === "industry" 
-              ? t("solutions.featuresByIndustry.more_solution_title") +" "+ t(title as any, {})
+              ? t("solutions.featuresByIndustry.more_solution_title") +" "+ t(industry as any, {})
               : t("solutions.featuresByUseCase.more_solution_title")
             }
           </h2>
@@ -48,9 +48,7 @@ const DynamicMore: React.FC<DynamicMoreProps> = ({ title, category, family }) =>
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredSolutions.map((feature) => {
-            const translationKey = family === "industry" 
-              ? `solutions.featuresByIndustry.${feature.id}`
-              : `solutions.featuresByUseCase.${feature.id}`;
+            const translationKey = `solutions.featuresByUseCase.${feature.id}`;
 
             return (
               <SolutionCard
@@ -59,7 +57,6 @@ const DynamicMore: React.FC<DynamicMoreProps> = ({ title, category, family }) =>
                 description={t(`${translationKey}.description` as any, {})}
                 image={feature.image}
                 link={feature.link}
-                solutionFamily={family ?? "use-case"}
               />
             );
           })}

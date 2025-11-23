@@ -13,7 +13,7 @@ export default function CapabilitiesSection() {
             {t("home.capabilities.title")}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             {capabilities.map((cap) => (
             <CapabilityCard key={cap.id} {...cap} />
             ))}

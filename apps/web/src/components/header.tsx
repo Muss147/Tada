@@ -243,22 +243,14 @@ const Header = () => {
                 </button>
                 <div className="pl-4 pb-2 space-y-2">
                   <Link
-                    href="/solutions"
-                    className="block py-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {t("home.header.menus.solutions_menu.all_solutions")}
-                  </Link>
-
-                  <Link
-                    href="/solutions"
+                    href="/solutions/use-case"
                     className="block py-2"
                     onClick={() => setIsOpen(false)}
                   >
                     {t("home.header.menus.solutions_menu.by_use_case")}
                   </Link>
                   <Link
-                    href="/solutions"
+                    href="/solutions/industry"
                     className="block py-2"
                     onClick={() => setIsOpen(false)}
                   >

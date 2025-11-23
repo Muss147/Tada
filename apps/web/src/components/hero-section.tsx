@@ -90,15 +90,15 @@ export function HeroSection() {
       {/* Content */}
       <div className="relative z-10 min-h-full flex items-center py-8 sm:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
             {/* Left Content */}
             <div
-              className={`text-white transition-all duration-500 text-center lg:text-left ${
+              className={`lg:col-span-3 text-white transition-all duration-500 text-center lg:text-left ${
                 isHeroAnimating
                   ? "opacity-0 translate-x-8"
                   : "opacity-100 translate-x-0"
               }`}
-            >
+              >
               {/* Subtitle Badge */}
               <div className="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-3 sm:px-4 lg:px-5 py-1.5 sm:py-2 mb-3 sm:mb-4 lg:mb-6">
                 <span className="text-[10px] xs:text-xs sm:text-sm lg:text-base font-semibold uppercase tracking-wider leading-none">
@@ -128,12 +128,12 @@ export function HeroSection() {
 
             {/* Right Content - Rating and Visual Elements */}
             <div
-              className={`flex justify-center lg:justify-end transition-all duration-500 mt-6 lg:mt-0 ${
+              className={`lg:col-span-2 flex justify-center lg:justify-end transition-all duration-500 mt-6 lg:mt-0 ${
                 isHeroAnimating
                   ? "opacity-0 translate-x-8"
                   : "opacity-100 translate-x-0"
               }`}
-            >
+              >
               <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 xl:p-8 border border-white/20 w-full max-w-[240px] xs:max-w-[280px] sm:max-w-xs lg:max-w-none lg:w-auto mx-auto lg:mx-0">
                 {/* Rating Stars */}
                 <div className="flex items-center justify-center mb-2 sm:mb-3 lg:mb-4 gap-0.5 sm:gap-1">

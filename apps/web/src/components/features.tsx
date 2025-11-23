@@ -5,14 +5,16 @@ import { useI18n } from "@/locales/client";
 export const Features: React.FC = () => {
   const t = useI18n();
   return (
-    <section className="py-20 px-6 bg-gray-100">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-4xl md:text-5xl font-bold text-center mb-16 text-black">
-          {t("home.what_sets_tada_apart.title")}
-        </p>
-        <p className="text-center text-gray-600 mb-10">
-          {t("home.what_sets_tada_apart.description")}
-        </p>
+    <section className="">
+      <div className="container-custom px-6 py-12 sm:p-16 space-y-12 bg-gray-100">
+        <div className="">
+          <p className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
+            {t("home.what_sets_tada_apart.title")}
+          </p>
+          <p className="text-center text-gray-600">
+            {t("home.what_sets_tada_apart.description")}
+          </p>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-x-24 gap-y-12">
           <FeatureBlock

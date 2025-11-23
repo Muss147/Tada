@@ -89,15 +89,7 @@ const Footer = () => {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    href="/solutions"
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    {t("home.header.menus.solutions_menu.all_solutions")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/solutions"
+                    href="/solutions/use-case"
                     className="text-gray-300 hover:text-white transition-colors"
                   >
                     {t("home.header.menus.solutions_menu.by_use_case")}
@@ -106,7 +98,7 @@ const Footer = () => {
 
                 <li>
                   <Link
-                    href="/solutions"
+                    href="/solutions/industry"
                     className="text-gray-300 hover:text-white transition-colors"
                   >
                     {t("home.header.menus.solutions_menu.by_industry")}

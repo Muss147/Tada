@@ -12,8 +12,9 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
   setActiveTab,
 }) => {
   return (
-    <div className="border-b border-gray-200 mb-8">
-      <nav className="-mb-px flex justify-center space-x-8">
+    <div className="relative border-b border-gray-200 mb-8">
+      <span className="absolute block md:hidden top-4 -right-3 text-gray-300"> ▶︎ </span>
+      <nav className="-mb-px flex md:justify-center space-x-8 overflow-x-auto">
         {Object.entries(categories).map(([key, label]) => (
           <button
             key={key}

@@ -90,7 +90,7 @@ export default {
         eleven: "to identify social or political risks",
         twelve: "to test messages in local languages",
         thirteen: "to understand consumer preferences",
-        forteen: "to evaluate humanitarian interventions",
+        fourteen: "to evaluate humanitarian interventions",
         fiveteen: "to validate recommendations with data",
         sixteen: "to identify emerging cultural trends",
         seventeen: "to test new product concepts quickly",
@@ -1074,8 +1074,8 @@ export default {
       title: "Our Solutions By Use Cases",
     },
     industry: {
-      title: "Solutions by Industry",
-      subtitle: "Our data solutions provide real-time information, helping organizations make data-driven decisions with confidence and efficiency.",
+      title: "Tada for every industry",
+      subtitle: "Every industry has questions that matter. From strategy to execution, Tada delivers the real-time insights teams need to make confident decisions, act faster, and stay ahead. Discover how our platform adapts to your world and helps you unlock better decisions, wherever you operate.",
       cta: {
         title: "Request a Demo",
       },
@@ -1087,20 +1087,20 @@ export default {
     // NOUVEAU BLOC
     featuresByIndustry: {
       1: {
-        title: "Consumer Brands",
-        description: "Leverage consumer insights to refine products and marketing strategies.",
+        title: "Tada for Consumer Brands",
+        description: "Trusted insight to build better products, sharpen strategy, and grow your brand across Africa.",
       },
       2: {
-        title: "Public & Political Sector",
-        description: "Access community data to enhance public programs and policies.",
+        title: "Tada for Public & Political Sector",
+        description: "Reliable, real-time insights to understand communities, guide policy, and deliver impact.",
       },
       3: {
-        title: "Consultancies",
-        description: "Gather reliable insights quickly and easily, so you can deliver the answers your clients need.",
+        title: "Tada for Consultancies",
+        description: "Faster insights to validate hypotheses, strengthen recommendations, and boost client impact.",
       },
       4: {
-        title: "Agencies",
-        description: "Equip your clients with actionable consumer insights.",
+        title: "Tada for Agencies",
+        description: "Real audience insights to shape stronger creative, win pitches, and deliver campaigns.",
       },
       // More title section
       more_solution_title: "Discover methods for",
@@ -1109,15 +1109,15 @@ export default {
       // Perception
       1: {
         title: "Media Testing",
-        description: "Assess the effectiveness of your ads, messages, or creative components in engaging and impacting your target audience.",
+        description: "Assess ad/message effectiveness and creative impact on your target audience.",
       },
       16: {
         title: "Shopper Activation Testing",
-        description: "Evaluate how shoppers react to your in-store and out-of-store activations across various African retail environments, including modern trade, informal trade, kiosks, markets, and supermarkets.",
+        description: "Evaluate shopper reaction to in-store and out-of-store activations across African retail.",
       },
       17: {
         title: "Public Engagement Effectiveness",
-        description: "Evaluate how communities respond to public information campaigns and social impact initiatives — ensuring your message resonates and motivates action across diverse African populations.",
+        description: "Evaluate community response to public campaigns for optimal resonance and action.",
       },
       18: {
         title: "Behavior Change Activation",
@@ -4417,71 +4417,121 @@ export default {
       },
     },
     consumerBrands: {
-      name: "Consumer Brands",
-      title: "Consumer Brands",
+      name: "Tada for Consumer Brands",
+      title: "Tada for Consumer Brands",
       description:
-        "Leverage consumer insights to refine products and marketing strategies.",
+        "Insight you can trust to build better products, sharpen strategy, and grow your brand across every African market.",
       hero: {
-        headline: "FMCG data for your company",
-        subheadline:
-          "Get FMCG insights you can trust: Tada delivers state of the art methods for your dynamic market. Whether it's testing new designs or tracking brand health, let us handle the heavy lifting while you drive innovation.",
+        headline: "Tada for Consumer Brands",
+        subheadline: "Tada helps governments, multilaterals, and development agencies gather real-time insights from citizens and communities. Whether you’re designing a policy, assessing needs, or monitoring impact, we give you clarity powered by on-the-ground data, geospatial intelligence, and human insight.",
         benefits: [],
-        ctaPrimary: "Book a demo",
+        ctaPrimary: "Request a demo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title: "How Tada simplifies your journey",
+        title: "How Tada Simplifies Your Journey",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Consumer-centric insights",
-            description:
-              "Tada offers flexible market research solutions tailored to your business, helping you make quick decisions and innovate even with limited time and resources.",
+            title: "",
+            description: "Understand what communities honestly think, feel, and need.",
           },
           {
-            icon: "CheckCircle",
-            title: "Market dynamics analysis",
-            description:
-              "Tada's market research services give you important insights into competitor strategies and market trends, helping you stay competitive in product positioning and market dynamics.",
+            title: "",
+            description: "Detect shifts in trust, satisfaction, and perception early.",
           },
           {
-            icon: "CheckCircle",
-            title: "Data-driven strategy",
-            description:
-              "With Tada, you benefit from unparalleled data quality and cost efficiency, empowering you to optimize research investments and make impactful decisions without compromise.",
+            title: "",
+            description: "Understand regional disparities without waiting weeks.",
+          },
+          {
+            title: "",
+            description: "Validate public programs before national rollout.",
+          },
+          {
+            title: "",
+            description: "Track policy effectiveness in real time.",
+          },
+          {
+            title: "",
+            description: "Strengthen transparency and accountability with reliable data.",
+          },
+        ],
+      },
+      zigZag: {
+        title: "",
+        items: [
+          {
+            eyebrow: "",
+            title: "Research Backed by Expert Guidance, Tailored to Your Needs",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Citizen sentiment and trust tracking across regions.</li>
+                <li>Geospatial mapping of access, infrastructure, and disparities.</li>
+                <li>Needs assessments for communities and vulnerable groups.</li>
+                <li>Program evaluation and effectiveness analysis.</li>
+                <li>Policy communication and narrative testing.</li>
+                <li>Regional deep dives for targeted interventions.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "What You Can Achieve With Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Design policies grounded in real community needs.</li>
+                <li>Improve program impact with ongoing feedback.</li>
+                <li>Build trust across diverse populations.</li>
+                <li>Allocate resources more efficiently and precisely.</li>
+                <li>Reduce risk through evidence-based decision-making.</li>
+                <li>Strengthen monitoring and evaluation frameworks.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
         ],
       },
       useCases: {
-        title: "Discover methods for FMCG market research",
-        subtitle: "Discover the most common use cases for data-driven decisions in the FMCG sector.",
+        title: "Tailored Research Solutions for All Your Needs",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Visual testing",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Discover the most promising logos, packaging designs, and visual concepts prior to launching your campaign. Make strategic decisions and invest your resources wisely by gaining valuable insights.",
+            description: "Monitor how citizens perceive key institutions or programs.",
           },
           {
-            title: "Finding the right price",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Obtain an in-depth understanding of customers' price sensitivity. Dive into consumer behavior to determine the optimal pricing strategy for your product or service.",
+            description: "Understand barriers to accessing public services.",
           },
           {
-            title: "Brand health tracking",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Enhance your brand health tracker with insights on mental availability and category engagement. Explore consumer cognition and behavior to drive actionable strategies for sustained brand success.",
+            description: "Validate public communication before national distribution.",
           },
           {
-            title: "Media and campaign planning",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Assess the effectiveness of your advertisements, claims, or creative elements in engaging and influencing your target audience. Make informed choices regarding media planning and allocation of advertising budgets.",
+            description: "Measure the gender, age, or geographic differences in perception.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Identify underserved communities that require support.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Monitor progress toward development goals in real time.",
           },
         ],
       },
@@ -4489,37 +4539,168 @@ export default {
         title: "Got questions? We've got answers!",
         items: [
           {
-            question: "What specific types of market research services do you offer for FMCG companies?",
-            answer: `At Tada, we offer a comprehensive range of market research services tailored specifically for FMCG companies, leveraging expert guidance and cutting-edge technology. Our services include:
-              1. Consumer Insights: Real-time access to consumer opinions, enabling FMCG companies to understand preferences, habits, and behavior across various demographics.
-
-              2. Product Testing: Evaluate new products before launch or improve existing ones by gathering feedback on packaging, taste, functionality, and overall appeal.
-
-              3. Brand Tracking: Monitor brand awareness, perception, and loyalty over time to gauge market position and effectiveness of branding strategies.
-
-              4. Advertising & Campaign Testing: Test the effectiveness of marketing campaigns and advertisements to ensure messaging resonates with target audiences before full rollout.
-
-              5. Competitor Analysis: Gain insights into competitor strategies, product offerings, and market positioning to inform business decisions and maintain a competitive edge.
-
-              6. Market Segmentation: Identify and target specific consumer segments, ensuring tailored strategies for diverse market needs.
-
-              Using Tada’s advanced research technology, FMCG companies can obtain fast, reliable, and actionable insights, all guided by a team of experts dedicated to optimizing research outcomes for strategic growth.`,
+            question: "Can Tada reach rural or hard-to-access regions?",
+            answer: "Yes — our network includes rural, peri-urban, and remote communities.",
           },
           {
-            question: "What is the typical timeframe for completing a market research project for FMCG products?",
-            answer: "The speed of our surveys ensures that you receive data promptly without compromising quality. Completion time depends on the target group and can range from a few minutes up to several days. Most surveys are completed on the same day they are launched. Our pricing structure is transparent and customizable, catering to the scope and scale of your projects. For specific details on pricing, visit our pricing page.",
+            question: "How quickly can data be collected?",
+            answer: "Most insights arrive within hours.",
           },
           {
-            question: "Do you offer support in setting up FMCG surveys?",
-            answer: "Of course we do! Our dedicated market research experts will guide you through every step of the way. Prefer doing it on your own? No problem! Tada serves as both a complete DIY tool and a full-service research agency.",
+            question: "Is the data secure?",
+            answer: "Yes — we follow strict privacy and ethical standards.",
           },
           {
-            question: "What do the FMCG survey results look like?",
-            answer: "Your results will be presented in the form of beautiful interactive charts that you’ll find in the dashboard. Analyze and filter your results by age, gender or any other criteria you’d like. Play around with your results, filtering each question to get the insights you need. Create links & export customized reports to share with your colleagues.",
+            question: "Can we segment results by region or demographic?",
+            answer: "Absolutely — segmentation is built into the platform.",
+          },
+        ]
+      },
+      cta: {
+        title: "Let us convince you!",
+        subtitle: "",
+        primaryButton: "Schedule a demo now",
+        secondaryButton: "",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondaryLink: "",
+      },
+    },
+    publicAndPoliticalSector: {
+      name: "Public & Political Sector",
+      title: "Public & Political Sector",
+      description: "Reliable, real-time insights to understand communities, guide policy, and deliver impact across Africa.",
+      hero: {
+        headline: "Public & Political Sector",
+        subheadline: "Tada helps governments, multilaterals, and development agencies gather real-time insights from citizens and communities. Whether you’re designing a policy, assessing needs, or monitoring impact, we give you clarity powered by on-the-ground data, geospatial intelligence, and human insight.",
+        benefits: [],
+        ctaPrimary: "Request a demo",
+        ctaPrimaryLink: "/schedule-a-demo",
+        ctaSecondary: "",
+      },
+      features: {
+        title: "How Tada Simplifies Your Journey",
+        subtitle: "",
+        items: [
+          {
+            title: "",
+            description: "Understand what communities honestly think, feel, and need.",
           },
           {
-            question: "Where is Tada available?",
-            answer: "We are where your target consumers are. Tada conducts market research in 190+ countries globally.",
+            title: "",
+            description: "Detect shifts in trust, satisfaction, and perception early.",
+          },
+          {
+            title: "",
+            description: "Understand regional disparities without waiting weeks.",
+          },
+          {
+            title: "",
+            description: "Validate public programs before national rollout.",
+          },
+          {
+            title: "",
+            description: "Track policy effectiveness in real time.",
+          },
+          {
+            title: "",
+            description: "Strengthen transparency and accountability with reliable data.",
+          },
+        ],
+      },
+      zigZag: {
+        title: "",
+        items: [
+          {
+            eyebrow: "",
+            title: "Research Backed by Expert Guidance, Tailored to Your Needs",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Citizen sentiment and trust tracking across regions.</li>
+                <li>Geospatial mapping of access, infrastructure, and disparities.</li>
+                <li>Needs assessments for communities and vulnerable groups.</li>
+                <li>Program evaluation and effectiveness analysis.</li>
+                <li>Policy communication and narrative testing.</li>
+                <li>Regional deep dives for targeted interventions.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+          {
+            eyebrow: "",
+            title: "What You Can Achieve With Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Design policies grounded in real community needs.</li>
+                <li>Improve program impact with ongoing feedback.</li>
+                <li>Build trust across diverse populations.</li>
+                <li>Allocate resources more efficiently and precisely.</li>
+                <li>Reduce risk through evidence-based decision-making.</li>
+                <li>Strengthen monitoring and evaluation frameworks.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
+      },
+      useCases: {
+        title: "Tailored Research Solutions for All Your Needs",
+        subtitle: "",
+        otherSubtitle: "",
+        cases: [
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Monitor how citizens perceive key institutions or programs.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Understand barriers to accessing public services.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Validate public communication before national distribution.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Measure the gender, age, or geographic differences in perception.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Identify underserved communities that require support.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Monitor progress toward development goals in real time.",
+          },
+        ],
+      },
+      accordion: {
+        title: "Got questions? We've got answers!",
+        items: [
+          {
+            question: "Can Tada reach rural or hard-to-access regions?",
+            answer: "Yes — our network includes rural, peri-urban, and remote communities.",
+          },
+          {
+            question: "How quickly can data be collected?",
+            answer: "Most insights arrive within hours.",
+          },
+          {
+            question: "Is the data secure?",
+            answer: "Yes — we follow strict privacy and ethical standards.",
+          },
+          {
+            question: "Can we segment results by region or demographic?",
+            answer: "Absolutely — segmentation is built into the platform.",
           },
         ]
       },
@@ -4533,47 +4714,47 @@ export default {
       },
     },
     consultancies: {
-      name: "Consultancies",
-      title: "Consultancies",
+      name: "Tada for Consultancies",
+      title: "Tada for Consultancies",
       description:
-        "Gather reliable insights quickly and easily, so you can deliver the answers your clients need.",
+        "Faster insights to validate hypotheses, strengthen recommendations, and deliver client impact with confidence.",
       hero: {
         headline:
-          "Actionable consumer insights to win, deliver, and drive client success",
+          "Tada for Consultancies",
         subheadline:
-          "At Tada, we help consultant teams gather reliable insights quickly and easily, so you can deliver the answers your clients need. With expert guidance at every stage of your project, you can stay on schedule without sacrificing on quality.",
+          "Tada equips consulting teams with real-time insights into consumers, markets, and fields to support strategic recommendations. Whether you're validating a hypothesis, sizing an opportunity, or stress-testing a growth path, we deliver the clarity you need precisely when you need it.",
         benefits: [],
-        ctaPrimary: "Book a demo",
+        ctaPrimary: "Request a demo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title: "Save time and effort with our expert guidance",
+        title: "How Tada Simplifies Your Journey",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Win pitches",
-            description:
-              "Increase your chances of winning new projects; we cover parts of your pitch survey costs.",
+            title: "",
+            description: "Validate hypotheses in hours, not weeks.",
           },
           {
-            icon: "CheckCircle",
-            title: "Enhance client projects",
-            description:
-              "Get valuable primary data to simplify market analysis for your client projects.",
+            title: "",
+            description: "Strengthen proposals with factual evidence.",
           },
           {
-            icon: "CheckCircle",
-            title: "Publish quality reports",
-            description:
-              "Ensure your publications, white-papers, and other PR efforts are backed with solid data.",
+            title: "",
+            description: "Map category or regional opportunities with confidence.",
           },
           {
-            icon: "CheckCircle",
-            title: "Innovate your strategy",
-            description:
-              "Bring fresh perspectives to your workshops, speaking engagements, and beyond.",
+            title: "",
+            description: "Reduce risk by testing assumptions before presentations.",
+          },
+          {
+            title: "",
+            description: "Support clients with field-level data they cannot access.",
+          },
+          {
+            title: "",
+            description: "Deliver strategy faster and with more precision.",
           },
         ],
       },
@@ -4582,41 +4763,75 @@ export default {
         items: [
           {
             eyebrow: "",
-            title: "Our AI-powered tech platform gives real-time & actionable insights",
-            description: "",
-            buttonLabel: "Book a Demo",
+            title: "Research Backed by Expert Guidance, Tailored to Your Needs",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Rapid hypothesis validation tools.</li>
+                <li>Category and competitive pulse tracking.</li>
+                <li>Market landscape and opportunity mapping.</li>
+                <li>Retail ecosystem and outlet census tracking.</li>
+                <li>Growth pathway testing and prioritization.</li>
+                <li>Qualitative and quantitative insight integration.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
-        ]
+          {
+            eyebrow: "",
+            title: "What You Can Achieve With Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Strengthen client recommendations with real insights.</li>
+                <li>Identify opportunities earlier than competitors.</li>
+                <li>Improve accuracy in market prioritization and sizing.</li>
+                <li>Deliver evidence-backed strategy under tight timelines.</li>
+                <li>Win more proposals with fresh, field-tested data.</li>
+                <li>Reduce risk across market-entry and growth projects.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
       },
       useCases: {
-        title: "Global trends and consumer behavior at your fingertips",
-        subheadline: "With our intuitive, AI-powered platform, Tada delivers real-time, actionable insights to keep you ahead of the curve. Use our express delivery option to get the data you need on tight timelines without sacrificing quality. Let Tada be your partner in delivering impactful insights for every consultancy project.",
-        subtitle: "Tailored research solutions for all your needs",
+        title: "Tailored Research Solutions for All Your Needs",
+        subheadline: "",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Pricing Analysis",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Assess market fit and revenue potential to identify significant growth opportunities for your client.",
+            description: "Validate assumptions during early project scoping.",
           },
           {
-            title: "Target Group Analysis",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Boost your client’s conversions by evaluating key features in their customer journey.",
+            description: "Measure the likelihood of adoption for new offers or services.",
           },
           {
-            title: "Visual testing",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Deliver insights into audience perceptions of a concept or campaign to better inform your clients.",
+            description: "Compare market attractiveness across countries.",
           },
           {
-            title: "Concept test",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Identify the concepts with the higher market potential to guide your current and future clients.",
+            description: "Understand willingness-to-pay in key segments.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Track competitive narratives or category shifts.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Evaluate strategic narratives before client workshops.",
           },
         ],
       },
@@ -4624,28 +4839,20 @@ export default {
         title: "Got questions? We've got answers!",
         items: [
           {
-            question: "What specific types of market research services do you offer for consultant teams?",
-            answer: `At Tada, we enable consulting teams to elevate their client offerings and deliver data-driven strategies through our agile and comprehensive market research platform. Our tailored solutions enable consulting firms to:
-              Gain Consumer Insights: Tap into real-time consumer opinions to understand preferences, motivations, and behaviors across diverse demographics.
-              Conduct Rapid Concept Testing: Validate new ideas and refine creative concepts through quick feedback loops, ensuring campaigns resonate with target audiences.
-              Optimize Brand Strategies: Track brand awareness, perception, and sentiment to measure campaign impact and guide strategic brand development.
-              Evaluate Pricing Strategies: Assess consumer willingness to pay, price sensitivity, and optimal pricing points to maximize revenue and profitability.
-              Conduct Competitor Analysis: Gain insights into competitor strategies, strengths, and weaknesses to inform competitive positioning and market differentiation.
-              Identify Trends and Opportunities: Uncover emerging trends, cultural shifts, and unmet consumer needs to guide innovation and campaign development.
-              
-              By leveraging Tada's advanced research technology and expert guidance, consulting companies can make data-driven decisions, optimize client strategies, and deliver exceptional results.`,
+            question: "Can we use Tada in short sprints?",
+            answer: "Yes — most studies deliver results within hours.",
           },
           {
-            question: "What is the typical timeframe for completing a market research project for consultancies?",
-            answer: "The speed of our surveys ensures that you receive data promptly without compromising quality. Our pricing structure is transparent and customizable, catering to the scope and scale of your projects. For specific details on pricing, visit our pricing page.",
+            question: "Can we run multi-country studies?",
+            answer: "Absolutely — across +90 African markets.",
           },
           {
-            question: "Do you offer support in setting up surveys for consulting teams?",
-            answer: "Of course we do! Our dedicated market research experts will guide you through every step of the way. Prefer doing it on your own? No problem! Tada serves as both a complete DIY tool and a full-service research agency.",
+            question: "Do we need research expertise?",
+            answer: "No — Tada is designed for consultants.",
           },
           {
-            question: "What do the survey results for consultancies look like?",
-            answer: "Your results will be presented in the form of beautiful interactive charts that you’ll find in the dashboard. Analyze and filter your results by age, gender or any other criteria you’d like. Play around with your results, filtering each question to get the insights you need. Create links & export customized reports to share with your colleagues.",
+            question: "Can insights export directly into slides?",
+            answer: "Yes — fully optimized for consulting workflows.",
           },
         ]
       },
@@ -4659,46 +4866,45 @@ export default {
       },
     },
     agencies: {
-      name: "Agencies",
-      title: "Agencies",
-      description: "Equip your clients with actionable consumer insights.",
+      name: "Tada for Agencies",
+      title: "Tada for Agencies",
+      description: "Real audience insights to shape stronger creative, win pitches, and deliver campaigns that truly resonate.",
       hero: {
-        headline: "Equip your clients with actionable consumer insights",
+        headline: "Tada for Agencies",
         subheadline:
-          "At Tada, we help agency teams and their clients across every industry to answer the questions that matter most. With our advanced methodologies and cutting-edge technology powered by AI, gathering consumer insights has never been more efficient.",
+          "Tada helps agencies understand how people react to ideas, storylines, and campaigns — before anything goes live. Whether you're pitching, crafting creative routes, or optimizing media, we provide the clarity you need to produce work that wins hearts and moves markets.",
         benefits: [],
-        ctaPrimary: "Book a demo",
+        ctaPrimary: "Request a demo",
         ctaPrimaryLink: "/schedule-a-demo",
         ctaSecondary: "",
       },
       features: {
-        title:
-          "Research backed by expert guidance tailored to your business needs",
+        title: "How Tada Simplifies Your Journey",
         subtitle: "",
         items: [
           {
-            icon: "CheckCircle",
-            title: "Win pitches",
-            description:
-              "Win the projects you are going after. We cover parts of your pitch survey costs to increase your likelihood of winning.",
+            title: "",
+            description: "Craft ideas that resonate from the start.",
           },
           {
-            icon: "CheckCircle",
-            title: "Target Group Analysis",
-            description:
-              "Uncover the target audience's motivations, attitudes, and messaging preferences to help your client build deeper connections.",
+            title: "",
+            description: "Validate creative routes before production.",
           },
           {
-            icon: "CheckCircle",
-            title: "Pre-testing",
-            description:
-              "Which creative performs best, is most understandable, or truly memorable? You have the gut feeling, we have the data.",
+            title: "",
+            description: "Optimize campaigns in real time while they run.",
           },
           {
-            icon: "CheckCircle",
-            title: "Tracking",
-            description:
-              "Track brand performance, trends, and campaigns in real time, with competitor benchmarking to help your client optimize strategies and drive results.",
+            title: "",
+            description: "Elevate pitch decks with fresh consumer evidence.",
+          },
+          {
+            title: "",
+            description: "Understand cultural nuances across regions.",
+          },
+          {
+            title: "",
+            description: "Make stronger creative decisions with less guesswork.",
           },
         ],
       },
@@ -4707,47 +4913,75 @@ export default {
         items: [
           {
             eyebrow: "",
-            title: "Our AI-powered tech platform gives real-time consumer insights",
-            description: "",
-            buttonLabel: "Book a Demo",
+            title: "Research Backed by Expert Guidance, Tailored to Your Need",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Rapid concept and creative route testing.</li>
+                <li>Emotional and attention measurement tools.</li>
+                <li>Message and narrative clarity validation.</li>
+                <li>Multi-market campaign performance tracking.</li>
+                <li>Visual and design testing across contexts.</li>
+                <li>Retail visibility and execution assessment.</li>
+              </ul>
+            `,
+            buttonLabel: "",
           },
-        ]
+          {
+            eyebrow: "",
+            title: "What You Can Achieve With Tada",
+            description: `<ul style="list-style-type: disc; margin-left: 1.5rem;">
+                <li>Create work that lands with the right audience.</li>
+                <li>Improve ROI through smarter media and creative optimization.</li>
+                <li>Reduce production risks with validated creative choices.</li>
+                <li>Strengthen pitches with evidence-based storytelling.</li>
+                <li>Deliver higher-performing campaigns for your clients.</li>
+                <li>Build a research-driven creative culture.</li>
+              </ul>
+            `,
+            buttonLabel: "",
+          },
+        ],
       },
       useCases: {
-        title: "Access to real time insights",
-        subheadline: "Whether you need insights from niche and B2B audiences or representative consumer samples, Tada connects you to real-world representation across 190+ markets, capturing authentic consumer voices globally that bring your research to life. Let Tada be your partner in delivering impactful results for each of your client’s projects.",
-        subtitle: "Tailored research solutions for all your needs",
+        title: "Tailored Research Solutions for All Your Needs",
+        subheadline: "",
+        subtitle: "",
         otherSubtitle: "",
         cases: [
           {
-            title: "Brand Health Tracking",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Provide your clients with insights into their brand’s performance and consumer’s perceptions.",
+            description: "Compare storyboard routes before production.",
           },
           {
-            title: "Visual testing",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Provide insights into what consumers think about your client’s designs.",
+            description: "Test emotional response to early creative ideas.",
           },
           {
-            title: "Target Group Analysis",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Deliver a clear understanding of your client’s audience, their motivations, and triggers to shape their communication strategy.",
+            description: "Validate brand narratives before strategy presentations.",
           },
           {
-            title: "Campaign Tracking",
-            subheadline: "Method",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Measure the impact of your client’s campaign during and after the campaign run to monitor impact and success.",
+            description: "Measure message clarity and recall instantly.",
           },
           {
-            title: "Media testing",
-            subheadline: "Business Solution",
+            title: "",
+            subheadline: "",
             benefits: [],
-            description: "Assess your client’s communication effectiveness and its impact on their target audience.",
+            description: "Optimize campaigns while they’re still active.",
+          },
+          {
+            title: "",
+            subheadline: "",
+            benefits: [],
+            description: "Understand regional interpretations of creative cues.",
           },
         ],
       },
@@ -4755,28 +4989,20 @@ export default {
         title: "Got questions? We've got answers!",
         items: [
           {
-            question: "What specific types of market research services do you offer for agencies?",
-            answer: `At Tada, we empower agency teams to elevate their research projects with our agile and comprehensive platform. Our tailored solutions enable agencies to:
-              Gain Consumer Insights: Tap into real-time consumer opinions to understand preferences, motivations, and behaviors across diverse demographics.
-              Conduct Rapid Concept Testing: Validate new ideas and refine creative concepts through quick feedback loops, ensuring campaigns resonate with target audiences.
-              Optimize Brand Strategies: Track brand awareness, perception, and sentiment to measure campaign impact and guide strategic brand development.
-              Test Advertising Effectiveness: Evaluate ad performance and messaging resonance across various channels and formats, ensuring optimal impact and ROI.
-              Conduct Competitor Analysis: Gain insights into competitor strategies, strengths, and weaknesses to inform competitive positioning and market differentiation.
-              Identify Trends and Opportunities: Uncover emerging trends, cultural shifts, and unmet consumer needs to guide innovation and campaign development.
-              
-              By leveraging Tada's advanced research technology and expert guidance, agencies can make data-driven decisions, optimize campaign strategies, and deliver exceptional results for their clients.`,
+            question: "Can we test rough cuts or early sketches?",
+            answer: "Yes — any creative format works.",
           },
           {
-            question: "What is the typical timeframe for completing a market research project for agencies?",
-            answer: "The speed of our surveys ensures that you receive data promptly without compromising quality. Our pricing structure is transparent and customizable, catering to the scope and scale of your projects. For specific details on pricing, visit our pricing page.",
+            question: "Can we run studies during pitches?",
+            answer: "Absolutely — fast turnaround makes it easy.",
           },
           {
-            question: "Do you offer support in setting up surveys for agencies ?",
-            answer: "Of course we do! Our dedicated market research experts will guide you through every step of the way. Prefer doing it on your own? No problem! Tada serves as both a complete DIY tool and a full-service research agency.",
+            question: "Can we test across multiple languages or regions?",
+            answer: "Yes — Africa-wide.",
           },
           {
-            question: "What do the survey results for agency teams look like?",
-            answer: "Your results will be presented in the form of beautiful interactive charts that you’ll find in the dashboard. Analyze and filter your results by age, gender or any other criteria you’d like. Play around with your results, filtering each question to get the insights you need. Create links & export customized reports to share with your colleagues.",
+            question: "Do we need research expertise?",
+            answer: "Not at all — we guide you step by step.",
           },
         ]
       },

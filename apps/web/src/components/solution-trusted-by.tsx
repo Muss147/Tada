@@ -2,9 +2,7 @@
 "use client";
 
 import Image from "next/image";
-import { useI18n } from "@/locales/client";
 import { useEffect, useRef } from "react";
-import React from "react";
 
 const logos = [
   { src: "/images/cocacola.png", alt: "Coca-Cola" },
@@ -16,11 +14,7 @@ const logos = [
   { src: "/images/bcg-31.png", alt: "BCG" },
 ];
 
-export default function DynamicTrustedBy({
-  section,
-}: {
-  section: string;
-}) {
+export default function DynamicTrustedBy() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Animation continue du scroll horizontal
@@ -49,40 +43,22 @@ export default function DynamicTrustedBy({
 
   // On duplique les logos pour un effet de boucle fluide
   const duplicatedLogos = [...logos, ...logos];
-  const t = useI18n();
 
   return (
-    <section className="py-16 bg-white overflow-hidden mb-20 md:mb-24">
-      <div className="max-w-7xl mx-auto px-6 text-center">
-        <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-10">
-          {t(`solutions.trustedBy.${section}` as any, {})
-            .split("\n")
-            .map((line, index) => (
-              <React.Fragment key={index}>
-                {/* Ajouter un saut de ligne seulement après la 1ère ligne */}
-                {line}
-                {index === 0 && <br className="hidden md:block" />}
-              </React.Fragment>
-            ))}
-        </h2>
-
-        <div
-          ref={scrollRef}
-          className="flex gap-12 overflow-x-hidden whitespace-nowrap"
-        >
-          {duplicatedLogos.map((logo, index) => (
-            <div key={index} className="flex-shrink-0 flex items-center w-40 md:w-48">
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={200}
-                height={100}
-                className="object-contain w-full h-auto opacity-80 hover:opacity-100 transition"
-              />
-            </div>
-          ))}
+    <div
+      ref={scrollRef}
+      className="flex gap-12 overflow-x-hidden whitespace-nowrap">
+      {duplicatedLogos.map((logo, index) => (
+        <div key={index} className="flex-shrink-0 flex items-center w-40 md:w-48">
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={200}
+            height={100}
+            className="object-contain w-full h-auto opacity-80 hover:opacity-100 transition"
+          />
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
