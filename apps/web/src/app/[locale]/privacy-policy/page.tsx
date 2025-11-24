@@ -1,5 +1,6 @@
 import { getI18n } from "@/locales/server";
 import { generateMetadata } from "../metadata";
+import RightMenu from "@/components/ui/AnnexeRightMenu";
 
 export const metadata = generateMetadata({
   title: "Privacy Policy - TadaIQ",
@@ -9,9 +10,10 @@ export const metadata = generateMetadata({
 
 export default async function PrivacyPolicyPage() {
   const t = await getI18n();
+
   return (
     <div className="min-h-screen bg-white">
-      <div className="grid grid-cols-4">
+      <div className="container-custom grid grid-cols-4">
         <div className="col-span-4 mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-12 text-center">
@@ -44,7 +46,7 @@ export default async function PrivacyPolicyPage() {
           </ul>
         </div>
 
-        <div className="col-span-3 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="col-span-3">
           <div className="prose prose-gray max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700">
             {/* Introduction */}
             <section className="mb-8">
@@ -1718,29 +1720,7 @@ export default async function PrivacyPolicyPage() {
         </div>
 
         {/* SIDEBAR MENU RESPONSIVE */}
-        <div className="hidden lg:block col-span-1 relative">
-          <nav className="fixed right-0 w-64 bg-white shadow-md rounded-md border-t-2 border-primary px-4 py-8 me-10">
-            <ul className="flex flex-col gap-3">
-              <li className="p-2 rounded hover:bg-gray-100 border-l-4 border-primary">
-                <a href="/privacy">Privacy Policy</a>
-              </li>
-              <li className="p-2 rounded hover:bg-gray-100">
-                <a href="/community-guidelines">Community Guidelines</a>
-              </li>
-              <li className="p-2 rounded hover:bg-gray-100">
-                <a href="/terms-of-use">Mobile Terms of Use</a>
-              </li>
-              <li className="p-2 rounded hover:bg-gray-100">
-                <a href="/saas-agreement">SaaS Agreement</a>
-              </li>
-              <li className="p-2 rounded hover:bg-gray-100">
-                <a href="/modern-slavery-statement">
-                  Modern Slavery Statement
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <RightMenu page="privacy_policy" />
       </div>
     </div>
   );

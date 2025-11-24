@@ -177,6 +177,12 @@ const Footer = () => {
                 >
                   {t("home.footer.cookie_policy")}
                 </Link>
+                <Link
+                  href="/saas-agreement"
+                  className="hover:text-white transition-colors"
+                >
+                  {t("home.footer.saas_agreement")}
+                </Link>
               </div>
             </div>
           </div>

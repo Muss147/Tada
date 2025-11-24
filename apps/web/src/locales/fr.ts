@@ -71,6 +71,7 @@ export default {
       terms_of_use: "Conditions d'utilisation",
       privacy_policy: "Politique de confidentialité",
       cookie_policy: "Politique des cookies",
+      saas_agreement: "Accord SaaS",
       all_rights_reserved: "Tous droits réservés par Tada",
     },
     hero: {
