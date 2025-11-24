@@ -81,7 +81,7 @@ export function HeroSection() {
   const currentHeroSlide = heroSlides[currentHeroIndex];
   return (
     <div className="relative overflow-hidden p-2 sm:p-4 min-h-[500px] sm:min-h-[600px] md:min-h-[650px] lg:min-h-[600px] xl:min-h-[700px]">
-      {/* Génération des background color */}
+      {/* Génération des couleurs du background */}
       <div className="from-orange-400/90 to-orange-400/80"></div>
       <div className="from-blue-400/90 to-blue-400/80"></div>
       <div className="from-red-400/90 to-red-400/80"></div>
