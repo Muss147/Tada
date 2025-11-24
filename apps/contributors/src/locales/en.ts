@@ -112,9 +112,7 @@ export default {
     },
 
     // CTA Section
-    ctaTitle1: "Become a contributor and",
-    ctaTitle2: "start earning",
-    ctaTitle3: "money.",
+    ctaTitle: "Become a contributor and start earning money.",
     ctaDescription: "Start making money with your opinions.",
     ctaSimulator: {
       month: "a month",
@@ -124,6 +122,7 @@ export default {
     // Footer
     termsOfUse: "Terms of Use",
     privacyPolicy: "Privacy Policy",
+    saas_agreement: "SaaS Agreement",
     copyright: "All rights reserved.",
 
     // Common

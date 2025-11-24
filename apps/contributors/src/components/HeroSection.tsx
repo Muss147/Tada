@@ -13,10 +13,10 @@ export function HeroSection() {
         <div className="grid gap-8 lg:gap-12 relative items-center lg:grid-cols-[55%_45%]">
           <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
             <div className="lg:space-y-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-[#282828] font-sans">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-[#282828]">
                 {t("common.heroTitle1")}
               </h1>
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-[#282828] font-sans">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-[#282828]">
                 {t("common.heroTitle2")}
               </h1>
             </div>

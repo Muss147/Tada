@@ -11,7 +11,7 @@ export function TestimonialsSection() {
     <section className="py-12 bg-[#F0F1F3] lg:py-24">
       <div className="max-w-7xl mx-auto px-4 lg:px-6">
         <div className="text-center mb-12 lg:mb-16">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold font-sora text-[#282828] mb-4 lg:mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#282828] mb-4 lg:mb-6">
             {t("common.testimonials.title")}
           </h2>
           <p className="text-base lg:text-lg font-light text-[#48505E]">

@@ -14,7 +14,7 @@ export function CTASection() {
   const [displayValue, setDisplayValue] = useState(0);
   const previousValue = useRef(0);
 
-  const mensualValue = jobsPerWeek * 7 * 4; // 7€ par job, 4 semaines
+  const mensualValue = jobsPerWeek * 7 * 4; // $7 par job, 4 semaines
 
   // Animation du décompte
   useEffect(() => {
@@ -42,14 +42,8 @@ export function CTASection() {
           {/* Text Block */}
           <div className="space-y-6 lg:space-y-8 text-center lg:text-left py-10">
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-sora font-semibold text-[#282828]">
-                {t("common.ctaTitle1")}
-              </h2>
-              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-sora font-semibold text-[#282828]">
-                {t("common.ctaTitle2")}
-              </h2>
-              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-sora font-semibold text-[#282828]">
-                {t("common.ctaTitle3")}
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl text-left sm:text-center font-semibold text-[#282828]">
+                {t("common.ctaTitle")}
               </h2>
             </div>
 
@@ -57,7 +51,7 @@ export function CTASection() {
             {/* SIMULATEUR DE GAINS */}
             {/* -------------------------------- */}
             <div className="mt-4 lg:mt-6">
-              <div className="flex items-baseline justify-center lg:justify-start gap-3 mb-4">
+              <div className="flex items-baseline justify-center gap-3 mb-4">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={displayValue}
@@ -67,7 +61,7 @@ export function CTASection() {
                     transition={{ duration: 0.25 }}
                     className="text-5xl lg:text-6xl font-bold text-primary"
                   >
-                    €{displayValue}
+                    ${displayValue}
                   </motion.span>
                 </AnimatePresence>
 
@@ -76,7 +70,7 @@ export function CTASection() {
                 </span>
               </div>
 
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-gray-600 text-center mb-4">
                 <strong className="text-primary">{jobsPerWeek} jobs</strong>{" "}
                 {t("common.ctaSimulator.perWeekFixed")}
               </p>
@@ -84,7 +78,7 @@ export function CTASection() {
               {/* Slider */}
               <div className="w-full md:max-w-2xl mx-auto lg:mx-0">
                 <div className="relative">
-                  <div className="h-2 bg-gray-200 rounded-full" />
+                  <div className="h-2 bg-gray-950 rounded-full" />
                   <input
                     type="range"
                     min={0}
@@ -104,11 +98,11 @@ export function CTASection() {
             </div>
             {/* -------------------------------- */}
 
-            <p className="text-base font-light lg:text-lg text-gray-600">
+            <p className="text-base font-light lg:text-lg text-gray-600 text-center">
               {t("common.ctaDescription")}
             </p>
 
-            <div className="flex flex-row gap-3 lg:gap-4 justify-center lg:justify-start">
+            <div className="flex flex-row gap-3 lg:gap-4 justify-center">
               <Link
                 href="https://testflight.apple.com/join/NU6pMECN"
                 target="_blank"

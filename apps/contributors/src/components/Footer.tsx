@@ -44,6 +44,13 @@ export function Footer() {
             >
               {t("common.privacyPolicy")}
             </Link>
+            <Link
+              href="/saas-agreement"
+              target="_blank"
+              className="text-white hover:opacity-80 text-xs lg:text-sm"
+            >
+              {t("common.saas_agreement")}
+            </Link>
           </nav>
 
           <div className="text-white text-xs lg:text-sm text-center">

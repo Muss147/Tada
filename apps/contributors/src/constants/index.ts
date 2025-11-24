@@ -45,7 +45,7 @@ export const testimonials = [
     name: "Ousmane",
     role: "common.testimonials.items.7.role",
     text: "common.testimonials.items.7.text",
-    thumbnail: "https://randomuser.me/api/portraits/men/61.jpg",
+    thumbnail: "/testimonials/Ousmane.jpg",
   },
   {
     name: "Aminata",
@@ -57,13 +57,13 @@ export const testimonials = [
     name: "Marie",
     role: "common.testimonials.items.9.role",
     text: "common.testimonials.items.9.text",
-    thumbnail: "https://randomuser.me/api/portraits/women/54.jpg",
+    thumbnail: "/testimonials/Marie.jpg",
   },
   {
     name: "Jean",
     role: "common.testimonials.items.10.role",
     text: "common.testimonials.items.10.text",
-    thumbnail: "https://randomuser.me/api/portraits/men/39.jpg",
+    thumbnail: "/testimonials/Jean.jpg",
   },
   {
     name: "Fatima",
@@ -87,6 +87,6 @@ export const testimonials = [
     name: "Nadia",
     role: "common.testimonials.items.14.role",
     text: "common.testimonials.items.14.text",
-    thumbnail: "https://randomuser.me/api/portraits/women/73.jpg",
+    thumbnail: "/testimonials/Nadia.jpg",
   },
 ];

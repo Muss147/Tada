@@ -112,9 +112,7 @@ export default {
     },
 
     // CTA Section
-    ctaTitle1: "Devenez contributeur et",
-    ctaTitle2: "commencez à gagner",
-    ctaTitle3: "de l'argent.",
+    ctaTitle: "Devenez contributeur et commencez à gagner de l'argent.",
     ctaDescription: "Commencez à vous faire de l'argent avec vos connaissances.",
     ctaSimulator: {
       month: "le mois",
@@ -124,6 +122,7 @@ export default {
     // Footer
     termsOfUse: "Conditions d'utilisation",
     privacyPolicy: "Politique de confidentialité",
+    saas_agreement: "Accord SaaS",
     copyright: "Tout droit reservé.",
 
     // Common
