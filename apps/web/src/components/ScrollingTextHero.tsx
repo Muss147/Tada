@@ -43,7 +43,7 @@ export default function ScrollingTextHero() {
   }, []);
 
   return (
-    <div className="space-y-12">
+    <div className="container-custom space-y-12">
       <div className="container-custom text-center">
         <h3 className="mt-2 text-2xl md:text-5xl font-bold mb-4">
           {t("home.hero.title")
@@ -61,7 +61,7 @@ export default function ScrollingTextHero() {
         </p>
       </div>
 
-      <div className="relative flex items-center justify-center h-[60vh] bg-cover bg-center"
+      <div className="relative flex items-center justify-center h-[70vh] bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}>
         {/* Overlay sombre */}
         <div className="absolute inset-0 bg-black/60" />
