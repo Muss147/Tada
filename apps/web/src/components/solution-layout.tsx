@@ -26,12 +26,11 @@ const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution, family }) => 
   const t = useI18n();
   
   return (
-    <div className="min-h-screen bg-white space-y-8">
+    <div className="min-h-screen bg-white space-y-16">
       <DynamicHero data={solution.hero} />
-      
-      <div className="py-16 bg-white overflow-hidden mb-20 md:mb-24">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-10">
+      <div className="container-custom pb-16 bg-white overflow-hidden mb-20 md:mb-24">
+        <div className="text-center">
+          <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-6">
             {t("solutions.trustedBy.layout" as any, {})
               .split("\n")
               .map((line, index) => (
@@ -42,9 +41,7 @@ const SolutionLayout: React.FC<SolutionLayoutProps> = ({ solution, family }) => 
                 </React.Fragment>
               ))}
           </h2>
-          
           <DynamicTrustedBy />
-
         </div>
       </div>
       <DynamicFeatures data={solution.features} />

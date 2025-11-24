@@ -25,7 +25,7 @@ const FeatureBlock: React.FC<FeatureBlockProps> = ({
         <Icon className="w-16 h-16 font-semibold text-primary" />
       </div>
       <div className="text-center md:text-left">
-        <h3 className="text-2xl font-bold mb-2 text-primary">{title}:</h3>
+        <h4 className="text-2xl font-bold mb-2 text-primary">{title}:</h4>
         <p className="text-gray-600 leading-relaxed text-lg">{description}</p>
       </div>
     </div>

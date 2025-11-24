@@ -9,9 +9,9 @@ export default function CapabilitiesSection() {
   
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <p className="mt-2 text-2xl md:text-5xl font-bold mb-4">
+        <h2 className="mt-2 text-2xl md:text-5xl font-bold mb-4">
             {t("home.capabilities.title")}
-        </p>
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             {capabilities.map((cap) => (

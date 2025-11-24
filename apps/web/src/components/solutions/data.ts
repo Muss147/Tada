@@ -1285,23 +1285,23 @@ export const solutions: Solution[] = [
       items: [
         {
           icon: "Lightbulb",
-          title: "solutions.mediaTesting.features.items.0.title",
+          title: "",
           description: "solutions.mediaTesting.features.items.0.description",
         },
         {
           icon: "CircleUser",
-          title: "solutions.mediaTesting.features.items.1.title",
+          title: "",
           description: "solutions.mediaTesting.features.items.1.description",
         },
         {
           icon: "HeartPulse",
-          title: "solutions.mediaTesting.features.items.2.title",
+          title: "",
           description: "solutions.mediaTesting.features.items.2.description",
         },
         {
           icon: "HeartPulse",
-          title: "solutions.mediaTesting.features.items.2.title",
-          description: "solutions.mediaTesting.features.items.2.description",
+          title: "",
+          description: "solutions.mediaTesting.features.items.3.description",
         },
       ],
     },

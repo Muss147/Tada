@@ -32,17 +32,17 @@ export default function DynamicZigZag({ data }: DynamicZigZagProps) {
   const t = useI18n();
 
   return (
-    <section className="py-16 sm:py-24">
+    <section className="container-custom py-8 sm:py-16">
       {/* Section Header */}
       {data.title && t(data.title as any, {}) !== data.title && (
-        <div className="text-center mb-16">
+        <div className="text-center mb-6">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             {t(data.title as any, {})}
           </h2>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-24">
+      <div className="flex flex-col gap-24">
         {data.items.map((item, index) => {
           const isReversed = index % 2 === 1;
 
@@ -56,9 +56,9 @@ export default function DynamicZigZag({ data }: DynamicZigZagProps) {
               {/* Text Block */}
               <div className={isReversed ? "md:order-last" : undefined}>
                 {item.eyebrow && t(item.eyebrow as any, {}) !== item.eyebrow && (
-                  <p className="text-sm text-premise-blue font-semibold mb-2">
+                  <span className="text-sm text-premise-blue font-semibold block mb-2">
                     {t(item.eyebrow as any, {})}
-                  </p>
+                  </span>
                 )}
 
                 <h3 className="text-3xl font-bold text-gray-900 mb-4">

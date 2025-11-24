@@ -45,7 +45,7 @@ export default function ScrollingTextHero() {
   return (
     <div className="space-y-12">
       <div className="container-custom text-center">
-        <p className="mt-2 text-2xl md:text-5xl font-bold mb-4">
+        <h3 className="mt-2 text-2xl md:text-5xl font-bold mb-4">
           {t("home.hero.title")
             .split("\n")
             .map((line, index) => (
@@ -55,13 +55,13 @@ export default function ScrollingTextHero() {
                 {index === 0 && <br className="hidden md:block" />}
               </React.Fragment>
           ))}
-        </p>
-        <p className="mt-6 text-lg/8 text-gray-600">
+        </h3>
+        <p className="text-lg/8 text-gray-600">
           {t("home.hero.description")}
         </p>
       </div>
 
-      <div className="relative flex items-center justify-center h-[80vh] bg-cover bg-center"
+      <div className="relative flex items-center justify-center h-[60vh] bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}>
         {/* Overlay sombre */}
         <div className="absolute inset-0 bg-black/60" />

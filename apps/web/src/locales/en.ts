@@ -2586,20 +2586,20 @@ export default {
         subtitle: "Advantages of Media Testing",
         items: [
           {
-            title: "Identify which ads genuinely perform best across African regions and segments.",
-            description: "",
+            title: "",
+            description: "Identify which ads genuinely perform best across African regions and segments.",
           },
           {
-            title: "Allocate your media and advertising budgets more efficiently, backed by evidence.",
-            description: "",
+            title: "",
+            description: "Allocate your media and advertising budgets more efficiently, backed by evidence.",
           },
           {
-            title: "Increase sales, visibility, and brand engagement across TV, digital, OOH & social.",
-            description: "",
+            title: "",
+            description: "Increase sales, visibility, and brand engagement across TV, digital, OOH & social.",
           },
           {
-            title: "Validate which claim resonates and aligns with cultural & linguistic realities.",
-            description: "",
+            title: "",
+            description: "Validate which claim resonates and aligns with cultural & linguistic realities.",
           },
         ],
       },

@@ -8,9 +8,9 @@ export const Features: React.FC = () => {
     <section className="">
       <div className="container-custom px-6 py-12 sm:p-16 space-y-12 bg-gray-100">
         <div className="">
-          <p className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
+          <h3 className="text-4xl md:text-5xl font-bold text-center mb-4 text-black">
             {t("home.what_sets_tada_apart.title")}
-          </p>
+          </h3>
           <p className="text-center text-gray-600">
             {t("home.what_sets_tada_apart.description")}
           </p>

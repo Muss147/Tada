@@ -16,9 +16,34 @@
   font-style: normal;
 }
 
+@font-face {
+  font-display:swap;
+  font-family:Aeonik;
+  font-weight:300;
+  src:url(https://www.appinio.com/hubfs/B2B%20New%202022/Fonts/Aeonik-Light.woff) format("woff")
+}
+@font-face {
+  font-display:swap;
+  font-family:Aeonik;
+  font-weight:400;
+  src:url(https://www.appinio.com/hubfs/B2B%20New%202022/Fonts/Aeonik-Regular.woff) format("woff")
+}
+@font-face {
+  font-display:swap;
+  font-family:Aeonik;
+  font-weight:500;
+  src:url(https://www.appinio.com/hubfs/B2B%20New%202022/Fonts/Aeonik-Medium.woff) format("woff")
+}
+@font-face {
+  font-display:swap;
+  font-family:Aeonik;
+  font-weight:700;
+  src:url(https://www.appinio.com/hubfs/B2B%20New%202022/Fonts/Aeonik-Bold.woff) format("woff")
+}
+
 @layer base {
   :root {
-    --font-primary: 'Sora', sans-serif;
+    --font-primary: 'Aeonik', 'Gilroy', sans-serif;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -80,15 +105,15 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Gilroy', sans-serif;
+    font-family: 'Aeonik', 'Gilroy', sans-serif;
   }
 
   h1, h2, h3 {
-    font-family: 'Gilroy', sans-serif;
+    font-family: 'Aeonik', 'Gilroy', sans-serif;
   }
 
   h4, h5, h6 {
-    font-family: 'Gilroy', sans-serif;
+    font-family: 'Aeonik', 'Gilroy', sans-serif;
   }
 }
 

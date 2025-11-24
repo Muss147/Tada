@@ -2462,16 +2462,20 @@ export default {
         subtitle: "Avantages des Tests Média",
         items: [
           {
-            title: "Identifiez les publicités les plus efficaces et allouez vos ressources plus efficacement.",
-            description: "",
+            title: "",
+            description: "Identifiez les publicités les plus efficaces et allouez vos ressources plus efficacement.",
           },
           {
-            title: "Augmentez les ventes, la reconnaissance de la marque et l'engagement client.",
-            description: "",
+            title: "",
+            description: "Augmentez les ventes, la reconnaissance de la marque et l'engagement client.",
           },
           {
-            title: "Sachez exactement quelle allégation fonctionne auprès de votre public cible.",
-            description: "",
+            title: "",
+            description: "Sachez exactement quelle allégation fonctionne auprès de votre public cible.",
+          },
+          {
+            title: "",
+            description: "Valider la revendication qui résonne et s'aligne sur les réalités culturelles et linguistiques.",
           },
         ],
       },

@@ -57,10 +57,10 @@ export default async function Home() {
       {/* Trusted By Section */}
       <section className="py-16 bg-white">
         <div className="container-custom">
-          <p className="text-2xl md:text-5xl font-bold text-center mb-10 block max-w-4xl mx-auto">
+          <h3 className="text-2xl md:text-5xl font-bold text-center mb-10 block max-w-4xl mx-auto">
             {t("home.trusted_by.title")}
-          </p>
-          <p className="text-center text-gray-600 font-bold mb-10 md:text-xl">
+          </h3>
+          <p className="text-center text-gray-600 mb-10 md:text-xl">
             {t("home.trusted_by.description")}
           </p>
           {/* <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
@@ -121,38 +121,38 @@ export default async function Home() {
 
       {/* Global Demand Section */}
       <section className="">
-        <div className="container-custom px-4 py-12 sm:p-16 bg-[#141a25] text-white">
-          <p className="text-2xl md:text-5xl font-bold text-center mb-4">
+        <div className="container-custom px-4 py-12 sm:p-16 bg-gradient-to-r from-gray-400/90 to-gray-400/80 text-white">
+          <h3 className="text-2xl md:text-5xl font-bold text-center mb-4">
             {t("home.global_demand.title")}
-          </p>
-          <p className="text-center text-gray-300 max-w-6xl mx-auto mb-12 md:text-xl">
+          </h3>
+          <p className="text-center text-gray-50 max-w-6xl mx-auto mb-12 md:text-xl">
             {t("home.global_demand.description")}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-md p-8 text-center text-navy">
-              <p className="text-3xl md:text-4xl font-bold mb-2 text-black">
+              <h4 className="text-3xl md:text-4xl font-bold mb-2 text-black">
                 {t("home.global_demand.stats.submissions")} <br />
                 {t("home.global_demand.stats.subtitle")}
-              </p>
+              </h4>
               <p className="text-gray-600">
                 {t("home.global_demand.stats.submission_description")}
               </p>
             </div>
             <div className="bg-white rounded-md p-8 text-center text-navy">
-              <div className="text-3xl md:text-4xl font-bold mb-2 text-black">
+              <h4 className="text-3xl md:text-4xl font-bold mb-2 text-black">
                 {t("home.global_demand.stats.contributors")} <br />
                 {t("home.global_demand.stats.subtitle_1")}
-              </div>
+              </h4>
               <p className="text-gray-600">
                 {t("home.global_demand.stats.contributors_description")} <br />
               </p>
             </div>
             <div className="bg-white rounded-md p-8 text-center text-navy">
-              <div className="text-3xl md:text-4xl font-bold mb-2 text-black">
+              <h4 className="text-3xl md:text-4xl font-bold mb-2 text-black">
                 {t("home.global_demand.stats.points_of_interest")} <br />
                 {t("home.global_demand.stats.subtitle_2")}
-              </div>
+              </h4>
               <p className="text-gray-600">
                 {t("home.global_demand.stats.points_of_interest_description")}
               </p>
@@ -164,9 +164,9 @@ export default async function Home() {
       <section className="py-16 bg-white">
         <div className="container-custom space-y-12">
           <div className="text-center">
-            <p className="mt-2 text-2xl md:text-5xl font-bold mb-4 block max-w-4xl mx-auto">
+            <h3 className="mt-2 text-2xl md:text-5xl font-bold mb-4 block max-w-4xl mx-auto">
               {t("home.insights_for_any_industry.title")}
-            </p>
+            </h3>
             <p className="text-gray-600 max-w-6xl mx-auto md:text-xl">
               {t("home.insights_for_any_industry.description")}
             </p>
@@ -221,9 +221,9 @@ export default async function Home() {
               />
             </div>
             <div>
-              <p className="text-4xl md:text-5xl font-bold mb-4">
+              <h3 className="text-4xl md:text-5xl font-bold mb-4">
                 {t("home.how_tada_works.title")}
-              </p>
+              </h3>
               <p className="text-gray-600 mb-6">
                 {t("home.how_tada_works.description")}
                 <br />
@@ -262,9 +262,9 @@ export default async function Home() {
       
       <section className="py-16 bg-white">
         <div className="container-custom p-0 sm:p-4">
-          <p className="text-4xl md:text-5xl font-bold text-center mb-8 block max-w-4xl mx-auto">
+          <h3 className="text-4xl md:text-5xl font-bold text-center mb-8 block max-w-4xl mx-auto">
             {t("home.testimonials.title")}
-          </p>
+          </h3>
           <DefaultTestimonial />
         </div>
       </section>

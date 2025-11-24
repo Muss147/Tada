@@ -12,6 +12,7 @@ interface HeroSlide {
   description: string;
   buttonText: string;
   backgroundImage: string;
+  backgroundColor?: string;
   rating: number;
 }
 
@@ -29,6 +30,7 @@ export function HeroSection() {
       description: t("home.header.hero_section.description_1"),
       buttonText: t("home.header.hero_section.button_text_1"),
       backgroundImage: "/images/1.jpg",
+      backgroundColor: "orange",
       rating: 5,
     },
     {
@@ -38,6 +40,7 @@ export function HeroSection() {
       description: t("home.header.hero_section.description_2"),
       buttonText: t("home.header.hero_section.button_text_2"),
       backgroundImage: "/images/2.jpg",
+      backgroundColor: "blue",
       rating: 5,
     },
     {
@@ -47,6 +50,7 @@ export function HeroSection() {
       description: t("home.header.hero_section.description_3"),
       buttonText: t("home.header.hero_section.button_text_3"),
       backgroundImage: "/images/3.jpg",
+      backgroundColor: "red",
       rating: 5,
     },
   ];
@@ -84,7 +88,7 @@ export function HeroSection() {
         }`}
         style={{ backgroundImage: `url(${currentHeroSlide?.backgroundImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-400/90 to-orange-400/80"></div>
+        <div className={`absolute inset-0 bg-gradient-to-r from-${currentHeroSlide?.backgroundColor}-400/90 to-${currentHeroSlide?.backgroundColor}-400/80`}></div>
       </div>
 
       {/* Content */}
@@ -107,9 +111,9 @@ export function HeroSection() {
               </div>
 
               {/* Main Title */}
-              <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-[1.2] mb-3 sm:mb-4 lg:mb-6 px-1 sm:px-0 break-words hyphens-auto">
+              <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-[1.2] mb-3 sm:mb-4 lg:mb-6 px-1 sm:px-0 break-words hyphens-auto">
                 {currentHeroSlide?.title}
-              </h1>
+              </h2>
 
               {/* Description */}
               <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl leading-relaxed mb-4 sm:mb-6 lg:mb-8 text-white/90 px-1 sm:px-0 max-w-2xl mx-auto lg:mx-0">
@@ -120,7 +124,7 @@ export function HeroSection() {
               <button
                 type="button"
                 onClick={() => router.push("/schedule-a-demo")}
-                className="inline-flex items-center bg-white text-orange-600 px-3 xs:px-4 sm:px-6 lg:px-8 py-2 xs:py-2.5 sm:py-3 lg:py-4 rounded-full font-semibold text-xs xs:text-sm sm:text-base lg:text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-lg min-w-fit whitespace-nowrap"
+                className={`inline-flex items-center bg-white text-${currentHeroSlide?.backgroundColor}-600 px-3 xs:px-4 sm:px-6 lg:px-8 py-2 xs:py-2.5 sm:py-3 lg:py-4 rounded-full font-semibold text-xs xs:text-sm sm:text-base lg:text-lg hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-lg min-w-fit whitespace-nowrap`}
               >
                 {currentHeroSlide?.buttonText}
               </button>
