@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tada Admin - Démo Présentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6">
+                <div class="text-2xl font-bold text-blue-600">Tada</div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-4">
+                <div class="space-y-2">
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg bg-gray-100 text-gray-900">
+                        <i data-lucide="home" class="mr-3 h-5 w-5"></i>
+                        Dashboard
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i data-lucide="users" class="mr-3 h-5 w-5"></i>
+                        Contributeurs
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i data-lucide="folder-open" class="mr-3 h-5 w-5"></i>
+                        Missions
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i data-lucide="building-2" class="mr-3 h-5 w-5"></i>
+                        Organisations
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i data-lucide="clipboard-list" class="mr-3 h-5 w-5"></i>
+                        Audit des Missions
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i data-lucide="settings" class="mr-3 h-5 w-5"></i>
+                        Paramètres
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- User Profile -->
+            <div class="p-6 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium">
+                        A
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Admin User</p>
+                        <p class="text-xs text-gray-500">admin@tada.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-lg font-medium text-gray-900">Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i data-lucide="search" class="h-5 w-5"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i data-lucide="bell" class="h-5 w-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="flex-1 p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-100 rounded-lg">
+                                <i data-lucide="users" class="h-6 w-6 text-blue-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Contributeurs</p>
+                                <p class="text-2xl font-semibold text-gray-900">1,234</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <i data-lucide="folder-open" class="h-6 w-6 text-green-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Missions</p>
+                                <p class="text-2xl font-semibold text-gray-900">567</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-yellow-100 rounded-lg">
+                                <i data-lucide="building-2" class="h-6 w-6 text-yellow-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Organisations</p>
+                                <p class="text-2xl font-semibold text-gray-900">89</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-purple-100 rounded-lg">
+                                <i data-lucide="clipboard-list" class="h-6 w-6 text-purple-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Audits</p>
+                                <p class="text-2xl font-semibold text-gray-900">45</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-medium text-gray-900">Activité Récente</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i data-lucide="user-plus" class="h-4 w-4 text-blue-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-900">Nouveau contributeur inscrit</p>
+                                    <p class="text-xs text-gray-500">Il y a 5 minutes</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i data-lucide="check-circle" class="h-4 w-4 text-green-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-900">Mission validée</p>
+                                    <p class="text-xs text-gray-500">Il y a 15 minutes</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <i data-lucide="alert-circle" class="h-4 w-4 text-yellow-600"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-900">Audit en cours</p>
+                                    <p class="text-xs text-gray-500">Il y a 1 heure</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Add some interactivity
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Remove active class from all links
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.className = l.className.replace('bg-gray-100 text-gray-900', 'text-gray-600 hover:bg-gray-50');
+                });
+                // Add active class to clicked link
+                link.className = link.className.replace('text-gray-600 hover:bg-gray-50', 'bg-gray-100 text-gray-900');
+            });
+        });
+    </script>
+</body>
+</html>
