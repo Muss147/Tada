@@ -5,7 +5,7 @@ const LeftSection = () => {
   const t = useI18n();
 
   return (
-    <div className="w-full md:w-1/2 p-6 md:p-12 md:px-24 flex flex-col justify-around relative overflow-hidden">
+    <div className="w-full md:w-1/2 p-6 md:p-12 lg:px-24 flex flex-col justify-around relative gap-6 overflow-hidden">
       <Image
         src="/bg-login.jpg"
         alt="Background"
@@ -17,18 +17,18 @@ const LeftSection = () => {
 
       <div className="absolute inset-0 bg-gradient-to-b from-[#FF5B4AB2] to-[#FF5B4AB2]/70" />
 
-      <h1 className="text-3xl z-10 md:text-5xl font-extrabold text-white leading-tight">
+      <h1 className="text-2xl z-10 md:text-4xl font-extrabold text-white leading-tight">
         {t("auth.login.title")}
       </h1>
 
       <div className="p-4 flex flex-col space-y-6  mb-4 md:p-8 bg-white/40 z-10 backdrop-blur-sm rounded-lg">
-        <p className="text-white text-lg font-normal md:text-2xl">
+        <p className="text-white text-lg font-normal md:text-xl">
           {t("auth.login.testimonial.quote1")}
         </p>
-        <p className="text-white text-lg md:text-2xl">
+        <p className="text-white text-lg md:text-xl">
           {t("auth.login.testimonial.quote2")}
         </p>
-        <p className="text-white text-lg md:text-2xl">
+        <p className="text-white text-lg md:text-xl">
           {t("auth.login.testimonial.quote2")}
         </p>
       </div>

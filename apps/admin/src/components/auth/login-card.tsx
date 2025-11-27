@@ -85,7 +85,7 @@ const LogIn = () => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       <div className="w-full md:w-1/2 p-6 md:p-12 flex items-start justify-center">
-        <div className="max-w-md w-full pt-20">
+        <div className="max-w-md w-full md:pt-20">
           <Image
             src="/logos/tada.svg"
             alt="Tada"
@@ -96,7 +96,7 @@ const LogIn = () => {
           <h1 className="text-2xl md:text-3xl font-sora font-bold">
             {t("auth.login.welcomeBack")}
           </h1>
-          <h2 className="text-[#48505E] mb-2">{t("auth.login.description")}</h2>
+          <h2 className="text-[#48505E] dark:text-gray-400 mb-2">{t("auth.login.description")}</h2>
 
           {error && (
             <div className="mt-4 p-3 text-sm text-red-500 bg-red-50 rounded-md">
@@ -106,7 +106,7 @@ const LogIn = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 mt-5">
             <div>
-              <Label className="text-sm/5 font-medium text-[#48505E]">
+              <Label className="text-sm/5 font-medium text-[#48505E] dark:text-gray-400">
                 {t("auth.login.email")}
               </Label>
               <Input
@@ -122,7 +122,7 @@ const LogIn = () => {
             </div>
 
             <div>
-              <Label className="text-sm/5 font-medium text-[#48505E]">
+              <Label className="text-sm/5 font-medium text-[#48505E] dark:text-gray-400">
                 {t("auth.login.password")}
               </Label>
               <Input
@@ -144,7 +144,7 @@ const LogIn = () => {
                 />
                 <Label
                   htmlFor="remember"
-                  className="text-sm font-normal text-gray-700 cursor-pointer"
+                  className="text-sm font-normal text-gray-700 dark:text-gray-400 cursor-pointer"
                 >
                   {t("auth.login.rememberMe")}
                 </Label>
