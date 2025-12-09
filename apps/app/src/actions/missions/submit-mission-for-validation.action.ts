@@ -20,7 +20,7 @@ export const submitMissionForValidationAction = authActionClient
       assumptions,
       status,
       revalidateRoute,
-      organizationId,
+      workspaceId,
       audiences,
     } = parsedInput;
 
@@ -86,7 +86,11 @@ export const submitMissionForValidationAction = authActionClient
         },
       });
 
-      revalidatePath(`/missions/${organizationId}`);
+      if (revalidateRoute) {
+        revalidatePath(revalidateRoute);
+      } else if (workspaceId) {
+        revalidatePath(`/missions/${workspaceId}`);
+      }
 
       return {
         success: true,

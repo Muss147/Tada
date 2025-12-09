@@ -18,12 +18,14 @@ export function ListMissions({
   hasNextPage: initialHasNextPage,
   pageSize,
   orgId,
+  workspaceId,
   loadMore,
 }: {
   missions: MissionFull[];
   hasNextPage: boolean;
   pageSize: number;
   orgId: string;
+  workspaceId: string;
   loadMore: (value: { from: number; to: number }) => Promise<MissionFull[]>;
 }) {
   const t = useI18n();
@@ -86,6 +88,7 @@ export function ListMissions({
                 } as any
               }
               orgId={orgId}
+              workspaceId={workspaceId}
             />
           ))}
         </div>

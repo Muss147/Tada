@@ -74,9 +74,38 @@ const ThreadWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          {/*       <p className="mt-4 font-medium">How can I help you today?</p> */}
+          <div className="w-full max-w-xl">
+            {/* Bulle type assistant */}
+            <div className="flex items-start gap-3">
+              <Avatar className="flex size-8 flex-shrink-0 items-center justify-center rounded-[24px] border border-white/40 shadow">
+                <AvatarImage
+                  src="/avatar.png"
+                  alt="avatar"
+                  className="max-w-6 h-full"
+                />
+              </Avatar>
+
+              <div className="bg-[#FFD3CE]/70 text-slate-900 max-w-md rounded-3xl px-4 py-3 shadow-sm border border-[#FFD3CE]">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 mb-1">
+                  Dina
+                </p>
+                <p className="text-sm leading-relaxed">
+                  Bonjour, bienvenue dans le copilote d’insights Tada. <br />
+                  Quel problème business puis-je t’aider à résoudre aujourd’hui
+                  ?
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-500 ml-11">
+              Réponds en une ou deux phrases. Je te poserai ensuite quelques
+              questions pour construire ton brief étape par étape.
+            </p>
+          </div>
         </div>
-        {/*    <ThreadWelcomeSuggestions /> */}
+
+        {/* Tu peux garder ou non les suggestions en dessous */}
+        {/* <ThreadWelcomeSuggestions /> */}
       </div>
     </ThreadPrimitive.Empty>
   );
@@ -115,7 +144,7 @@ const Composer: FC = () => {
       <ComposerPrimitive.Input
         rows={1}
         autoFocus
-        placeholder=""
+        placeholder="Décris en quelques phrases le problème business sur lequel tu veux travailler…"
         className="placeholder:text-muted-foreground max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <ComposerAction />

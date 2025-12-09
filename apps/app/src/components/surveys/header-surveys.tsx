@@ -15,6 +15,7 @@ import { Loader2, Plus, RefreshCw } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { AddNewQuestionModal } from "./modals/add-new-question-modal";
+import { useSearchParams } from "next/navigation";
 
 interface HeaderSurveysProps {
   surveyId: string;
@@ -23,6 +24,7 @@ interface HeaderSurveysProps {
   objectives: string;
   assumptions: string;
   audiences: Record<string, string | number>;
+  isAiMode: boolean;
 }
 
 export function HeaderSurveys({
@@ -32,11 +34,13 @@ export function HeaderSurveys({
   objectives,
   assumptions,
   audiences,
+  isAiMode = false,
 }: HeaderSurveysProps) {
   const t = useI18n();
   const { toast } = useToast();
   const { setSurveys } = useSurveysBuilder();
   const [showAddModal, setShowAddModal] = useState(false);
+
   const updateSurveyQuestions = useAction(updateSurveyQuestionsAction, {
     onSuccess: () => {
       toast({
@@ -129,6 +133,13 @@ export function HeaderSurveys({
           </Button>
         </div>
       </div>
+      {/* 🧠 Bannière IA uniquement en mode=ai */}
+      {isAiMode && (
+        <div className="mt-3 rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-900 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-100">
+          {t("missions.surveys.aiInfoBanner") ??
+            "Les questions ci-dessous ont été générées automatiquement à partir de votre brief (problématique, objectifs, hypothèses et ciblage). Vous pouvez les modifier, réorganiser ou en ajouter de nouvelles librement."}
+        </div>
+      )}
       <div className="flex mt-3 gap-2">
         <Button
           onClick={() => setShowAddModal(true)}
@@ -137,29 +148,31 @@ export function HeaderSurveys({
           <Plus size={14} />
           {t("missions.surveys.addNewQuestion.add")}
         </Button>
-        <Button
-          variant="outline"
-          className="flex items-center justify-center gap-2"
-          onClick={() => {
-            regenerateSurveysAI.execute({
-              surveyId,
-              problemSummary,
-              objectives,
-              assumptions,
-              audiences,
-            });
-          }}
-          disabled={regenerateSurveysAI.status === "executing"}
-        >
-          {regenerateSurveysAI.status === "executing" ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <>
-              <RefreshCw size={14} />
-              Regenerate questions with AI
-            </>
-          )}
-        </Button>
+        {isAiMode && (
+          <Button
+            variant="outline"
+            className="flex items-center justify-center gap-2"
+            onClick={() => {
+              regenerateSurveysAI.execute({
+                surveyId,
+                problemSummary,
+                objectives,
+                assumptions,
+                audiences,
+              });
+            }}
+            disabled={regenerateSurveysAI.status === "executing"}
+          >
+            {regenerateSurveysAI.status === "executing" ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <RefreshCw size={14} />
+                Regenerate questions with AI
+              </>
+            )}
+          </Button>
+        )}
       </div>
       <AddNewQuestionModal
         isOpen={showAddModal}
@@ -182,6 +195,7 @@ export function HeaderSurveys({
           });
         }}
         isLoadingAddQuestionAI={addQuestionAI.status === "executing"}
+        isAiMode={isAiMode}
       />
     </header>
   );

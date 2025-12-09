@@ -19,9 +19,10 @@ import { useRouter } from "next/navigation";
 interface MissionCardProps {
   mission: Mission & { submissions: number; percentage: number };
   orgId: string;
+  workspaceId?: string;
 }
 
-export function MissionCard({ mission, orgId }: MissionCardProps) {
+export function MissionCard({ mission, orgId, workspaceId }: MissionCardProps) {
   const t = useI18n();
   const router = useRouter();
   const currentLocale = useCurrentLocale();
@@ -34,7 +35,7 @@ export function MissionCard({ mission, orgId }: MissionCardProps) {
   const duplicateMission = useAction(duplicateMissionAction, {
     onSuccess: async ({ data }) => {
       setIsLoading(true);
-      await router.push(`/missions/${orgId}/${data?.duplicationId}`);
+      await router.push(`/missions/${workspaceId}/${data?.duplicationId}`);
       toast({
         title: t("missions.duplicate.success"),
         description: t("missions.duplicate.descriptionSuccess"),
@@ -64,7 +65,7 @@ export function MissionCard({ mission, orgId }: MissionCardProps) {
   return (
     <div className="flex items-center justify-between">
       <Link
-        href={`/missions/${orgId}/${mission.id}`}
+        href={`/missions/${workspaceId}/${mission.id}`}
         className="grid grid-cols-4 py-6 px-4 gap-4"
       >
         <div className="flex flex-col">

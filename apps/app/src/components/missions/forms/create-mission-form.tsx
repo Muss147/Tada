@@ -5,14 +5,21 @@ import { useAudiencesFilter } from "@/context/audiences-filter-context";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/locales/client";
 import { Button } from "@tada/ui/components/button";
-import { FormControl, FormField, FormItem } from "@tada/ui/components/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@tada/ui/components/form";
 import { Edit } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { AudiencesFilterModal } from "../modals/audiences-filter-modal";
-import type { Mission } from "../type";
+
+import { generateMissionBriefAIAction } from "@/actions/missions/generate-mission-brief-ai";
+import { useThread } from "@assistant-ui/react";
 
 interface Section {
   id: number;
@@ -27,8 +34,12 @@ interface Section {
 
 export function CreateMissionForm({
   organization,
+  workspaceId,
+  locale,
 }: {
   organization: { status: string | null; id: string };
+  workspaceId: string;
+  locale: string;
 }) {
   const t = useI18n();
   const { toast } = useToast();
@@ -37,6 +48,8 @@ export function CreateMissionForm({
   const searchParams = useSearchParams();
   const templateId = searchParams.get("t");
   const mode = searchParams.get("mode");
+
+  const isAiMode = mode === "ai";
 
   const editSectionRef = useRef<HTMLDivElement>(null);
   const editTitleRef = useRef<HTMLDivElement>(null);
@@ -47,22 +60,62 @@ export function CreateMissionForm({
   const [tempTitle, setTempTitle] = useState("");
   const [editingSection, setEditingSection] = useState<number | null>(null);
   const [tempContent, setTempContent] = useState("");
+
   const {
     activeFiltersCount,
     selectedFilters,
     filterGroups,
     handleOptionSelect,
   } = useAudiencesFilter();
+
+  const watchedName = form.watch("name");
+  const watchedProblem = form.watch("problemSummary");
+  const watchedObjectives = form.watch("objectives");
+  const watchedAssumptions = form.watch("assumptions");
+
+  const hasCoreInputs =
+    !!watchedName?.trim() ||
+    !!watchedProblem?.trim() ||
+    !!watchedObjectives?.trim() ||
+    !!watchedAssumptions?.trim();
+
+  const hasAudiences = activeFiltersCount > 0;
+
+  // Messages du thread assistant-ui
+  const thread = useThread();
+
+  // thread peut être undefined au tout début
+  const threadMessages = thread?.messages ?? [];
+
+  const lastAssistantMessage = threadMessages
+    .slice()
+    .reverse()
+    .find((m) => m.role === "assistant");
+
+  // On garde le texte pour plus tard (quand tu feras vraiment le refine)
+  const lastAssistantText =
+    lastAssistantMessage?.content
+      ?.filter((c: any) => c.type === "text")
+      .map((c: any) => c.text)
+      .join("\n") ?? "";
+
+  // ✅ Nouveau : on active le bouton dès qu’il y a AU MOINS une réponse assistant
+  const hasAssistantMessage = !!lastAssistantMessage;
+
+  //On ne permet la génération que si on a au moins quelque chose
+  const canGenerateBrief = hasCoreInputs || hasAudiences || hasAssistantMessage;
+
+  const canRefineFromConversation = hasAssistantMessage;
+
   const createMission = useAction(createMissionAction, {
     onSuccess: (data) => {
       toast({
         title: t("missions.createMission.form.success"),
       });
 
-      if (data.data?.data) {
-        router.push(
-          `/missions/${organization.id}/${data.data.data.id}/surveys`
-        );
+      const mission = data.data?.data;
+      if (mission) {
+        router.push(`/${locale}/missions/${workspaceId}/${mission.id}/surveys`);
       }
     },
     onError: () => {
@@ -107,6 +160,7 @@ export function CreateMissionForm({
       content: "",
       selectedMarkets: ["UK", "USA"],
       status: "pending",
+      placeholder: t("missions.createMission.form.targetPlaceholder"),
       color: "gray",
     },
   ]);
@@ -150,6 +204,7 @@ export function CreateMissionForm({
     createMission.execute(
       createMissionSchema.parse({
         ...values,
+        workspaceId,
         organizationId: organization.id,
         audiences: selectedFilters,
         templateId,
@@ -158,23 +213,97 @@ export function CreateMissionForm({
     );
   };
 
-  function renderBulletedList(text: string): JSX.Element {
-    if (!text) return <></>;
-    const items = text
-      .split(/\n|\. /)
-      .map((item) => item.trim())
-      .filter(Boolean);
+  const generateBrief = useAction(generateMissionBriefAIAction, {
+    onSuccess: (res) => {
+      const brief = res.data?.data;
+      if (!brief) return;
 
-    if (items.length > 1)
-      return (
-        <ul className="list-disc pl-5 space-y-1">
-          {items.map((item, idx) => (
-            <li key={idx}>{item.endsWith(".") ? item : item + "."}</li>
-          ))}
-        </ul>
+      // Remplir le formulaire
+      form.setValue("name", brief.name, { shouldDirty: true });
+      form.setValue("problemSummary", brief.problemSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("objectives", brief.objectives, { shouldDirty: true });
+      form.setValue("assumptions", brief.assumptions, { shouldDirty: true });
+      form.setValue("sampleSummary", brief.sampleSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("targetSampleSize", brief.targetSampleSize ?? undefined, {
+        shouldDirty: true,
+      });
+      form.setValue(
+        "preliminaryRecommendations",
+        brief.preliminaryRecommendations,
+        { shouldDirty: true }
+      );
+      form.setValue("studyStructure", brief.studyStructure, {
+        shouldDirty: true,
+      });
+
+      // Mettre à jour les sections (pastilles vertes)
+      setSections((prev) =>
+        prev.map((s) => {
+          if (["problemSummary", "objectives", "assumptions"].includes(s.key)) {
+            const v = form.getValues(s.key);
+            return {
+              ...s,
+              content: v,
+              status: v ? "completed" : "pending",
+            };
+          }
+          return s;
+        })
       );
 
-    return <span>{items[0]?.endsWith(".") ? items[0] : items[0] + "."}</span>;
+      toast({
+        title: t("missions.createMission.form.aiBriefFilled"),
+        description:
+          "Le brief complet a été rempli automatiquement. Tu peux encore l’éditer avant de sauvegarder.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: t("common.error.somethingWentWrong"),
+        description:
+          "Impossible de générer le plan complet de l’étude. Réessaie dans un instant.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  function renderBulletedList(text: string): JSX.Element {
+    if (!text) return <></>;
+
+    // On découpe UNIQUEMENT sur les retours à la ligne
+    const rawLines = text
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    // Si une seule ligne => on affiche juste le texte tel quel
+    if (rawLines.length <= 1) {
+      return (
+        <p className="whitespace-pre-line text-left">
+          {rawLines[0]?.endsWith(".") ? rawLines[0] : rawLines[0]}
+        </p>
+      );
+    }
+
+    // On nettoie les bullets / numéros : "• ", "- ", "1. ", "2) ", etc.
+    const items = rawLines.map((line) =>
+      line
+        .replace(/^[-*•●]\s*/, "") // bullets
+        .replace(/^\d+[\.\)]\s*/, "") // numéros "1. " ou "2) "
+        .trim()
+    );
+
+    return (
+      <ul className="list-disc pl-5 space-y-1 text-left">
+        {items.map((item, idx) => (
+          <li key={idx}>{item.endsWith(".") ? item : item + "."}</li>
+        ))}
+      </ul>
+    );
   }
 
   useEffect(() => {
@@ -294,6 +423,38 @@ export function CreateMissionForm({
                 >
                   {t("common.cancel")}
                 </Button>
+
+                {/* Bouton 2 : Mettre à jour depuis la conversation AI */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  //disabled={!canRefineFromConversation}
+                  onClick={() => {
+                    console.log(
+                      "[AI refine brief] lastAssistantText:",
+                      lastAssistantText
+                    );
+
+                    // Ici plus tard :
+                    // refineMissionBriefAIAction.execute({
+                    //   conversation: lastAssistantText,
+                    //   currentBrief: {
+                    //     name: form.getValues("name"),
+                    //     problemSummary: form.getValues("problemSummary"),
+                    //     objectives: form.getValues("objectives"),
+                    //     assumptions: form.getValues("assumptions"),
+                    //     sampleSummary: form.getValues("sampleSummary"),
+                    //     targetSampleSize: form.getValues("targetSampleSize"),
+                    //     preliminaryRecommendations: form.getValues("preliminaryRecommendations"),
+                    //     studyStructure: form.getValues("studyStructure"),
+                    //   },
+                    // });
+                  }}
+                >
+                  {t("missions.createMission.form.aiUpdateFromConversation")}
+                </Button>
+
                 <Button
                   size="sm"
                   type="button"
@@ -328,13 +489,55 @@ export function CreateMissionForm({
             {t("missions.createMission.form.researchMarket")}
           </span>
         </div>
-        <Button variant="default" size="lg" type="submit">
-          {createMission.status === "executing" ? (
-            <Icons.spinner className="w-4 h-4 animate-spin" />
-          ) : (
-            t("common.save")
+
+        <div className="flex flex-col gap-2 items-end">
+          {isAiMode && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (!canGenerateBrief) {
+                  toast({
+                    title: t("common.error.somethingWentWrong"),
+                    description:
+                      "Donne au moins un peu de contexte (problème, objectifs, hypothèses ou audiences) avant de demander un brief complet.",
+                    variant: "destructive",
+                  });
+                  return;
+                }
+
+                generateBrief.execute({
+                  name: form.getValues("name"),
+                  problemSummary: form.getValues("problemSummary"),
+                  objectives: form.getValues("objectives"),
+                  assumptions: form.getValues("assumptions"),
+                  audiences: selectedFilters,
+                });
+              }}
+              disabled={
+                generateBrief.status === "executing" || !canGenerateBrief
+              }
+            >
+              {generateBrief.status === "executing" ? (
+                <>
+                  <Icons.spinner className="w-4 h-4 animate-spin mr-2" />
+                  {t("missions.createMission.form.aiGenerating")}
+                </>
+              ) : (
+                t("missions.createMission.form.aiProposeFullStudy")
+              )}
+            </Button>
           )}
-        </Button>
+
+          <Button variant="default" size="lg" type="submit">
+            {createMission.status === "executing" ? (
+              <Icons.spinner className="w-4 h-4 animate-spin" />
+            ) : (
+              t("common.save")
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Sections */}
@@ -345,38 +548,39 @@ export function CreateMissionForm({
             className="bg-[#FFD3CE] dark:bg-gray-900 border border-[#FFD3CE] rounded-md p-4"
           >
             <div className="flex items-center mb-3">
-              {/* Point coloré indiquant le statut */}
               <div
                 className={`w-3 h-3 rounded-full mr-3 ${
                   section.status === "pending"
                     ? "bg-yellow-400"
                     : section.status === "completed"
-                    ? "bg-green-500"
-                    : "bg-gray-400"
+                      ? "bg-green-500"
+                      : "bg-gray-400"
                 }`}
               />
 
-              <h2 className="text-black dark:text-white font-bold text-lg flex-grow ">
+              <h2 className="text-black dark:text-white font-bold text-lg flex-grow">
                 {section.title}
               </h2>
 
-              {/* Boutons d'action */}
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  onClick={() => startEditingContent(section.id)}
-                >
-                  <Edit className="w-4 h-4 " />
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                onClick={() => startEditingContent(section.id)}
+              >
+                <Edit className="w-4 h-4" />
+              </Button>
             </div>
 
             {/* Contenu de la section */}
             <div className="ml-6">
               {section.id === 4 ? (
-                <div className="flex-1 space-x-2 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-3 overflow-y-auto">
+                  {/* 🔹 Placeholder au-dessus du bouton */}
+                  <p className="text-sm text-black/80 dark:text-white/80">
+                    {section.placeholder}
+                  </p>
+
                   <Button
                     size="lg"
                     className="w-full"
@@ -390,8 +594,9 @@ export function CreateMissionForm({
                       </span>
                     )}
                   </Button>
+
                   {activeFiltersCount > 0 && (
-                    <div className="mt-4">
+                    <div className="mt-2">
                       <div className="flow-root">
                         <div className="-mx-2 -my-1 flex flex-wrap">
                           {Object.keys(selectedFilters).map((groupId) =>
@@ -511,7 +716,7 @@ export function CreateMissionForm({
               ) : (
                 <button
                   type="button"
-                  className="text-black dark:text-white hover:bg-opacity-30 p-2 rounded-md transition-colors"
+                  className="text-black dark:text-white hover:bg-opacity-30 p-2 rounded-md transition-colors text-left w-full"
                   onClick={() => startEditingContent(section.id)}
                 >
                   {section.content
@@ -583,10 +788,12 @@ export function CreateMissionForm({
           </div>
         )} */}
       </div>
-
       <AudiencesFilterModal
-        onOpenChange={setIsAudiencesFilterModalOpen}
         isOpen={isAudiencesFilterModalOpen}
+        onOpenChange={() => setIsAudiencesFilterModalOpen(false)}
+        orgId={organization.id}
+        missionId={undefined}
+        currentUserId={undefined}
       />
     </form>
   );

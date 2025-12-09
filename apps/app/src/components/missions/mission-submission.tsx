@@ -64,7 +64,7 @@ export type MissionSubmissionProps = {
   surveys: Record<string, any>[];
   locations: MapLocation[];
   params: {
-    orgId: string;
+    workspaceId: string;
     missionId: string;
   };
 };
@@ -535,8 +535,8 @@ export const MissionSubmission = ({
                 {row.gender === "male"
                   ? "Homme"
                   : row.gender === "female"
-                  ? "Femme"
-                  : row.gender}
+                    ? "Femme"
+                    : row.gender}
               </span>
             </p>
           )}
