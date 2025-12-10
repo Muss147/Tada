@@ -13,13 +13,23 @@ export const metadata = {
   title: "Gestion des Utilisateurs | Tada",
 };
 
+export const USER_ROLES = {
+  SYSTEM_ADMIN: "system_admin",
+  CLIENT_ADMIN: "client_admin",
+  CONTRIBUTOR: "contributor",
+  VALIDATOR: "validator",
+} as const;
+
 async function getUsersWithStats() {
   const users = await prisma.user.findMany({
+    where: {
+      role: "system_admin", // <-- FILTRE ICI
+    },
     select: {
       id: true,
       name: true,
       email: true,
-      role: true,
+      adminSubRole: true,
       kyc_status: true,
       image: true,
       location: true,
@@ -45,9 +55,9 @@ async function getUsersWithStats() {
 
   // Calculer les statistiques
   const totalUsers = users.length;
-  const contributors = users.filter((u) => u.role === "contributor").length;
-  const clients = users.filter((u) => u.role === "client").length;
-  const admins = users.filter((u) => u.role === "admin").length;
+  // const contributors = users.filter((u) => u.role === "contributor").length;
+  // const clients = users.filter((u) => u.role === "client").length;
+  // const admins = users.filter((u) => u.role === "admin").length;
   const bannedUsers = users.filter((u) => u.banned).length;
   const verifiedUsers = users.filter((u) => u.kyc_status === "completed").length;
 
@@ -55,9 +65,9 @@ async function getUsersWithStats() {
     users,
     stats: {
       total: totalUsers,
-      contributors,
-      clients,
-      admins,
+      // contributors,
+      // clients,
+      // admins,
       banned: bannedUsers,
       verified: verifiedUsers,
     },
@@ -70,7 +80,7 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
         {[
           {
             key: "total-users",
@@ -78,16 +88,16 @@ export default async function UsersPage() {
             value: stats.total,
             icon: <Users className="h-8 w-8 text-blue-600" />,
           },
+          // {
+          //   key: "contributors",
+          //   label: "Contributeurs",
+          //   value: stats.contributors,
+          //   icon: <UserCheck className="h-8 w-8 text-green-600" />,
+          // },
           {
-            key: "contributors",
-            label: "Contributeurs",
-            value: stats.contributors,
-            icon: <UserCheck className="h-8 w-8 text-green-600" />,
-          },
-          {
-            key: "admins",
-            label: "Administrateurs",
-            value: stats.admins,
+            key: "verifiedUsers",
+            label: "Utilisateurs actifs",
+            value: stats.verified,
             icon: <Shield className="h-8 w-8 text-purple-600" />,
           },
           {

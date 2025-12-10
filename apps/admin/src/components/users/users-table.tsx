@@ -72,7 +72,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  adminSubRole: string;
   kyc_status: string | null;
   image: string | null;
   location: string | null;
@@ -103,7 +103,7 @@ const UserCell = React.memo(({ user }: { user: User }) => (
       )}
     </div>
     <div>
-      <div className="font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+      <div className="font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-600 transition-colors">
         {user.name}
       </div>
       <div className="text-sm text-gray-500">{user.email}</div>
@@ -200,7 +200,7 @@ export function UsersTable({ users }: { users: User[] }) {
       {
         accessorKey: "role",
         header: "Rôle",
-        cell: ({ row }) => <RoleBadge role={row.original.role} />,
+        cell: ({ row }) => <RoleBadge role={row.original.adminSubRole} />,
         filterFn: (row, id, value) => {
           if (value === "all") return true;
           return row.getValue(id) === value;
@@ -283,7 +283,7 @@ export function UsersTable({ users }: { users: User[] }) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/users/${user.id}/edit`}>
+                  <Link href={`/users/edit/${user.id}`}>
                     <Edit className="mr-2 h-4 w-4" />
                     Modifier
                   </Link>
@@ -317,7 +317,7 @@ export function UsersTable({ users }: { users: User[] }) {
 
   const filteredData = useMemo(() => {
     return users.filter((user) => {
-      const matchesRole = roleFilter === "all" || user.role === roleFilter;
+      const matchesRole = roleFilter === "all" || user.adminSubRole === roleFilter;
       const matchesStatus =
         statusFilter === "all" ||
         (statusFilter === "banned" && user.banned) ||
@@ -389,10 +389,10 @@ export function UsersTable({ users }: { users: User[] }) {
         <CardHeader className="border-b bg-gray-50/50">
           <div className="flex items-center justify-between">
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <Users className="h-6 w-6 text-blue-600" />
+              <Users className="h-6 w-6 text-blue-600 dark:text-white" />
               Gestion des Utilisateurs
             </CardTitle>
-            <Button asChild className="bg-blue-600 hover:bg-blue-700">
+            <Button asChild className="bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:text-white">
               <Link href="/users/new">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Nouvel utilisateur
@@ -418,9 +418,12 @@ export function UsersTable({ users }: { users: User[] }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les rôles</SelectItem>
-                <SelectItem value="admin">Administrateurs</SelectItem>
-                <SelectItem value="client">Clients</SelectItem>
-                <SelectItem value="contributor">Contributeurs</SelectItem>
+                <SelectItem value="super_admin">Super Administrateur</SelectItem>
+                <SelectItem value="operations_admin">Administrateur des Opérations</SelectItem>
+                <SelectItem value="customer_admin">Administrateur Client</SelectItem>
+                <SelectItem value="content_moderator">Modérateur de Contenu</SelectItem>
+                <SelectItem value="finance_admin">Administrateur Financier</SelectItem>
+                <SelectItem value="auditor">Auditeur</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -441,7 +444,7 @@ export function UsersTable({ users }: { users: User[] }) {
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="bg-gray-50/50">
+                  <TableRow key={headerGroup.id} className="bg-gray-50/50 dark:bg-inherit">
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id} className="font-semibold">
                         {header.isPlaceholder

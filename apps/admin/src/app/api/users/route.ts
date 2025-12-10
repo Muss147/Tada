@@ -55,6 +55,7 @@ export async function GET(req: Request) {
           email: true,
           name: true,
           role: true,
+          adminSubRole: true,
           position: true,
           country: true,
           sector: true,
@@ -107,44 +108,48 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
-    // Validation des données
+
+    // Ajout important : on laisse image passer dans validation
     const validation = validateCreateUser(body);
-    
+
     if (!validation.valid) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: "Validation failed",
           errors: validation.errors,
         },
         { status: 400 }
       );
     }
-    
-    // Vérification si l'email existe déjà
+
+    // Vérification email
     const existingUser = await prisma.user.findUnique({
       where: { email: validation.data!.email },
     });
-    
+
     if (existingUser) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "A user with this email already exists" 
+        {
+          success: false,
+          error: "A user with this email already exists",
         },
         { status: 409 }
       );
     }
-    
-    // Création de l'utilisateur
+
+    // Création (⚠️ image = URL envoyée depuis le front)
     const user = await prisma.user.create({
-      data: validation.data!,
+      data: {
+        ...validation.data!,
+        image: validation.data!.image ?? null,
+      },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        adminSubRole: true,
         position: true,
         country: true,
         sector: true,
@@ -157,7 +162,7 @@ export async function POST(req: Request) {
         updatedAt: true,
       },
     });
-    
+
     return NextResponse.json(
       {
         success: true,
@@ -168,11 +173,12 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error creating user:", error);
+
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: "Failed to create user",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );

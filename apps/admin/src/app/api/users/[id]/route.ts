@@ -30,6 +30,7 @@ export async function GET(
         email: true,
         name: true,
         role: true,
+        adminSubRole: true,
         position: true,
         country: true,
         sector: true,
@@ -114,79 +115,59 @@ export async function GET(
  * PATCH /api/users/[id]
  * Met à jour les informations d'un utilisateur (y compris le rôle)
  */
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const body = await req.json();
-    
+
     if (!id) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: "User ID is required" 
-        },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: "User ID is required" }, { status: 400 });
     }
-    
-    // Vérification si l'utilisateur existe
-    const existingUser = await prisma.user.findUnique({
-      where: { id },
-    });
-    
+
+    const existingUser = await prisma.user.findUnique({ where: { id } });
+
     if (!existingUser) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "User not found" 
-        },
+        { success: false, error: "User not found" },
         { status: 404 }
       );
     }
-    
-    // Validation des données
+
     const validation = validateUpdateUser(body);
-    
+
     if (!validation.valid) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: "Validation failed",
-          errors: validation.errors,
-        },
+        { success: false, error: "Validation failed", errors: validation.errors },
         { status: 400 }
       );
     }
-    
-    // Vérifier si l'email n'est pas déjà utilisé par un autre utilisateur
+
+    // Si email changé → vérifier doublon
     if (validation.data!.email && validation.data!.email !== existingUser.email) {
-      const emailExists = await prisma.user.findUnique({
+      const mailExists = await prisma.user.findUnique({
         where: { email: validation.data!.email },
       });
-      
-      if (emailExists) {
+
+      if (mailExists) {
         return NextResponse.json(
-          { 
-            success: false, 
-            error: "This email is already in use" 
-          },
+          { success: false, error: "This email is already in use" },
           { status: 409 }
         );
       }
     }
-    
-    // Mise à jour de l'utilisateur
-    const updatedUser = await prisma.user.update({
+
+    const updated = await prisma.user.update({
       where: { id },
-      data: validation.data!,
+      data: {
+        ...validation.data!,
+        image: validation.data!.image ?? existingUser.image, // ⚡ ici
+      },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        adminSubRole: true,
         position: true,
         country: true,
         sector: true,
@@ -199,19 +180,20 @@ export async function PATCH(
         updatedAt: true,
       },
     });
-    
+
     return NextResponse.json({
       success: true,
-      data: updatedUser,
+      data: updated,
       message: "User updated successfully",
     });
+
   } catch (error) {
     console.error("Error updating user:", error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: "Failed to update user",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );

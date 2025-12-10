@@ -121,7 +121,7 @@ export function Sidebar() {
         {
           icon: <UserCog className="h-5 w-5" />,
           text: "Utilisateurs",
-          href: "/organizations/users",
+          href: "/users",
         },
       ],
     },

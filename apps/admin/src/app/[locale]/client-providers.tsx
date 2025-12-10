@@ -5,6 +5,7 @@ import { I18nProviderClient } from "@/locales/client";
 import { Toaster } from "@/components/ui/toaster";
 import { Next13ProgressBar } from "next13-progressbar";
 import { useEffect, useState } from "react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -19,25 +20,27 @@ export function ClientProviders({ children, locale }: ClientProvidersProps) {
   }, []);
 
   return (
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="system" 
-      enableSystem
-      disableTransitionOnChange
-      storageKey="tada-theme"
-    >
-      <I18nProviderClient locale={locale}>
-        {children}
-        <Toaster />
-        {mounted && (
-          <Next13ProgressBar
-            height="3px"
-            color="#FF5B4A"
-            options={{ showSpinner: true }}
-            showOnShallow
-          />
-        )}
-      </I18nProviderClient>
-    </ThemeProvider>
+    <NuqsAdapter>
+      <ThemeProvider 
+        attribute="class" 
+        defaultTheme="system" 
+        enableSystem
+        disableTransitionOnChange
+        storageKey="tada-theme"
+      >
+        <I18nProviderClient locale={locale}>
+          {children}
+          <Toaster />
+          {mounted && (
+            <Next13ProgressBar
+              height="3px"
+              color="#FF5B4A"
+              options={{ showSpinner: true }}
+              showOnShallow
+            />
+          )}
+        </I18nProviderClient>
+      </ThemeProvider>
+    </NuqsAdapter>
   );
 }

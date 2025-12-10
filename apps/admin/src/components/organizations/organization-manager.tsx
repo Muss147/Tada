@@ -12,6 +12,7 @@ import {
 } from "@tada/ui/components/dialog";
 import { Input } from "@tada/ui/components/input";
 import { Label } from "@tada/ui/components/label";
+import { useUpload } from "@/hooks/use-upload";
 import {
   Select,
   SelectContent,
@@ -206,6 +207,8 @@ export function OrganizationManager({
     }));
   };
 
+  const { uploadFile } = useUpload();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -231,6 +234,22 @@ export function OrganizationManager({
     }
 
     try {
+      let finalImageUrl = formData.logo;
+
+      // --- UPLOAD VERS SUPABASE SI UNE NOUVELLE IMAGE EST CHOISIE ---
+      if (imageFile) {
+        const cleanName = imageFile.name.replace(/[^a-zA-Z0-9.\-_]/g, "");
+        const userFolder = organization?.id ?? crypto.randomUUID();
+
+        const { url } = await uploadFile({
+          file: imageFile,
+          path: [userFolder, cleanName],
+          bucket: "avatars",
+        });
+
+        finalImageUrl = url;
+      }
+
       const url = organization?.id
         ? `/api/organizations/${organization.id}`
         : "/api/organizations";
@@ -304,6 +323,8 @@ export function OrganizationManager({
       setIsSubmitting(false);
     }
   };
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

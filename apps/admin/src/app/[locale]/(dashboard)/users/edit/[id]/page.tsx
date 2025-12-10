@@ -1,15 +1,23 @@
 import { UserForm } from "@/components/users/user-form";
+import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@tada/ui/components/card";
-import { UserPlus } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@tada/ui/components/button";
-import { ChevronLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Nouvel Utilisateur | Tada",
+  title: "Modifier un utilisateur | Tada",
 };
 
-export default function NewUserPage() {
+export default async function EditUserPage({ params }: { params: { id: string } }) {
+  const user = await prisma.user.findUnique({
+    where: { id: params.id },
+  });
+
+  if (!user) {
+    return <p>Utilisateur introuvable</p>;
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6">
@@ -23,13 +31,13 @@ export default function NewUserPage() {
 
       <Card className="max-w-3xl mx-auto">
         <CardHeader className="border-b bg-gray-50/50">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <UserPlus className="h-6 w-6 text-blue-600 dark:text-white" />
-            Créer un nouvel utilisateur
+          <CardTitle className="text-2xl font-bold">
+            Modifier l'utilisateur
           </CardTitle>
         </CardHeader>
+
         <CardContent className="p-6">
-          <UserForm mode="create" />
+          <UserForm mode="edit" initialData={user} />
         </CardContent>
       </Card>
     </div>

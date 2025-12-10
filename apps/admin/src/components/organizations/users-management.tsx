@@ -619,6 +619,13 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
           </DialogHeader>
           <form onSubmit={handleCreateUser}>
             <div className="grid gap-4 py-4">
+              <div className="">
+                <ImageUpload
+                  value={formData.image}
+                  onChange={(file) => setImageFile(file)}
+                  label="Photo de profil"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Nom complet *</Label>
@@ -688,23 +695,15 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kyc_status">Statut KYC</Label>
-                  <Select
-                    value={formData.kyc_status || "none"}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, kyc_status: value === "none" ? "" : value })
+                  <Label htmlFor="sector">Secteur d'activité</Label>
+                  <Input
+                    id="sector"
+                    value={formData.sector}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sector: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Non défini</SelectItem>
-                      <SelectItem value="in_progress">En cours</SelectItem>
-                      <SelectItem value="completed">Complété</SelectItem>
-                      <SelectItem value="canceled">Annulé</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    placeholder="Ex: Technologie, Finance..."
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -733,21 +732,24 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="sector">Secteur d'activité</Label>
-                  <Input
-                    id="sector"
-                    value={formData.sector}
-                    onChange={(e) =>
-                      setFormData({ ...formData, sector: e.target.value })
+                  <Label htmlFor="kyc_status">Statut KYC</Label>
+                  <Select
+                    value={formData.kyc_status || "none"}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, kyc_status: value === "none" ? "" : value })
                     }
-                    placeholder="Ex: Technologie, Finance..."
-                  />
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Non défini</SelectItem>
+                      <SelectItem value="in_progress" aria-selected>En cours</SelectItem>
+                      <SelectItem value="completed">Complété</SelectItem>
+                      <SelectItem value="canceled">Annulé</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <ImageUpload
-                  value={formData.image}
-                  onChange={(file) => setImageFile(file)}
-                  label="Photo de profil"
-                />
               </div>
             </div>
             <DialogFooter>
@@ -785,6 +787,13 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
           </DialogHeader>
           <form onSubmit={handleUpdateUser}>
             <div className="grid gap-4 py-4">
+              <div className="">
+                <ImageUpload
+                  value={formData.image}
+                  onChange={(file) => setImageFile(file)}
+                  label="Photo de profil"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="edit-name">Nom complet *</Label>
@@ -854,23 +863,15 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-kyc_status">Statut KYC</Label>
-                  <Select
-                    value={formData.kyc_status || "none"}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, kyc_status: value === "none" ? "" : value })
+                  <Label htmlFor="edit-sector">Secteur d'activité</Label>
+                  <Input
+                    id="edit-sector"
+                    value={formData.sector}
+                    onChange={(e) =>
+                      setFormData({ ...formData, sector: e.target.value })
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Non défini</SelectItem>
-                      <SelectItem value="in_progress">En cours</SelectItem>
-                      <SelectItem value="completed">Complété</SelectItem>
-                      <SelectItem value="canceled">Annulé</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    placeholder="Ex: Technologie, Finance..."
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -899,21 +900,24 @@ export function UsersManagement({ initialUsers }: { initialUsers: User[] }) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-sector">Secteur d'activité</Label>
-                  <Input
-                    id="edit-sector"
-                    value={formData.sector}
-                    onChange={(e) =>
-                      setFormData({ ...formData, sector: e.target.value })
+                  <Label htmlFor="edit-kyc_status">Statut KYC</Label>
+                  <Select
+                    value={formData.kyc_status || "none"}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, kyc_status: value === "none" ? "" : value })
                     }
-                    placeholder="Ex: Technologie, Finance..."
-                  />
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Non défini</SelectItem>
+                      <SelectItem value="in_progress">En cours</SelectItem>
+                      <SelectItem value="completed">Complété</SelectItem>
+                      <SelectItem value="canceled">Annulé</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <ImageUpload
-                  value={formData.image}
-                  onChange={(file) => setImageFile(file)}
-                  label="Photo de profil"
-                />
               </div>
             </div>
             <DialogFooter>

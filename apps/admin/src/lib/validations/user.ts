@@ -19,6 +19,7 @@ export interface CreateUserInput {
   email: string;
   name: string;
   role?: UserRole;
+  adminSubRole?: string | null;
   position?: string | null;
   country?: string | null;
   sector?: string | null;
@@ -33,6 +34,7 @@ export interface UpdateUserInput {
   email?: string;
   name?: string;
   role?: UserRole;
+  adminSubRole?: string | null;
   position?: string | null;
   country?: string | null;
   sector?: string | null;
@@ -99,6 +101,11 @@ export function validateCreateUser(data: any): {
     errors.push(`Invalid role. Must be one of: ${Object.values(USER_ROLES).join(", ")}`);
   }
   
+  // Validation adminSubRole si fourni
+  if (data.adminSubRole && typeof data.adminSubRole !== "string") {
+    errors.push("Invalid adminSubRole format");
+  }
+
   // Validation du statut KYC
   if (data.kyc_status && !isValidKycStatus(data.kyc_status)) {
     errors.push(`Invalid KYC status. Must be one of: ${Object.values(KYC_STATUSES).join(", ")}`);
@@ -115,6 +122,7 @@ export function validateCreateUser(data: any): {
       email: data.email.toLowerCase().trim(),
       name: data.name.trim(),
       role: data.role || USER_ROLES.CONTRIBUTOR,
+      adminSubRole: data.adminSubRole || null,
       position: data.position || null,
       country: data.country || null,
       sector: data.sector || null,
@@ -163,6 +171,10 @@ export function validateUpdateUser(data: any): {
     } else {
       updateData.role = data.role;
     }
+  }
+  
+  if (data.adminSubRole !== undefined) {
+    updateData.adminSubRole = data.adminSubRole || null;
   }
   
   // Validation du statut KYC si fourni

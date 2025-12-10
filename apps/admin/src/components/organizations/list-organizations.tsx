@@ -347,11 +347,11 @@ export function ListOrganizations({
           </UIButton>
         </div>
       <Table>
-        <TableHead>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHeader
+                <TableHead
                   key={header.id}
                   className={cn(header.column.columnDef.meta?.align)}
                 >
@@ -359,11 +359,28 @@ export function ListOrganizations({
                     header.column.columnDef.header,
                     header.getContext()
                   )}
-                </TableHeader>
+                </TableHead>
               ))}
             </TableRow>
           ))}
-        </TableHead>
+        </TableHeader>
+
+        {/* <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="bg-gray-50/50 dark:bg-inherit">
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id} className="font-semibold">
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader> */}
         <TableBody>
           {table.getRowModel().rows.length === 0 ? (
             <TableRow>
