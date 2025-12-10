@@ -3,6 +3,7 @@
 
 import { useCallback, useState } from "react";
 import { useQueryState } from "nuqs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@tada/ui/components/button";
 
 import { BarChartCard } from "@/components/missions/boards/graphs/bar-chart";
@@ -23,27 +24,41 @@ interface MissionDashboardClientProps {
   initialQuestions: QuestionData[];
   totalResponses: number;
   missionStatus: string;
+  commentCountsByQuestion?: Record<string, number>;
 }
 
 export default function MissionDashboardClient({
   initialQuestions,
   totalResponses,
   missionStatus,
+  commentCountsByQuestion,
 }: MissionDashboardClientProps) {
   const [questions, setQuestions] = useState<QuestionData[]>(initialQuestions);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const openCommentsForQuestion = (question: QuestionData) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("commentQuestionKey", question.question);
+
+    router.replace(`?${params.toString()}`, { scroll: false });
+
+    // Signal au drawer d'ouverture
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-comments"));
+    }
+  };
 
   // paramètre partagé avec le modal
   const [, setQuestionId] = useQueryState("questionId", {
     defaultValue: "",
   });
 
-  // 👉 TOUJOURS ouvrir le modal, même si pas de chartId
   const openChangeChartModal = (question: QuestionData) => {
     const id = question.chartId ?? question.question;
     setQuestionId(id);
   };
 
-  // 👉 retrouve la question par chartId OU par texte de question
   const getQuestionConfig = useCallback(
     (questionId: string) => {
       const q = questions.find(
@@ -60,7 +75,6 @@ export default function MissionDashboardClient({
     [questions]
   );
 
-  // 👉 quand on clique sur "Appliquer" dans le modal
   const handleApply = useCallback(
     ({
       questionId,
@@ -113,6 +127,9 @@ export default function MissionDashboardClient({
             chart_type: question.chart_type,
           });
 
+          const commentCount =
+            commentCountsByQuestion?.[question.question] ?? 0;
+
           const participationLabel = `${index + 1} de ${
             questions.length
           } | ${question.participants_responded} Participants (${Math.round(
@@ -136,13 +153,27 @@ export default function MissionDashboardClient({
               )}
 
               {question.type !== "text" && question.type !== "comment" && (
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => openChangeChartModal(question)}
                   >
                     Modifier la visualisation
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => openCommentsForQuestion(question)}
+                    className="relative"
+                  >
+                    Commentaires
+                    {commentCount > 0 && (
+                      <span className="ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary/10 text-primary text-[11px] px-1">
+                        {commentCount}
+                      </span>
+                    )}
                   </Button>
                 </div>
               )}

@@ -102,14 +102,14 @@ Audiences: ${JSON.stringify(audiences, null, 2)}`,
             const questions = object.questions ?? [];
 
             // ✅ Contrôle métier : min 20 questions
-            if (!questions || questions.length < 20) {
+            if (!questions || questions.length < 10) {
               console.error(
                 "[CREATE_MISSION_ACTION] Not enough questions generated:",
                 questions.length
               );
               return {
                 success: false,
-                error: `L'IA n'a généré que ${questions.length} questions, il en faut au moins 20.`,
+                error: `L'IA n'a généré que ${questions.length} questions, il en faut au moins 10.`,
               };
             }
 

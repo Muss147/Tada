@@ -4,6 +4,8 @@ import { image } from "@uiw/react-markdown-editor";
 import { maxSize } from "better-auth";
 import { organization } from "better-auth/plugins";
 import { add, max, min } from "lodash";
+import { arch } from "os";
+import { send } from "process";
 import { settings } from "survey-core";
 import { title } from "vega-lite/types_unstable/channeldef.js";
 import { no } from "zod/v4/locales";
@@ -56,6 +58,26 @@ export default {
       withFilters: "Try a different search or adjust the filters.",
       clearFilters: "Clear filters",
     },
+  },
+  comments:{
+    title: "Comments",
+    titleQuestion : "Comments on question",
+    countLabel: "{count} comment(s)",
+    loading: "Loading comments...",
+    newQuestion: "New comment on question",
+    empty: "No comments yet.",
+    emptyQuestion: "No comments on this question yet.",
+    newGlobal: "New comment",
+    newPlaceholder: "Write a comment...",
+    newPlaceholderQuestion: "Comment on this question...",
+    sending: "Sending...",
+    send: "Send",
+    openButton: "Open comments",
+    status:{
+      open: "Open",
+      resolved: "Resolved",
+      archived: "Archived",
+    }
   },
   billing: {
     success: {
@@ -994,6 +1016,7 @@ export default {
       filedFilled: "Fields filled(...)",
       form: {
         researchMarket: "Research a market",
+        aiUpdateFromConversations: "Update with AI from conversations",
         filterAudiences: "Filter audiences",
         problemSummary: "Problem statement",
         strategicGoal: "Strategic goals",
@@ -1430,11 +1453,11 @@ export default {
         },
         menu: {
           generalTitle: "General",
-          generalSubTitle: "Workspace Information",
+          generalSubtitle: "Workspace Information",
           membersTitle: "Members",
-          membersSubTitle: "Manage Team Members",
+          membersSubtitle: "Manage Team Members",
           billingTitle: "Billing",
-          billingSubTitle: "Billing & Plans",
+          billingSubtitle: "Billing & Plans",
         },
         columns: {
           member: "Member",

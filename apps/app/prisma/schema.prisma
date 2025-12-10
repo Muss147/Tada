@@ -33,19 +33,24 @@ model User {
   missionAssignments MissionAssignment[]
   assignedBy         MissionAssignment[] @relation("AssignedBy")
 
-  // new relations for workspaces
+  // workspaces...
   ownedWorkspaces                Workspace[]           @relation("WorkspaceOwner")
   workspaceMemberships           WorkspaceMember[]
   workspaceMemberInvitationsSent WorkspaceMember[]     @relation("WorkspaceMemberInvitedBy")
   workspaceInvitationsSent       WorkspaceInvitation[] @relation("WorkspaceInvitationInvitedBy")
 
-  // Ai Analysis relations
+  // Ai Analysis
   aiDatasets        AiDataset[]       @relation("AiDatasetOwner")
   aiAnalyses        AiAnalysis[]      @relation("AiAnalysisCreatedBy")
   aiAnalysisQueries AiAnalysisQuery[]
 
-  //suggetion audience
+  // Audience suggestion
   audienceAttributeSuggestions AudienceAttributeSuggestion[] @relation("AudienceSuggestionCreatedBy")
+
+  commentsAuthored Comment[]        @relation("CommentsCreatedBy")
+  commentsResolved Comment[]        @relation("ResolvedComments")
+  commentMentions  CommentMention[]
+  commentEvents    CommentEvent[]
 
   @@map("user")
 }
@@ -126,6 +131,7 @@ model Mission {
   ConsultedMission             ConsultedMission[]
   contributors                 MissionAssignment[]
   audienceAttributeSuggestions AudienceAttributeSuggestion[]
+  comments                     Comment[]
 
   @@map("mission")
 }
@@ -170,14 +176,15 @@ model Survey {
   updatedAt     DateTime?        @updatedAt
   response      SurveyResponse[]
   missionCharts MissionChart[]
+  comments      Comment[]
 
   @@map("survey")
 }
 
 model SurveyResponse {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   surveyId    String
-  survey      Survey   @relation(fields: [surveyId], references: [id])
+  survey      Survey    @relation(fields: [surveyId], references: [id])
   responses   Json
   age         Int
   gender      String
@@ -185,10 +192,11 @@ model SurveyResponse {
   // Métadonnées de soumission
   ipAddress   String?
   userAgent   String?
-  submittedAt DateTime @default(now())
-  status      String   @default("pending")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  submittedAt DateTime  @default(now())
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
 
   @@map("survey_response")
 }
@@ -873,4 +881,79 @@ model AudienceAttributeSuggestion {
   decidedAt DateTime?
 
   @@map("audience_attribute_suggestion")
+}
+
+//comment 
+model Comment {
+  id String @id @default(uuid())
+
+  missionId String?  @map("mission_id")
+  mission   Mission? @relation(fields: [missionId], references: [id])
+
+  surveyId String? @map("survey_id")
+  survey   Survey? @relation(fields: [surveyId], references: [id])
+
+  surveyResponseId String?         @map("survey_response_id")
+  surveyResponse   SurveyResponse? @relation(fields: [surveyResponseId], references: [id])
+
+  questionKey String? @map("question_key")
+
+  parentId String?   @map("parent_id")
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  content String @db.Text
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation("CommentsCreatedBy", fields: [createdById], references: [id])
+
+  status String @default("open")
+
+  resolvedById String?   @map("resolved_by_id")
+  resolvedBy   User?     @relation("ResolvedComments", fields: [resolvedById], references: [id])
+  resolvedAt   DateTime? @map("resolved_at")
+
+  editedAt  DateTime? @map("edited_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  mentions      CommentMention[]
+  commentEvents CommentEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comment")
+}
+
+model CommentMention {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  seenAt    DateTime? @map("seen_at")
+
+  @@unique([commentId, userId])
+  @@map("comment_mention")
+}
+
+model CommentEvent {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  type    String
+  payload Json?
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("comment_event")
 }

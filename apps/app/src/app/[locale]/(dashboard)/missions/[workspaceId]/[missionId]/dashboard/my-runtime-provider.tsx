@@ -11,7 +11,7 @@ import {
   SurveyData,
 } from "@/lib/utils";
 import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
-import { useSetDocumentId, VeltComments } from "@veltdev/react";
+//import { useSetDocumentId, VeltComments } from "@veltdev/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
@@ -29,7 +29,7 @@ export function MyRuntimeProvider({
     executiveSummaryUpdatedAt?: Date | string | null;
   };
 }>) {
-  useSetDocumentId(mission.id);
+  //useSetDocumentId(mission.id);
 
   const [executiveSummary, setExecutiveSummary] = useState<string>("");
   const runtime = useEdgeRuntime({
@@ -63,7 +63,7 @@ export function MyRuntimeProvider({
 
   return (
     <>
-      <VeltComments />
+      {/* <VeltComments /> */}
       <AssistantRuntimeProvider runtime={runtime}>
         <div className="max-w-7xl mx-auto  gap-2 space-y-4">
           <div className="w-full mb-12">
@@ -105,9 +105,10 @@ export function MyRuntimeProvider({
                 <MarkdownPreviewCard
                   title="📋 Résumé Exécutif"
                   description=""
-                  participationQuestions={mission.executiveSummaryUpdatedAt ? 
-                    `Mis à jour le ${new Date(mission.executiveSummaryUpdatedAt).toLocaleDateString('fr-FR')}` : 
-                    ""
+                  participationQuestions={
+                    mission.executiveSummaryUpdatedAt
+                      ? `Mis à jour le ${new Date(mission.executiveSummaryUpdatedAt).toLocaleDateString("fr-FR")}`
+                      : ""
                   }
                   content={executiveSummary}
                 />

@@ -49,6 +49,26 @@ export default {
       clearFilters: "Annuler les filtres",
     },
   },
+  comments:{
+      title: "Commentaires",
+      titleQuestion : "Commentaires sur la question",
+      countLabel: "{count} commentaire(s)",
+      loading: "Chargement des commentaires...",
+      newQuestion: "Nouveau commentaire sur la question",
+      empty: "Pas encore de commentaires.",
+      emptyQuestion: "Pas encore de commentaires sur cette question.",
+      newGlobal: "Nouveau commentaire",
+      newPlaceholder: "Écrire un commentaire...",
+      newPlaceholderQuestion: "Commenter cette question...",
+      sending: "Envoi en cours...",
+      send: "Envoyer",
+      openButton: "Ouvrir les commentaires",
+      status:{
+        open: "Ouvert",
+        resolved: "Résolu",
+        archived: "Archivé",
+      }
+    },
   billing: {
     success: {
       title: "Paiement réussi !",
@@ -717,11 +737,11 @@ export default {
         },
         menu: {
           generalTitle: "Général",
-          generalSubtitle: "Informations de base et paramètres du workspace",
+          generalSubtitle: "Informations de base du workspace",
           membersTitle: "Membres",
-          membersSubtitle: "Gérer les membres de l'équipe et leurs rôles",
+          membersSubtitle: "Gérer les membres de l'équipe",
           billingTitle: "Facturation & Plans",
-          billingSubtitle: "Gérer la facturation et les plans du workspace",
+          billingSubtitle: "Gérer la facturation",
         },
             columns: {
               member: "Membre",
@@ -1073,6 +1093,7 @@ export default {
       filedFilled: "Champs remplis(...)",
       form: {
         researchMarket: "Analyse de marché",
+        aiUpdateFromConversations: "Mettre à jour avec l'IA à partir des conversations",
         filterAudiences: "Filtrer les audiences",
         problemSummary: "Enoncé du problème",
         strategicGoal: "Objectifs stratégiques",
