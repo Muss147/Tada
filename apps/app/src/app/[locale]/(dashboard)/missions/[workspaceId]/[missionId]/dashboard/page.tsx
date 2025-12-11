@@ -83,8 +83,13 @@ export default async function Page({
     where: { missionId, parentId: null },
     include: {
       createdBy: true,
+      resolvedBy: {
+        select: { id: true, name: true, email: true, image: true },
+      },
       replies: {
-        include: { createdBy: true },
+        include: {
+          createdBy: true,
+        },
         orderBy: { createdAt: "asc" },
       },
     },
@@ -204,10 +209,15 @@ export default async function Page({
         }}
       >
         <MissionDashboardClient
+          missionId={missionId}
           initialQuestions={questionsData}
           totalResponses={totalResponses}
           missionStatus={mission.status || "in_progress"}
           commentCountsByQuestion={commentCountsByQuestion}
+          currentUserId={currentUser?.id ?? ""}
+          workspaceMembers={workspaceMembers.filter(
+            (m) => m.id !== currentUser?.id
+          )}
         />
         <AssistantModal />
       </MyRuntimeProvider>

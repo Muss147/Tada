@@ -3,9 +3,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { X, MessageCircle, CheckCircle2 } from "lucide-react";
+import { X, MessageCircle, SlidersHorizontal } from "lucide-react";
 import { Button } from "@tada/ui/components/button";
 import { Textarea } from "@tada/ui/components/textarea";
+import { Input } from "@tada/ui/components/input";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@tada/ui/components/dropdown-menu";
 import { useI18n } from "@/locales/client";
 import {
   CommentLite,
@@ -15,6 +23,7 @@ import { CommentThread } from "@/components/missions/comments/comment-thread";
 
 type MentionTarget = { type: "root" } | { type: "reply"; commentId: string };
 type DrawerMode = "global" | "question";
+type SortMode = "date" | "unread";
 
 function updateCommentInTree(
   comments: CommentLite[],
@@ -73,6 +82,12 @@ export function MissionCommentsDrawer({
       replies: c.replies ?? [],
     }))
   );
+
+  const [sortMode, setSortMode] = useState<SortMode>("date");
+  const [showResolved, setShowResolved] = useState<boolean>(false);
+  const [onlyMine, setOnlyMine] = useState<boolean>(false);
+  const [search, setSearch] = useState("");
+
   const [newContent, setNewContent] = useState("");
   const [replyForId, setReplyForId] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
@@ -153,7 +168,7 @@ export function MissionCommentsDrawer({
     resetMentionState();
   };
 
-  // Ouverture depuis une question
+  // Ouverture depuis une question (event "open-comments")
   useEffect(() => {
     const handler = () => {
       setMode("question");
@@ -309,7 +324,7 @@ export function MissionCommentsDrawer({
     }
   };
 
-  // Update
+  // Update contenu
   const handleUpdateComment = async (commentId: string, content: string) => {
     if (!content.trim()) return;
     try {
@@ -334,6 +349,39 @@ export function MissionCommentsDrawer({
       );
     } catch (err) {
       console.error("Erreur update commentaire", err);
+    }
+  };
+
+  // Update statut (open / resolved) via endpoint dédié /resolve
+  const handleUpdateStatus = async (
+    commentId: string,
+    status: "open" | "resolved" | "archived"
+  ) => {
+    try {
+      const res = await fetch(`/api/comments/${commentId}/resolve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!res.ok) {
+        console.error(
+          "Erreur POST /api/comments/[id]/resolve",
+          await res.text()
+        );
+        return;
+      }
+
+      const updated = (await res.json()) as CommentLite;
+
+      setComments((prev) =>
+        updateCommentInTree(prev, {
+          ...updated,
+          replies: updated.replies ?? [],
+        })
+      );
+    } catch (err) {
+      console.error("Erreur update statut commentaire", err);
     }
   };
 
@@ -366,9 +414,66 @@ export function MissionCommentsDrawer({
 
   const isQuestionMode = mode === "question" && !!questionKeyFromUrl;
 
+  // Filtres + tri façon Figma
+  const filteredComments = useMemo(() => {
+    let list = [...comments];
+
+    // Show / hide résolus (toggle "Show resolved comments")
+    if (!showResolved) {
+      list = list.filter(
+        (c) =>
+          c.status !== "resolved" &&
+          c.status !== "RESOLVED" &&
+          c.status !== "archived"
+      );
+    }
+
+    // Only your threads
+    if (onlyMine) {
+      list = list.filter((c) => c.createdBy?.id === currentUserId);
+    }
+
+    // Search (contenu, auteur, questionKey)
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((c) => {
+        const content = c.content?.toLowerCase() ?? "";
+        const author = c.createdBy?.name?.toLowerCase() ?? "";
+        const qKey = c.questionKey?.toLowerCase() ?? "";
+        return content.includes(q) || author.includes(q) || qKey.includes(q);
+      });
+    }
+
+    // Tri
+    list.sort((a, b) => {
+      const da = new Date(a.createdAt).getTime();
+      const db = new Date(b.createdAt).getTime();
+
+      if (sortMode === "date") {
+        // plus récent en premier
+        return db - da;
+      }
+
+      // "Sort by unread" ≈ threads ouverts d'abord, puis résolus, tout en gardant l'ordre par date
+      const aOpen =
+        a.status === "open" || a.status === "OPEN" || !a.status ? 1 : 0;
+      const bOpen =
+        b.status === "open" || b.status === "OPEN" || !b.status ? 1 : 0;
+
+      if (aOpen !== bOpen) return bOpen - aOpen;
+      return db - da;
+    });
+
+    return list;
+  }, [comments, showResolved, onlyMine, search, sortMode, currentUserId]);
+
+  const totalThreadsLabel = `${filteredComments.length} ${
+    t("comments.countLabel") || "fil(s) de discussion"
+  }`;
+
   return (
     <>
-      {/* Bouton flottant global */}
+      {/* Bouton flottant global (comme Figma : ouvre le panneau de droite) */}
       <Button
         type="button"
         size="sm"
@@ -382,50 +487,111 @@ export function MissionCommentsDrawer({
         {t("comments.openButton") || "Voir les commentaires"}
       </Button>
 
-      {/* Drawer */}
+      {/* Drawer / panneau latéral */}
       {open && (
         <div className="fixed inset-0 z-50 flex">
           <div className="flex-1 bg-black/30" onClick={() => setOpen(false)} />
 
           <div className="w-full max-w-md h-full bg-white shadow-xl border-l flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <MessageCircle className="h-4 w-4 text-slate-500" />
-                  <p className="text-sm font-semibold">
-                    {isQuestionMode
-                      ? t("comments.titleQuestion") ||
-                        "Commentaires sur la question"
-                      : t("comments.title") || "Commentaires de la mission"}
-                  </p>
+            {/* Header + search + filtre façon Figma */}
+            <div className="px-4 pt-3 pb-2 border-b space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="h-4 w-4 text-slate-500" />
+                    <p className="text-sm font-semibold">
+                      {isQuestionMode
+                        ? t("comments.titleQuestion") ||
+                          "Commentaires sur la question"
+                        : t("comments.title") || "Commentaires de la mission"}
+                    </p>
+                  </div>
+
+                  {isQuestionMode && (
+                    <p className="text-xs text-slate-500 line-clamp-2">
+                      {questionKeyFromUrl}
+                    </p>
+                  )}
+
+                  <p className="text-xs text-slate-500">{totalThreadsLabel}</p>
                 </div>
 
-                {isQuestionMode && (
-                  <p className="text-xs text-slate-500 line-clamp-2">
-                    {questionKeyFromUrl}
-                  </p>
-                )}
-
-                <p className="text-xs text-slate-500">
-                  {loadingComments
-                    ? t("comments.loading") || "Chargement..."
-                    : `${comments.length} ${
-                        t("comments.countLabel") || "fil(s) de discussion"
-                      }`}
-                </p>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
 
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setOpen(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              {/* Search + menu filtre */}
+              <div className="flex items-center gap-2">
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={t("comments.searchPlaceholder") || "Search"}
+                  className="h-8 text-xs"
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 rounded-full border border-slate-200"
+                    >
+                      <SlidersHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-52 text-xs">
+                    <DropdownMenuItem
+                      onClick={() => setSortMode("date")}
+                      className={sortMode === "date" ? "font-semibold" : ""}
+                    >
+                      {t("comments.filters.sortByDate") || "Sort by date"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setSortMode("unread")}
+                      className={sortMode === "unread" ? "font-semibold" : ""}
+                    >
+                      {t("comments.filters.sortByUnread") || "Sort by unread"}
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      onClick={() => setShowResolved((v) => !v)}
+                      className={showResolved ? "font-semibold" : ""}
+                    >
+                      {t("comments.filters.showResolved") ||
+                        "Show resolved comments"}
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={() => setOnlyMine((v) => !v)}
+                      className={onlyMine ? "font-semibold" : ""}
+                    >
+                      {t("comments.filters.onlyYours") || "Only your threads"}
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={() =>
+                        setMode((m) =>
+                          m === "question" ? "global" : "question"
+                        )
+                      }
+                    >
+                      {t("comments.filters.onlyCurrentPage") ||
+                        "Only current page"}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
 
+            {/* Liste des threads */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
-              {!loadingComments && comments.length === 0 && (
+              {!loadingComments && filteredComments.length === 0 && (
                 <p className="text-xs text-slate-500">
                   {isQuestionMode
                     ? t("comments.emptyQuestion") ||
@@ -435,7 +601,7 @@ export function MissionCommentsDrawer({
                 </p>
               )}
 
-              {comments.map((comment, index) => (
+              {filteredComments.map((comment, index) => (
                 <CommentThread
                   key={`${comment.id}-${index}`}
                   comment={comment}
@@ -460,6 +626,7 @@ export function MissionCommentsDrawer({
                   mentionCandidates={mentionCandidates}
                   onSelectMention={handleSelectMention}
                   onUpdateComment={handleUpdateComment}
+                  onUpdateStatus={handleUpdateStatus}
                   onDeleteComment={handleDeleteComment}
                 />
               ))}

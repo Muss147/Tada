@@ -68,12 +68,28 @@ export default {
         open: "Ouvert",
         resolved: "Résolu",
         archived: "Archivé",
-      }
+      },
+      actions: {
+      reply: "Répondre",
+      edit: "Modifier",
+      reopen: "Rouvrir",
+      resolve: "Résoudre",
+      delete: "Supprimer",
+      cancel: "Annuler",
+      save: "Enregistrer",
+      replyPlaceholder: "Écrire une réponse...",
+      sendReply: "Envoyer la réponse",
+    },
+    filter:{
+      all: "Tous",
+      resolved: "Résolu",
+      open: "Ouvert",
+    }
     },
   billing: {
     success: {
       title: "Paiement réussi !",
-      subscriptionActivated: "Abonnement activé avec succès 🎉",
+      subscriptionActivated: "Abonnement activé avec succès",
     },
     error: {
       title: "Erreur",

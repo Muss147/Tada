@@ -1,7 +1,7 @@
 // src/app/[locale]/(dasboard)/missions/[workspaceId]/[missionId]/dasboard/mission-dashboard-client.tsx
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQueryState } from "nuqs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@tada/ui/components/button";
@@ -19,21 +19,37 @@ import FilterChangeChartType from "@/components/missions/boards/modals/filter-ch
 
 import type { QuestionData } from "@/lib/utils";
 import type { VisualizationId } from "@/lib/chart-types";
+import type {
+  WorkspaceMember,
+  CommentLite,
+} from "@/components/comments/comments-types";
+import { QuestionCommentsBubble } from "@/components/missions/comments/question-comments-bubble";
+import { CommentPin } from "@/components/missions/comments/comment-pin";
 
 interface MissionDashboardClientProps {
+  missionId: string;
   initialQuestions: QuestionData[];
   totalResponses: number;
   missionStatus: string;
   commentCountsByQuestion?: Record<string, number>;
+  currentUserId: string;
+  workspaceMembers: WorkspaceMember[];
 }
 
 export default function MissionDashboardClient({
+  missionId,
   initialQuestions,
   totalResponses,
   missionStatus,
   commentCountsByQuestion,
+  currentUserId,
+  workspaceMembers,
 }: MissionDashboardClientProps) {
   const [questions, setQuestions] = useState<QuestionData[]>(initialQuestions);
+  const [activeBubbleQuestionKey, setActiveBubbleQuestionKey] = useState<
+    string | null
+  >(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -41,15 +57,25 @@ export default function MissionDashboardClient({
     const params = new URLSearchParams(searchParams.toString());
     params.set("commentQuestionKey", question.question);
 
+    // on garde l’URL à jour pour le drawer global
     router.replace(`?${params.toString()}`, { scroll: false });
 
-    // Signal au drawer d'ouverture
+    // scroll vers la question
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("open-comments"));
+      window.dispatchEvent(
+        new CustomEvent("scroll-to-question", {
+          detail: { questionKey: question.question },
+        })
+      );
     }
+
+    // ouvre / ferme la bulle locale façon Figma
+    setActiveBubbleQuestionKey((prev) =>
+      prev === question.question ? null : question.question
+    );
   };
 
-  // paramètre partagé avec le modal
+  // paramètre partagé avec le modal de changement de chart
   const [, setQuestionId] = useQueryState("questionId", {
     defaultValue: "",
   });
@@ -87,46 +113,47 @@ export default function MissionDashboardClient({
       chartType: VisualizationId;
       isSorted: boolean;
     }) => {
-      console.log("[Client] handleApply appelé", {
-        questionId,
-        chartType,
-        filter,
-        isSorted,
-      });
-
-      setQuestions((prev) => {
-        const updated = prev.map((q) =>
+      setQuestions((prev) =>
+        prev.map((q) =>
           q.chartId === questionId || q.question === questionId
             ? { ...q, chart_type: chartType }
             : q
-        );
-
-        console.log(
-          "[Client] state après update",
-          updated.map((q) => ({
-            id: q.chartId,
-            question: q.question,
-            chart_type: q.chart_type,
-          }))
-        );
-
-        return updated;
-      });
+        )
+      );
     },
     []
   );
+
+  // Listener pour "scroll-to-question" (depuis le drawer)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const custom = e as CustomEvent<{ questionKey: string }>;
+      const key = custom.detail?.questionKey;
+      if (!key) return;
+
+      const el =
+        document.querySelector<HTMLElement>(`[data-question-key="${key}"]`) ||
+        document.getElementById(`question-${key}`);
+
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("ring-2", "ring-sky-400", "ring-offset-2");
+
+        setTimeout(() => {
+          el.classList.remove("ring-2", "ring-sky-400", "ring-offset-2");
+        }, 2000);
+      }
+    };
+
+    window.addEventListener("scroll-to-question", handler);
+    return () => window.removeEventListener("scroll-to-question", handler);
+  }, []);
 
   return (
     <>
       {questions
         .filter((question) => question.participants_responded > 0)
         .map((question, index) => {
-          console.log("[Render] question", {
-            id: question.chartId,
-            question: question.question,
-            chart_type: question.chart_type,
-          });
-
           const commentCount =
             commentCountsByQuestion?.[question.question] ?? 0;
 
@@ -141,8 +168,25 @@ export default function MissionDashboardClient({
 
           const type = question.chart_type;
 
+          const questionKey = question.question;
+          const domId = `question-${index + 1}`;
+          const bubbleOpen = activeBubbleQuestionKey === questionKey;
+
           return (
-            <div key={question.chartId ?? index} className="mb-8 space-y-3">
+            <div
+              key={question.chartId ?? index}
+              id={domId}
+              data-question-key={questionKey}
+              className="relative mb-8 space-y-3"
+            >
+              {commentCount > 0 && (
+                <CommentPin
+                  count={commentCount}
+                  label={question.question}
+                  onClick={() => openCommentsForQuestion(question)}
+                />
+              )}
+
               {renderInsights && (
                 <InsightsSection
                   insights={question.insights as any}
@@ -167,6 +211,7 @@ export default function MissionDashboardClient({
                     variant="ghost"
                     onClick={() => openCommentsForQuestion(question)}
                     className="relative"
+                    title={question.question}
                   >
                     Commentaires
                     {commentCount > 0 && (
@@ -279,11 +324,23 @@ export default function MissionDashboardClient({
                   participationQuestions={participationLabel}
                 />
               )}
+
+              {/* Bulle de commentaires façon Figma, ancrée sur la question */}
+              {bubbleOpen && (
+                <QuestionCommentsBubble
+                  missionId={missionId}
+                  questionKey={questionKey}
+                  questionLabel={question.question}
+                  currentUserId={currentUserId}
+                  workspaceMembers={workspaceMembers}
+                  onClose={() => setActiveBubbleQuestionKey(null)}
+                />
+              )}
             </div>
           );
         })}
 
-      {/* Modal connecté au state */}
+      {/* Modal de changement de type de graphe */}
       <FilterChangeChartType
         getQuestionConfig={getQuestionConfig}
         onApply={handleApply}

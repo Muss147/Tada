@@ -80,67 +80,73 @@ export function MissionCard({
   }
 
   return (
-    <div className="grid grid-cols-[4fr,3fr,3fr,3fr,auto] items-center px-5 py-4 gap-4">
-      {/* Colonnes 1-4 : contenu cliquable */}
+    <div className="grid grid-cols-[4fr,3fr,3fr,3fr,auto] items-center px-5 py-3 gap-4 text-sm">
+      {/* Col 1 : Nom + statut (aligné sur "Mission") */}
       <Link
         href={`/missions/${workspaceId}/${mission.id}`}
-        className="col-span-4 grid grid-cols-4 gap-4"
+        className="flex flex-col text-left"
       >
-        {/* Col 1 : nom + status */}
-        <div className="flex flex-col">
-          <h2 className="font-medium text-gray-800 dark:text-gray-100">
-            {mission.name}
-          </h2>
-          {mission.status && <MissionStatus mission={mission} />}
-        </div>
-
-        {/* Col 2 : progression + createdAt */}
-        <div className="flex flex-col items-center text-center">
-          <span className="text-gray-600 text-sm dark:text-gray-100">
-            {t("missions.completion", { percentage: mission.percentage })}
-          </span>
-          {mission.createdAt && (
-            <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-              {timeAgo(new Date(mission.createdAt), currentLocale)}
-            </span>
-          )}
-        </div>
-
-        {/* Col 3 : submissions + updatedAt */}
-        <div className="flex flex-col items-center text-center">
-          <span className="text-gray-600 text-sm dark:text-gray-100">
-            {t("missions.submissions", {
-              submissions: mission.submissions,
-            })}
-          </span>
-          {mission.updatedAt && (
-            <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-              {timeAgo(new Date(mission.updatedAt), currentLocale)}
-            </span>
-          )}
-        </div>
-
-        {/* Col 4 : dernière maj + type */}
-        <div className="flex flex-col items-center text-center">
-          {mission.updatedAt && (
-            <span className="text-gray-600 text-sm dark:text-gray-100">
-              {timeAgo(new Date(mission.updatedAt), currentLocale)}
-            </span>
-          )}
-
-          {mission.updatedType && (
-            <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-              {t(
-                `missions.updated_type.${mission.updatedType}` as keyof typeof t
-              )}
-            </span>
-          )}
-        </div>
+        <h2 className="font-medium text-gray-800 dark:text-gray-100">
+          {mission.name}
+        </h2>
+        {mission.status && (
+          <div className="mt-1">
+            <MissionStatus mission={mission} />
+          </div>
+        )}
       </Link>
 
-      {/* Col 5 : actions alignées */}
+      {/* Col 2 : Progress (aligné sur "Progress") */}
+      <Link
+        href={`/missions/${workspaceId}/${mission.id}`}
+        className="flex flex-col items-center text-center"
+      >
+        <span className="text-gray-700 dark:text-gray-100">
+          {t("missions.completion", { percentage: mission.percentage })}
+        </span>
+        {mission.createdAt && (
+          <span className="text-xs text-gray-400 mt-1 dark:text-gray-300">
+            {timeAgo(new Date(mission.createdAt), currentLocale)}
+          </span>
+        )}
+      </Link>
 
-      <div className="flex items-center justify-center space-x-2">
+      {/* Col 3 : Submissions (aligné sur "Submissions") */}
+      <Link
+        href={`/missions/${workspaceId}/${mission.id}`}
+        className="flex flex-col items-center text-center"
+      >
+        <span className="text-gray-700 dark:text-gray-100">
+          {t("missions.submissions", {
+            submissions: mission.submissions,
+          })}
+        </span>
+        {mission.updatedAt && (
+          <span className="text-xs text-gray-400 mt-1 dark:text-gray-300">
+            {timeAgo(new Date(mission.updatedAt), currentLocale)}
+          </span>
+        )}
+      </Link>
+
+      {/* Col 4 : Last update (aligné sur "Last update") */}
+      <Link
+        href={`/missions/${workspaceId}/${mission.id}`}
+        className="flex flex-col items-center text-center"
+      >
+        {mission.updatedAt && (
+          <span className="text-gray-700 dark:text-gray-100">
+            {timeAgo(new Date(mission.updatedAt), currentLocale)}
+          </span>
+        )}
+        {mission.updatedType && (
+          <span className="text-xs text-gray-400 mt-1 dark:text-gray-300">
+            {t(`missions.updated_type.${mission.updatedType}` as any) as string}
+          </span>
+        )}
+      </Link>
+
+      {/* Col 5 : Actions (aligné sur "Actions") */}
+      <div className="flex items-center justify-center gap-2">
         {/* Duplicate */}
         <Button
           size="icon"
@@ -159,7 +165,7 @@ export function MissionCard({
         {/* Permissions */}
         <MissionPermissionsModal orgId={orgId} mission={pureMission as any} />
 
-        {/* Delete avec Dialog de confirmation */}
+        {/* Delete avec Dialog */}
         <DeleteMissionDialog
           missionId={mission.id}
           missionName={mission.name}
