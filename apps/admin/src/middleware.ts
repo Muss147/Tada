@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     {
       baseURL: `${protocol}://${host}`,
       headers: {
-        cookie: request.headers.get("cookie") || "",
+        cookie: request.headers.get("cookie") ?? "",
       },
     },
   );

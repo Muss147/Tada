@@ -20,7 +20,7 @@ import {
   Bot,
   TableOfContents,
 } from "lucide-react";
-import { useI18n, useCurrentLocale } from "@/locales/client";
+import { useI18n } from "@/locales/client";
 
 interface CreateSurveyModalProps {
   trigger?: React.ReactNode;
@@ -34,7 +34,6 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
 
   const router = useRouter();
   const t = useI18n();
-  const currentLocale = useCurrentLocale();
 
   const surveyOptions = [
     {
@@ -56,7 +55,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.ai.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=ai`),
+      onClick: () => router.push(`/missions/${orgId}/create?mode=ai`),
     },
     {
       id: "template",
@@ -77,7 +76,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.template.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/templates?mode=template`),
+      onClick: () => router.push(`/missions/${orgId}/templates?mode=template`),
     },
     {
       id: "manuel",
@@ -98,7 +97,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.manuel.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=manual`),
+      onClick: () => router.push(`/missions/${orgId}/create?mode=manual`),
     },
     {
       id: "survey",
@@ -119,7 +118,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.upload.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=survey`),
+      onClick: () => router.push(`/missions/${orgId}/create?mode=survey`),
     },
   ];
 

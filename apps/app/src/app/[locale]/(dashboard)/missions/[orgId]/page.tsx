@@ -12,18 +12,15 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: Promise<{ orgId: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: { orgId: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const { orgId } = await params;
-  const resolvedSearchParams = await searchParams;
-  
   const value = {
-    ...(resolvedSearchParams.q && { query: resolvedSearchParams.q }),
-    ...(resolvedSearchParams.sort && { sort: resolvedSearchParams.sort }),
-    ...(resolvedSearchParams.page && { page: resolvedSearchParams.page }),
-    ...(resolvedSearchParams.status && { status: resolvedSearchParams.status }),
-    ...(resolvedSearchParams.date && { date: resolvedSearchParams.date }),
+    ...(searchParams.q && { query: searchParams.q }),
+    ...(searchParams.sort && { sort: searchParams.sort }),
+    ...(searchParams.page && { page: searchParams.page }),
+    ...(searchParams.status && { status: searchParams.status }),
+    ...(searchParams.date && { date: searchParams.date }),
   };
 
   const loadingKey = JSON.stringify(value);
@@ -45,7 +42,7 @@ export default async function Page({
           page={Number(value.page) || 0}
           status={(value.status as string) || "all"}
           date={(value.date as string) || ""}
-          orgId={orgId}
+          orgId={params.orgId}
         />
       </Suspense>
     </ErrorBoundary>
