@@ -24,7 +24,7 @@ export function CreateMissionCard({
   const templateId = searchParams.get("t");
   const mode = searchParams.get("mode");
 
-  useAssistantInstructions(`You are Jarvis, a Marketing Research Copilot, specialized in guiding users through the process of completing a comprehensive marketing research form. Your purpose is to help users define their business problems, research objectives, target markets, and formulate testable hypotheses in a structured yet conversational manner.
+  useAssistantInstructions(`You are Dina, a Marketing Research Copilot, specialized in guiding users through the process of completing a comprehensive marketing research form. Your purpose is to help users define their business problems, research objectives, target markets, and formulate testable hypotheses in a structured yet conversational manner.
 
 IMPORTANT: Always adapt to the language used by the user in their first interaction. If they write to you in French, respond in French. If they use Spanish, continue in Spanish, and so on. Maintain this language consistency throughout the entire conversation.
 
@@ -83,13 +83,15 @@ IMPORTANT CHECKLIST:
   - Hypothèses (assumptions) : ...
   - Audience ciblée / échantillon (sampleSummary) : ...
 
-- Once all four sections are clear and confirmed by the user, you may say something like:
-  "Parfait, nous avons maintenant un brief structuré (problème, objectifs, hypothèses, audience). Je vais maintenant remplir le formulaire avec ces éléments. Tu pourras ensuite relire et ajuster si besoin."
+- Once all four sections are clear and confirmed by the user, you MUST:
+  1) Produce a clear, structured recap of the brief (problem, objectives, assumptions, audience),
+  2) Then END your message with the EXACT sentence in French:
+     "Est-ce que tout cela vous semble correct ? Si oui, je peux maintenant remplir le formulaire avec ces informations."
+  This closing sentence is mandatory in French UI mode, because the frontend listens for this pattern to trigger the form filling after the user's confirmation.
 
-Never update or write into form fields until after the full summary has been explicitly validated by the user.
+- Never update or write into form fields yourself. The form will only be filled AFTER the user explicitly confirms that the recap is correct (e.g. "oui", "ok", "parfait", etc.).
 
-This ensures that the conversation always converges towards a complete brief compatible with the form fields and the progress score.
-`);
+This ensures that the conversation always converges towards a complete brief compatible with the form fields and the progress score, and that the form is only filled after explicit user validation.`);
 
   const hasRenderedField = useRef(false);
   const form = useForm({
@@ -114,21 +116,23 @@ This ensures that the conversation always converges towards a complete brief com
         workspaceId={workspace.id}
         missionId={null}
       >
-        <div
-          className={cn(
-            "w-1/2 flex flex-col border-r border-gray-200 bg-white",
-            (templateId || mode) && "w-2/3"
-          )}
-        >
-          <div className="flex-1 overflow-y-auto">
-            <CreateMissionForm
-              organization={organization}
-              workspaceId={workspace.id}
-              locale={locale}
-            />
+        <div className="flex h-full min-h-0 w-full">
+          {/* Colonne formulaire */}
+          <div className="flex flex-col border-r border-gray-200 bg-white flex-1 min-w-0 min-h-0">
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <CreateMissionForm
+                organization={organization}
+                workspaceId={workspace.id}
+                locale={locale}
+              />
+            </div>
+          </div>
+
+          {/* Sidebar à droite : scroll indépendante */}
+          <div className="w-80 flex flex-col h-full min-h-0 border-l border-gray-200 bg-white overflow-y-auto">
+            <ProgressSidebar />
           </div>
         </div>
-        <ProgressSidebar />
       </AudiencesFilterProvider>
     </Form>
   );

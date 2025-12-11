@@ -3,10 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";
 import { assertWorkspaceAdmin, getUserWorkspaces } from "@/lib/workspaces";
-
-import { promises as fs } from "fs";
-import path from "path";
-import crypto from "crypto";
+import { uploadFileToSupabase } from "@/lib/uploads";
 
 export async function GET(
   req: NextRequest,
@@ -136,34 +133,16 @@ export async function PATCH(
   let finalLogo: string | null = existing.logo ?? null;
 
   if (logoFile && logoFile.size > 0) {
-    const bytes = await logoFile.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Upload sur Supabase
+    const { publicUrl /*, path */ } = await uploadFileToSupabase({
+      file: logoFile,
+      category: "workspaceLogo",
+      baseName: finalSlug ?? finalName, // pour un nom de fichier plus propre
+    });
 
-    const ext =
-      logoFile.name.split(".").pop()?.toLowerCase() || "png";
-    const filename = `${crypto.randomUUID()}.${ext}`;
-
-    const uploadDirEnv =
-      process.env.WORKSPACE_LOGO_UPLOAD_DIR || "public/uploads/workspaces";
-
-    const uploadDir = path.isAbsolute(uploadDirEnv)
-      ? uploadDirEnv
-      : path.join(process.cwd(), uploadDirEnv);
-
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
-
-    // Optionnel : supprimer l'ancien logo si c’est juste un filename local
-    if (existing.logo) {
-      const oldPath = path.join(uploadDir, existing.logo);
-      fs.unlink(oldPath).catch(() => {
-        // on ignore l'erreur si le fichier n'existe plus
-      });
-    }
-
-    finalLogo = filename;
+    // Ici tu peux choisir ce que tu veux stocker en BDD.
+    // Simple : on stocke directement l'URL publique
+    finalLogo = publicUrl;
   }
 
   const updated = await prisma.workspace.update({

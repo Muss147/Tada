@@ -1,7 +1,5 @@
-// src/app/api/uploads/organization-logo/route.ts
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { uploadFileToSupabase } from "@/lib/uploads";
 
 export async function POST(req: Request) {
   try {
@@ -16,31 +14,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const uploadDir =
-      process.env.ORGANIZATION_LOGO_UPLOAD_DIR ||
-      "public/uploads/organizations";
+    // Upload centralisé sur Supabase
+    const { publicUrl } = await uploadFileToSupabase({
+      file,
+      category: "organizationLogo",
+      baseName: orgId,
+    });
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const extension = file.name.split(".").pop() || "png";
-    const safeName = file.name
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const filename = `${orgId}_${Date.now()}.${extension}`;
-
-    const dirPath = path.join(process.cwd(), uploadDir);
-    await fs.mkdir(dirPath, { recursive: true });
-
-    const filePath = path.join(dirPath, filename);
-    await fs.writeFile(filePath, buffer);
-
-    // URL publique (car tout ce qui est dans /public est servi à la racine)
-    const publicBasePath = uploadDir.replace(/^public\//, "");
-    const publicUrl = `/${publicBasePath}/${filename}`;
-
-    return NextResponse.json({ url: publicUrl });
+    // On retourne l’URL publique qui sera stockée dans organization.logo
+    return NextResponse.json({ url: publicUrl }, { status: 200 });
   } catch (error) {
     console.error("[UPLOAD_ORGANIZATION_LOGO_ERROR]", error);
     return NextResponse.json(

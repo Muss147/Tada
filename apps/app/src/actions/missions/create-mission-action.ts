@@ -83,7 +83,6 @@ export const createMissionAction = authActionClient
 
             surveyQuestions = template.questions;
           } else {
-            // 👉 On demande juste une LISTE de questions
             const { object } = await generateObject({
               model: openai("gpt-4o-mini"),
               schema: z.object({

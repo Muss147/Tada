@@ -1,3 +1,4 @@
+// src/app/[locale]/(dashboard)/missions/create/layout.tsx
 import { MyRuntimeProvider } from "./my-runtime-provider";
 
 export default function CreateMissionLayout({
@@ -5,5 +6,5 @@ export default function CreateMissionLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <MyRuntimeProvider>{children} </MyRuntimeProvider>;
+  return <MyRuntimeProvider>{children}</MyRuntimeProvider>;
 }

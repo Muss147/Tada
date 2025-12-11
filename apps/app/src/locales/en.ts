@@ -1061,6 +1061,7 @@ export default {
         aiProposeFullStudy: "Generate with AI",
         aiGenerating: "AI is generating your brief...",
         aiBriefFilled: "AI has filled in your brief",
+        aiBriefGenerating: "AI is generating your brief...",
         audienceSuggestionHelper:
           "suggests audiences based on your brief. We will add more targeting options soon.",
         audienceSuggestionGroupPlaceHolder: "Select an audience group",

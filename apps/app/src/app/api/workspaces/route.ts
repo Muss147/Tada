@@ -9,6 +9,7 @@ import path from "path";
 import crypto from "crypto";
 
 import { transporter } from "@/lib/transporter";
+import { uploadFileToSupabase } from "@/lib/uploads";
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
 
 export async function GET(req: NextRequest) {
@@ -89,29 +90,13 @@ export async function POST(req: NextRequest) {
     let logo: string | null = null;
 
     if (logoFile && logoFile.size > 0) {
-      const bytes = await logoFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const ext =
-        logoFile.name.split(".").pop()?.toLowerCase() || "png";
-      const filename = `${crypto.randomUUID()}.${ext}`;
-
-      const uploadDirEnv =
-        process.env.WORKSPACE_LOGO_UPLOAD_DIR || "public/uploads/workspaces";
-
-      const uploadDir = path.isAbsolute(uploadDirEnv)
-        ? uploadDirEnv
-        : path.join(process.cwd(), uploadDirEnv);
-
-      await fs.mkdir(uploadDir, { recursive: true });
-
-      const filePath = path.join(uploadDir, filename);
-      await fs.writeFile(filePath, buffer);
-
-      // En BDD : on stocke juste le filename (simple)
-      logo = filename;
+      const { publicUrl, path } = await uploadFileToSupabase({
+        file: logoFile,
+        category: "workspaceLogo",
+        baseName: slug || name,
+      });
+      logo = publicUrl;
     }
-
 
     // On s'assure que le slug est unique
     const existingWithSameSlug = await prisma.workspace.findUnique({

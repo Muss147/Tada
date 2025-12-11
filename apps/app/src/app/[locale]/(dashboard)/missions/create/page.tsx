@@ -1,7 +1,6 @@
-import { ConversationCard } from "@/components/missions/conversation-card";
-import { CreateMissionCard } from "@/components/missions/create-mission-card";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { CreateMissionLayout } from "./CreateMissionLayout";
 
 export const metadata = {
   title: "Create Mission | Tada",
@@ -22,7 +21,6 @@ export default async function Page({
   const mode = value.mode as string | undefined;
 
   if (!workspaceId) {
-    // pas de workspace → on renvoie vers la home ou la liste des workspaces
     return redirect(`/${locale}`);
   }
 
@@ -45,13 +43,11 @@ export default async function Page({
   const shouldShowConversationCard = !templateId && (!mode || mode === "ai");
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {shouldShowConversationCard && <ConversationCard />}
-      <CreateMissionCard
-        organization={organization}
-        workspace={workspace}
-        locale={locale}
-      />
-    </div>
+    <CreateMissionLayout
+      organization={organization}
+      workspace={{ id: workspace.id }}
+      locale={locale}
+      shouldShowConversationCard={shouldShowConversationCard}
+    />
   );
 }

@@ -1338,6 +1338,13 @@ export function AudiencesFilterProvider({
   };
 
   const submitSuggestion = async (suggestion: AudienceSuggestion) => {
+    if (!organizationId) {
+      console.warn(
+        "[AudiencesFilterProvider] submitSuggestion called without organizationId"
+      );
+      return;
+    }
+
     try {
       const res = await fetch("/api/audience-attribute-suggestions", {
         method: "POST",

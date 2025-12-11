@@ -1,6 +1,6 @@
+// src/app/api/uploads/question-image/route.ts
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { uploadFileToSupabase } from "@/lib/uploads";
 
 export const runtime = "nodejs";
 
@@ -12,49 +12,26 @@ export async function POST(request: Request) {
     if (!file) {
       return NextResponse.json(
         { error: "Aucun fichier envoyé" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // 💾 Dossier cible : tu peux le changer si tu veux
-    const uploadDir =
-      process.env.SURVEY_IMAGE_UPLOAD_DIR || "public/uploads/surveys";
+    // Optionnel : si tu veux tagger par missionId ou questionId
+    const missionId =
+      (formData.get("missionId") as string | null) ?? "generic";
 
-    const absoluteUploadDir = path.join(process.cwd(), uploadDir);
+    const { publicUrl } = await uploadFileToSupabase({
+      file,
+      category: "surveyImage",
+      baseName: missionId,
+    });
 
-    // On s'assure que le dossier existe
-    await fs.mkdir(absoluteUploadDir, { recursive: true });
-
-    // Nom de fichier safe
-    const originalName = file.name || "survey-image";
-    const safeName = originalName.replace(/\s+/g, "-").toLowerCase();
-    const ext =
-      safeName.includes(".") ? `.${safeName.split(".").pop()}` : ".png";
-
-    const filename = `survey-${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2)}${ext}`;
-
-    const filepath = path.join(absoluteUploadDir, filename);
-
-    // Écriture sur le disque
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await fs.writeFile(filepath, buffer);
-
-    // URL publique (public/ est la racine statique)
-    const publicPath =
-      "/" +
-      path
-        .join(uploadDir.replace(/^public[\\/]/, ""), filename)
-        .replace(/\\/g, "/");
-
-    return NextResponse.json({ url: publicPath });
+    return NextResponse.json({ url: publicUrl }, { status: 200 });
   } catch (error) {
-    console.error("Erreur upload survey image :", error);
+    console.error("[UPLOAD_SURVEY_IMAGE_ERROR]", error);
     return NextResponse.json(
       { error: "Erreur lors de l'upload de l'image" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

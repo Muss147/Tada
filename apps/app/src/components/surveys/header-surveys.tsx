@@ -25,6 +25,7 @@ interface HeaderSurveysProps {
   assumptions: string;
   audiences: Record<string, string | number>;
   isAiMode: boolean;
+  redirectTo: string;
 }
 
 export function HeaderSurveys({
@@ -35,6 +36,7 @@ export function HeaderSurveys({
   assumptions,
   audiences,
   isAiMode = false,
+  redirectTo,
 }: HeaderSurveysProps) {
   const t = useI18n();
   const { toast } = useToast();

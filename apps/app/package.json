@@ -19,6 +19,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.0",
     "@react-email/render": "^2.0.0",
+    "@supabase/supabase-js": "^2.87.1",
     "@tada/analytics": "workspace:*",
     "@tada/email": "workspace:*",
     "@tada/kv": "workspace:*",

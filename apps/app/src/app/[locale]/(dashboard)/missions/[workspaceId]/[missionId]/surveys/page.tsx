@@ -26,6 +26,7 @@ export default async function Page({
       assumptions: true,
       audiences: true,
       mode: true,
+      workspaceId: true,
     },
   });
 
@@ -33,6 +34,8 @@ export default async function Page({
 
   console.log("survey mission:", mission);
   console.log("mode", mission.mode);
+
+  const redirectToMissionsList = `/missions?workspaceId=${mission.workspaceId}`;
   return (
     <SurveysBuilderProvider
       defaultSurvey={mission.survey[0]?.questions as unknown as Survey}
@@ -45,6 +48,7 @@ export default async function Page({
         assumptions={mission.assumptions || ""}
         audiences={mission.audiences as Record<string, string | number>}
         isAiMode={mission.mode === "ai"}
+        redirectTo={redirectToMissionsList}
       />
       <div className="flex flex-1 overflow-hidden">
         <div className="w-72 bg-gray-100 dark:bg-gray-800 overflow-y-auto border-r border-gray-200 dark:border-gray-700 h-full">
@@ -57,6 +61,9 @@ export default async function Page({
           audiences={
             (mission.audiences as unknown as Record<string, any>) || undefined
           }
+          organizationId={params.orgId}
+          workspaceId={mission.workspaceId}
+          missionId={missionId}
         >
           <div className="w-96 bg-white h-full dark:bg-gray-800 overflow-y-auto border-r border-gray-200 dark:border-gray-700">
             <MissionBrief

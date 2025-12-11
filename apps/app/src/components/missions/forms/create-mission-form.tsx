@@ -32,6 +32,16 @@ interface Section {
   selectedMarkets?: string[];
 }
 
+const extractTextFromMessage = (msg: any): string => {
+  if (!msg?.content) return "";
+  return (
+    msg.content
+      .filter((c: any) => c.type === "text")
+      .map((c: any) => c.text)
+      .join("\n") ?? ""
+  );
+};
+
 export function CreateMissionForm({
   organization,
   workspaceId,
@@ -60,6 +70,10 @@ export function CreateMissionForm({
   const [tempTitle, setTempTitle] = useState("");
   const [editingSection, setEditingSection] = useState<number | null>(null);
   const [tempContent, setTempContent] = useState("");
+
+  const [lastSyncedAssistantId, setLastSyncedAssistantId] = useState<
+    string | null
+  >(null);
 
   const {
     activeFiltersCount,
@@ -99,13 +113,7 @@ export function CreateMissionForm({
       .map((c: any) => c.text)
       .join("\n") ?? "";
 
-  // ✅ Nouveau : on active le bouton dès qu’il y a AU MOINS une réponse assistant
   const hasAssistantMessage = !!lastAssistantMessage;
-
-  //On ne permet la génération que si on a au moins quelque chose
-  const canGenerateBrief = hasCoreInputs || hasAudiences || hasAssistantMessage;
-
-  const canRefineFromConversation = hasAssistantMessage;
 
   const createMission = useAction(createMissionAction, {
     onSuccess: (data) => {
@@ -218,7 +226,6 @@ export function CreateMissionForm({
       const brief = res.data?.data;
       if (!brief) return;
 
-      // Remplir le formulaire
       form.setValue("name", brief.name, { shouldDirty: true });
       form.setValue("problemSummary", brief.problemSummary, {
         shouldDirty: true,
@@ -307,6 +314,90 @@ export function CreateMissionForm({
   }
 
   useEffect(() => {
+    if (!isAiMode) return;
+    if (!threadMessages.length) return;
+
+    const ASK_RE = /remplir le formulaire/i;
+    const CONFIRM_RE = /^(oui|ok|okay|c['’]est bon|yes|yep|parfait)/i;
+
+    // 1) On cherche le DERNIER message assistant qui propose de remplir le formulaire
+    let askedIndex = -1;
+    for (let i = threadMessages.length - 1; i >= 0; i--) {
+      const msg = threadMessages[i];
+      if (msg.role !== "assistant") continue;
+      const text = extractTextFromMessage(msg);
+      if (ASK_RE.test(text)) {
+        askedIndex = i;
+        break;
+      }
+    }
+
+    if (askedIndex === -1) {
+      return; // aucun assistant n'a proposé de remplir le formulaire
+    }
+
+    const assistantMsg = threadMessages[askedIndex];
+    const assistantText = extractTextFromMessage(assistantMsg);
+
+    // 2) On cherche une confirmation utilisateur APRÈS ce message
+    const confirmMsg = threadMessages
+      .slice(askedIndex + 1)
+      .reverse()
+      .find((m) => {
+        if (m.role !== "user") return false;
+        const userText = extractTextFromMessage(m).trim();
+        return CONFIRM_RE.test(userText);
+      });
+
+    if (!confirmMsg) {
+      return; // pas encore de "oui / ok / parfait" après la proposition
+    }
+
+    // 3) On obtient un identifiant stable pour ce récap assistant
+    const assistantId =
+      (assistantMsg as any).id ??
+      (assistantMsg as any).messageId ??
+      `assistant-${askedIndex}`;
+
+    if (assistantId === lastSyncedAssistantId) {
+      return; // déjà traité
+    }
+
+    if (generateBrief.status === "executing") {
+      return;
+    }
+
+    // 4) On marque ce récap comme traité AVANT de lancer la génération
+    setLastSyncedAssistantId(assistantId);
+
+    // 5) On lance la génération du brief
+    toast({
+      title:
+        locale === "fr"
+          ? "Génération du brief en cours…"
+          : "Generating the brief…",
+      description:
+        locale === "fr"
+          ? "Je remplis automatiquement le formulaire à partir de la conversation."
+          : "I'm filling the form from the conversation.",
+    });
+    generateBrief.execute({
+      name: form.getValues("name"),
+      problemSummary: assistantText || form.getValues("problemSummary"),
+      objectives: form.getValues("objectives"),
+      assumptions: form.getValues("assumptions"),
+      audiences: selectedFilters,
+    });
+  }, [
+    isAiMode,
+    threadMessages,
+    lastSyncedAssistantId,
+    generateBrief.status,
+    form,
+    selectedFilters,
+  ]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingSection &&
@@ -384,7 +475,7 @@ export function CreateMissionForm({
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="min-h-screen bg-white dark:bg-gray-900 p-4"
+      className="h-full flex flex-col bg-white dark:bg-gray-900 p-4"
     >
       <input type="hidden" {...form.register("hidden")} />
 
@@ -491,45 +582,6 @@ export function CreateMissionForm({
         </div>
 
         <div className="flex flex-col gap-2 items-end">
-          {isAiMode && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (!canGenerateBrief) {
-                  toast({
-                    title: t("common.error.somethingWentWrong"),
-                    description:
-                      "Donne au moins un peu de contexte (problème, objectifs, hypothèses ou audiences) avant de demander un brief complet.",
-                    variant: "destructive",
-                  });
-                  return;
-                }
-
-                generateBrief.execute({
-                  name: form.getValues("name"),
-                  problemSummary: form.getValues("problemSummary"),
-                  objectives: form.getValues("objectives"),
-                  assumptions: form.getValues("assumptions"),
-                  audiences: selectedFilters,
-                });
-              }}
-              disabled={
-                generateBrief.status === "executing" || !canGenerateBrief
-              }
-            >
-              {generateBrief.status === "executing" ? (
-                <>
-                  <Icons.spinner className="w-4 h-4 animate-spin mr-2" />
-                  {t("missions.createMission.form.aiGenerating")}
-                </>
-              ) : (
-                t("missions.createMission.form.aiProposeFullStudy")
-              )}
-            </Button>
-          )}
-
           <Button variant="default" size="lg" type="submit">
             {createMission.status === "executing" ? (
               <Icons.spinner className="w-4 h-4 animate-spin" />
@@ -539,6 +591,19 @@ export function CreateMissionForm({
           </Button>
         </div>
       </div>
+
+      {/* Bandeau "Brief en cours de génération" */}
+      {generateBrief.status === "executing" && (
+        <div className="mb-4 flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100">
+          <Icons.spinner className="h-4 w-4 animate-spin" />
+          <span>
+            {t("missions.createMission.form.aiBriefGenerating") ??
+              (locale === "fr"
+                ? "Brief en cours de génération à partir de la conversation…"
+                : "Generating the brief from the conversation…")}
+          </span>
+        </div>
+      )}
 
       {/* Sections */}
       <div className="space-y-6 w-full">

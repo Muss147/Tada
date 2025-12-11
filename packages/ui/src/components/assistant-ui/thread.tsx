@@ -22,35 +22,38 @@ import { Avatar, AvatarImage } from "../avatar";
 import { Button } from "../button";
 import { MarkdownText } from "./markdown-text";
 import { TooltipIconButton } from "./tooltip-icon-button";
+import { useCurrentLocale } from "@tada/app/src/locales/client";
 
 export const Thread: FC = () => {
   return (
     <ThreadPrimitive.Root
-      className="bg-background box-border flex h-full flex-col overflow-hidden"
+      className="bg-background box-border flex h-full min-h-0 flex-col overflow-hidden"
       style={{
         ["--thread-max-width" as string]: "42rem",
       }}
     >
-      <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+      {/* Messages scrollables */}
+      <ThreadPrimitive.Viewport className="flex-1 min-h-0 flex flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4 pt-4">
         <ThreadWelcome />
 
         <ThreadPrimitive.Messages
           components={{
-            UserMessage: UserMessage,
-            EditComposer: EditComposer,
-            AssistantMessage: AssistantMessage,
+            UserMessage,
+            EditComposer,
+            AssistantMessage,
           }}
         />
 
-        <ThreadPrimitive.If empty={false}>
-          <div className="min-h-8 flex-grow" />
-        </ThreadPrimitive.If>
+        <div className="h-4" />
+      </ThreadPrimitive.Viewport>
 
-        <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
+      {/* Composer toujours en bas, hors zone scroll */}
+      <div className="border-t border-gray-200/60 bg-inherit px-4 pb-3 pt-2">
+        <div className="mx-auto flex w-full max-w-[var(--thread-max-width)] flex-col items-center">
           <ThreadScrollToBottom />
           <Composer />
         </div>
-      </ThreadPrimitive.Viewport>
+      </div>
     </ThreadPrimitive.Root>
   );
 };
@@ -61,7 +64,7 @@ const ThreadScrollToBottom: FC = () => {
       <TooltipIconButton
         tooltip="Scroll to bottom"
         variant="outline"
-        className="absolute -top-8 rounded-full disabled:invisible"
+        className="mb-2 self-end rounded-full disabled:invisible"
       >
         <ArrowDownIcon />
       </TooltipIconButton>
@@ -70,42 +73,41 @@ const ThreadScrollToBottom: FC = () => {
 };
 
 const ThreadWelcome: FC = () => {
+  const locale = useCurrentLocale();
+  const isFrench = locale?.startsWith("fr");
+
+  const welcomeText = isFrench
+    ? "Bonjour, bienvenue dans le copilote d’insights Tada. Quel problème business puis-je t’aider à résoudre aujourd’hui ?"
+    : "Hi, welcome to Tada’s insights copilot. What business problem can I help you solve today?";
+
+  const helperText = isFrench
+    ? "Réponds en une ou deux phrases. Je te poserai ensuite quelques questions pour construire ton brief étape par étape."
+    : "Answer in one or two sentences. I’ll then ask you a few questions to build your brief step by step.";
+
   return (
     <ThreadPrimitive.Empty>
-      <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
-        <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <div className="w-full max-w-xl">
-            {/* Bulle type assistant */}
-            <div className="flex items-start gap-3">
-              <Avatar className="flex size-8 flex-shrink-0 items-center justify-center rounded-[24px] border border-white/40 shadow">
-                <AvatarImage
-                  src="/avatar.png"
-                  alt="avatar"
-                  className="max-w-6 h-full"
-                />
-              </Avatar>
+      <div className="flex w-full max-w-[var(--thread-max-width)] flex-col">
+        <div className="flex w-full flex-col items-start">
+          {/* Bulle type assistant */}
+          <div className="flex items-start gap-3">
+            <Avatar className="flex size-8 flex-shrink-0 items-center justify-center rounded-[24px] border border-white/40 shadow">
+              <AvatarImage
+                src="/avatar.png"
+                alt="avatar"
+                className="max-w-6 h-full"
+              />
+            </Avatar>
 
-              <div className="bg-[#FFD3CE]/70 text-slate-900 max-w-md rounded-3xl px-4 py-3 shadow-sm border border-[#FFD3CE]">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 mb-1">
-                  Dina
-                </p>
-                <p className="text-sm leading-relaxed">
-                  Bonjour, bienvenue dans le copilote d’insights Tada. <br />
-                  Quel problème business puis-je t’aider à résoudre aujourd’hui
-                  ?
-                </p>
-              </div>
+            <div className="bg-[#FFD3CE]/70 text-slate-900 max-w-md rounded-3xl px-4 py-3 shadow-sm border border-[#FFD3CE]">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 mb-1">
+                DINA
+              </p>
+              <p className="text-sm leading-relaxed">{welcomeText}</p>
             </div>
-
-            <p className="mt-3 text-xs text-slate-500 ml-11">
-              Réponds en une ou deux phrases. Je te poserai ensuite quelques
-              questions pour construire ton brief étape par étape.
-            </p>
           </div>
-        </div>
 
-        {/* Tu peux garder ou non les suggestions en dessous */}
-        {/* <ThreadWelcomeSuggestions /> */}
+          <p className="mt-3 text-xs text-slate-500 ml-11">{helperText}</p>
+        </div>
       </div>
     </ThreadPrimitive.Empty>
   );
