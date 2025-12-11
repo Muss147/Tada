@@ -9,25 +9,25 @@ datasource db {
 }
 
 model User {
-  id                                                    String               @id @default(uuid())
+  id                                                    String                      @id @default(uuid())
   name                                                  String
-  email                                                 String               @unique
-  emailVerified                                         Boolean              @default(false)
+  email                                                 String                      @unique
+  emailVerified                                         Boolean                     @default(false)
   image                                                 String?
-  createdAt                                             DateTime             @default(now())  @db.Timestamp(6)
-  updatedAt                                             DateTime             @updatedAt @db.Timestamp(6)
+  createdAt                                             DateTime                    @default(now()) @db.Timestamp(6)
+  updatedAt                                             DateTime                    @updatedAt @db.Timestamp(6)
   role                                                  UserRole?
-  adminSubRole                                          AdminSubRole?       // Sous-rôle pour les system_admin
+  adminSubRole                                          AdminSubRole? // Sous-rôle pour les system_admin
   banned                                                Boolean?
   banReason                                             String?
-  banExpires                                            DateTime?            @db.Timestamp(6)
+  banExpires                                            DateTime?                   @db.Timestamp(6)
   position                                              String?
-  kyc_status                                            KycSatus?            @default(in_progress)
+  kyc_status                                            KycSatus?                   @default(in_progress)
   job                                                   String?
   location                                              String?
   country                                               String?
   sector                                                String?
-  code_invitation                                       String?              @unique(map: "user_codeInvitation_key")
+  code_invitation                                       String?                     @unique(map: "user_codeInvitation_key")
   balance                                               BigInt?
   account                                               account[]
   comment                                               comment[]
@@ -35,11 +35,11 @@ model User {
   invitation                                            invitation[]
   members                                               Member[]
   // Missions reçues
-  missionAssignments                                    MissionAssignment[]  @relation("UserMissions")
+  missionAssignments                                    MissionAssignment[]         @relation("UserMissions")
   // Missions assignées par cet utilisateur
-  assignedBy                                            MissionAssignment[]  @relation("UserAssignedMissions")
-  mission_permission_mission_permission_grantedByTouser mission_permission[] @relation("mission_permission_grantedByTouser")
-  mission_permission_mission_permission_userIdTouser    mission_permission[] @relation("mission_permission_userIdTouser")
+  assignedBy                                            MissionAssignment[]         @relation("UserAssignedMissions")
+  mission_permission_mission_permission_grantedByTouser mission_permission[]        @relation("mission_permission_grantedByTouser")
+  mission_permission_mission_permission_userIdTouser    mission_permission[]        @relation("mission_permission_userIdTouser")
   payemts_contibutor                                    payemts_contibutor?
   projectRoles                                          ProjectRole[]
   session                                               session[]
@@ -49,93 +49,133 @@ model User {
   validationComments                                    ValidationComment[]
   contributorAttributes                                 ContributorAttributeValue[]
   rewardHistory                                         RewardHistory[]
-  grantedPermissions MissionPermission[] @relation("GrantedPermissions")
-  SupportTicket      SupportTicket[]
+  grantedPermissions                                    MissionPermission[]         @relation("GrantedPermissions")
+  SupportTicket                                         SupportTicket[]
+
+  // workspaces...
+  ownedWorkspaces                Workspace[]           @relation("WorkspaceOwner")
+  workspaceMemberships           WorkspaceMember[]
+  workspaceMemberInvitationsSent WorkspaceMember[]     @relation("WorkspaceMemberInvitedBy")
+  workspaceInvitationsSent       WorkspaceInvitation[] @relation("WorkspaceInvitationInvitedBy")
+
+  // Ai Analysis
+  aiDatasets        AiDataset[]       @relation("AiDatasetOwner")
+  aiAnalyses        AiAnalysis[]      @relation("AiAnalysisCreatedBy")
+  aiAnalysisQueries AiAnalysisQuery[]
+
+  // Audience suggestion
+  audienceAttributeSuggestions AudienceAttributeSuggestion[] @relation("AudienceSuggestionCreatedBy")
+
+  commentsAuthored Comment[]        @relation("CommentsCreatedBy")
+  commentsResolved Comment[]        @relation("ResolvedComments")
+  commentMentions  CommentMention[]
+  commentEvents    CommentEvent[]
 
   @@map("user")
 }
 
 model Organization {
-  id                String             @id @default(uuid())
-  name              String
-  slug              String             @unique
-  logo              String?
-  createdAt         DateTime           @default(now()) @db.Timestamp(6)
-  metadata          String?
-  updatedAt         DateTime?          @updatedAt @db.Timestamptz(6)
-  status            String?            @default("inactive") @db.VarChar
-  sector            String?
-  country           String?
-  billingInfo      BillingInfo?
-  consulted_mission ConsultedMission[]
-  datasets           Dataset[]
-  invitation        invitation[]
-  members           Member[]
-  missions           Mission[]
-  projects          Project[]
-  subscription      Subscription?
-  templates          Template[]
+  id                          String             @id @default(uuid())
+  name                        String
+  slug                        String
+  logo                        String?
+  metadata                    String?
+  status                      String?
+  country                     String?
+  sector                      String?
+  createdAt                   DateTime           @default(now())
+  updatedAt                   DateTime?          @updatedAt
+  missions                    Mission[]
+  templates                   Template[]
+  projects                    Project[]
+  datasets                    Dataset[]
+  subscription                Subscription?
+  consultedSuperAdminMissions Mission[]          @relation("ConsultedSuperAdminMissions")
+  ConsultedMission            ConsultedMission[]
+  billingInfo                 BillingInfo?
+  workspaces                  Workspace[]
+
+  //Ai Analysis relations
+  aiDatasets                   AiDataset[]
+  audienceAttributeSuggestions AudienceAttributeSuggestion[]
 
   @@map("organization")
 }
 
 model Mission {
-  id                         String                     @id @default(uuid())
-  name                       String
-  problemSummary             String?
-  objectives                 String?
-  createdAt                  DateTime                   @db.Timestamp(6)
-  updatedAt                  DateTime?                  @updatedAt @db.Timestamptz(6)
-  status                     String?                    @default("'draft'::character varying") @db.VarChar
-  assumptions                String?
-  organizationId             String?
-  updatedType                String?
-  audiences                  Json?
-  internal                   Boolean?                   @default(false)
-  type                       String?                    @default("survey")
-  isPublic                   Boolean?                   @default(true)
-  isSuperAdminMission        Boolean?                   @default(false)
-  isPublish                  Boolean                    @default(false)
-  publishAt                  DateTime?                  @db.Timestamptz(6)
-  executiveSummary           String?
-  executiveSummaryUpdatedAt  DateTime?                  @db.Timestamp(6)
-  consultedMission          ConsultedMission[]
-  contributorData            ContributorData[]
-  organization               Organization?              @relation(fields: [organizationId], references: [id])
-  contributors         MissionAssignment[]
-  missionCharts              MissionChart[]
-  mission_config_contributor MissionConfigContributor[]
-  missionPermission         missionPermission[]
-  project                    Project[]
-  subDashboard               SubDashboard[]
-  survey                     survey[]
-  tempMission                TempMission[]
-  consultingOrganizations Organization[]      @relation("ConsultedSuperAdminMissions")
+  id                  String        @id @default(uuid())
+  name                String
+  problemSummary      String?
+  objectives          String?
+  assumptions         String?
+  audiences           Json?
+  organizationId      String?
+  organization        Organization? @relation(fields: [organizationId], references: [id])
+  status              String?
+  updatedType         String?
+  type                String?
+  internal            Boolean?      @default(false)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime?     @updatedAt
+  isPublic            Boolean       @default(true)
+  isSuperAdminMission Boolean       @default(false)
+
+  // NEW : workspace
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  //mode 
+  mode  String  @default("manual")
+  //image
+  image String? // chemin de fichier ou URL
+
+  // 🆕 Champs de brief enrichi
+  sampleSummary              String? @db.Text
+  targetSampleSize           Int?
+  preliminaryRecommendations String? @db.Text
+  studyStructure             String? @db.Text
+
+  // Executive Summary - généré quand mission = "completed"
+  executiveSummary          String?   @db.Text // Résumé exécutif généré par l'IA
+  executiveSummaryUpdatedAt DateTime? // Dernière génération du résumé
+
+  survey             Survey[]
+  Project            Project[]
+  subDashboard       SubDashboard[]
+  missionPermissions MissionPermission[]
+  tempMission        TempMission?
+  missionCharts      MissionChart[]
+
+  consultingOrganizations      Organization[]                @relation("ConsultedSuperAdminMissions")
+  ConsultedMission             ConsultedMission[]
+  contributors                 MissionAssignment[]
+  audienceAttributeSuggestions AudienceAttributeSuggestion[]
+  comments                     Comment[]
 
   @@map("mission")
 }
 
 model MissionAssignment {
-  id            String    @id @default(uuid())
-  missionId     String
+  id             String    @id @default(uuid())
+  missionId      String
   // User qui reçoit la mission
-  contributorId String
-  contributor   User      @relation("UserMissions", fields: [contributorId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  contributorId  String
+  contributor    User      @relation("UserMissions", fields: [contributorId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   // User qui assigne la mission
-  assignedBy    String
-  assignedByUser User    @relation("UserAssignedMissions", fields: [assignedBy], references: [id])
-  status        String    @default("assigned")
-  progress      Int       @default(0)
-  assignedAt    DateTime  @default(now())
-  acceptedAt    DateTime?
-  startedAt     DateTime?
-  completedAt   DateTime?
-  dueDate       DateTime?
-  notes         String?
-  priority      String    @default("medium")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime
-  mission       Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  assignedBy     String
+  assignedByUser User      @relation("UserAssignedMissions", fields: [assignedBy], references: [id])
+  status         String    @default("assigned")
+  progress       Int       @default(0)
+  assignedAt     DateTime  @default(now())
+  acceptedAt     DateTime?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  dueDate        DateTime?
+  notes          String?
+  priority       String    @default("medium")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  mission        Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([missionId, contributorId])
   @@map("mission_assignment")
@@ -143,38 +183,37 @@ model MissionAssignment {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Survey {
-  id              String           @id
-  name            String
-  description     String?
-  createdAt       DateTime         @default(now()) @db.Timestamp(6)
-  updatedAt       DateTime?        @updatedAt @db.Timestamptz(6)
-  missionId       String?
-  questions       Json?
-  missionCharts   MissionChart[]
-  mission         Mission?         @relation(fields: [missionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  response        SurveyResponse[]
+  id            String           @id @default(uuid())
+  name          String
+  description   String?
+  missionId     String?
+  mission       Mission?         @relation(fields: [missionId], references: [id])
+  questions     Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime?        @updatedAt
+  response      SurveyResponse[]
+  missionCharts MissionChart[]
+  comments      Comment[]
 
   @@map("survey")
 }
 
 model SurveyResponse {
-  id                 String              @id @default(uuid())
-  createdAt          DateTime            @default(now()) @db.Timestamptz(6)
-  surveyId           String
-  responses          Json
-  age                Int                 @default(18) @db.SmallInt
-  gender             String              @default("male") @db.VarChar
-  location           Json                // Structure: { type: string, lat: float, long: float, label: string }
-  ipAddress          String?
-  userAgent          String?
-  submittedAt        DateTime            @default(now()) @db.Timestamptz(6)
-  status             String              @default("pending")
-  updatedAt          DateTime?           @updatedAt @db.Timestamptz(6)
-  userId             String?
-  qualityControl    qualityControl?
-  survey             survey              @relation(fields: [surveyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user               User?               @relation(fields: [userId], references: [id], onUpdate: NoAction)
-  validationComment ValidationComment[]
+  id          String    @id @default(uuid())
+  surveyId    String
+  survey      Survey    @relation(fields: [surveyId], references: [id])
+  responses   Json
+  age         Int
+  gender      String
+  location    Json // Structure: { type: string, lat: float, long: float, label: string }
+  // Métadonnées de soumission
+  ipAddress   String?
+  userAgent   String?
+  submittedAt DateTime  @default(now())
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
 
   @@map("survey_response")
 }
@@ -195,36 +234,36 @@ model template {
 }
 
 model Project {
-  id                 String             @id @default(uuid())
+  id                 String            @id @default(uuid())
   name               String?
-  tadaName           String?            @unique
+  tadaName           String?           @unique
   dashboardTitle     String?
-  description        String?            @db.Text
+  description        String?           @db.Text
   organizationId     String
-  backgroundColor    String?            @default("#103751")
-  titleColor         String?            @default("white")
-  headerCode         String?            @db.Text
-  footerCode         String?            @db.Text
+  backgroundColor    String?           @default("#103751")
+  titleColor         String?           @default("white")
+  headerCode         String?           @db.Text
+  footerCode         String?           @db.Text
   logo               String?
-  logoLink           String?            @db.VarChar(1234)
-  public             Boolean            @default(false)
-  passwordProtected  Boolean            @default(false)
+  logoLink           String?           @db.VarChar(1234)
+  public             Boolean           @default(false)
+  passwordProtected  Boolean           @default(false)
   password           String?
   timezone           String?
-  ghost              Boolean            @default(false)
-  createdAt          DateTime           @default(now()) @db.Timestamptz(6)
-  updatedAt          DateTime?          @updatedAt @db.Timestamptz(6)
+  ghost              Boolean           @default(false)
+  createdAt          DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime?         @updatedAt @db.Timestamptz(6)
   updateSchedule     Json?
   snapshotSchedule   Json?
-  lastSnapshotSentAt DateTime?          @db.Timestamptz(6)
+  lastSnapshotSentAt DateTime?         @db.Timestamptz(6)
   currentSnapshot    String?
   missionId          String?
-  charts              Chart[]
+  charts             Chart[]
   dashboardFilters   DashboardFilter[]
-  mission            Mission?           @relation(fields: [missionId], references: [id], onUpdate: NoAction)
-  organization       Organization       @relation(fields: [organizationId], references: [id], onDelete: SetNull, onUpdate: NoAction)
-  projectRoles        ProjectRole[]
-  variables           Variable[]
+  mission            Mission?          @relation(fields: [missionId], references: [id], onUpdate: NoAction)
+  organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  projectRoles       ProjectRole[]
+  variables          Variable[]
 
   @@map("project")
 }
@@ -287,7 +326,7 @@ model Chart {
   project            Project              @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chart_project")
   chartDatasetConfig ChartDatasetConfig[]
   chart_share        ChartShare[]
-  datasets            Dataset[]
+  datasets           Dataset[]
 
   @@map("chart")
 }
@@ -342,6 +381,7 @@ model Variable {
   projectId String
   name      String
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
   @@map("variable")
 }
 
@@ -351,8 +391,8 @@ model ChartDatasetConfig {
   updatedAt      DateTime? @updatedAt @db.Timestamptz(6)
   chartId        String
   datasetId      String
-  formula        String?  @db.Text
-  datasetColor   String?  @db.Text
+  formula        String?   @db.Text
+  datasetColor   String?   @db.Text
   fillColor      Json?
   fill           Boolean   @default(false)
   multiFill      Boolean   @default(false)
@@ -372,15 +412,15 @@ model ChartDatasetConfig {
 }
 
 model SubDashboard {
-  id                 String             @id @default(uuid())
-  name               String
-  missionId          String
-  createdAt          DateTime           @default(now()) @db.Timestamptz(6)
-  isShared           Boolean            @default(true)
-  userId             String
-  updatedAt          DateTime?          @db.Timestamptz(6)
-  mission            Mission            @relation(fields: [missionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user               User               @relation(fields: [userId], references: [id])
+  id               String             @id @default(uuid())
+  name             String
+  missionId        String
+  createdAt        DateTime           @default(now()) @db.Timestamptz(6)
+  isShared         Boolean            @default(true)
+  userId           String
+  updatedAt        DateTime?          @db.Timestamptz(6)
+  mission          Mission            @relation(fields: [missionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user             User               @relation(fields: [userId], references: [id])
   SubDashboardItem SubDashboardItem[]
 
   @@map("sub_dashboard")
@@ -396,26 +436,26 @@ model SubDashboardItem {
   createdAt      DateTime     @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime?    @db.Timestamptz(6)
   comment        comment[]
-  subDashboard  SubDashboard @relation(fields: [subDashboardId], references: [id])
+  subDashboard   SubDashboard @relation(fields: [subDashboardId], references: [id])
 
   @@map("sub_dashboard_item")
 }
 
 model SubscriptionPlan {
-  id           String         @id @default(uuid())
-  name         String
-  description  String?
-  price        Int
-  currency     String         @default("EUR")
-  interval     String
-  features     Json
-  maxMissions  Int?
-  maxUsers     Int?
-  maxResponses Int?
-  isActive     Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  addOn        Int?           @db.SmallInt
+  id            String         @id @default(uuid())
+  name          String
+  description   String?
+  price         Int
+  currency      String         @default("EUR")
+  interval      String
+  features      Json
+  maxMissions   Int?
+  maxUsers      Int?
+  maxResponses  Int?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  addOn         Int?           @db.SmallInt
   subscriptions Subscription[]
 
   @@map("subscription_plan")
@@ -436,7 +476,7 @@ model Subscription {
   metadata             Json?
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
-  payments              Payment[]
+  payments             Payment[]
   organization         Organization     @relation(fields: [organizationId], references: [id])
   plan                 SubscriptionPlan @relation(fields: [planId], references: [id])
 
@@ -461,36 +501,37 @@ model Payment {
 }
 
 model TempMission {
-  id                 String             @id @default(uuid())
-  name               String
-  problemSummary     String?
-  objectives         String?
-  assumptions        String?
-  audiences          Json?
-  status             String?
-  updatedType        String?
-  type               String?
-  internal           Boolean?             @default(false)
-  isPublic           Boolean?             @default(true)
-  validationStatus   String               @default("pending")
-  validatedAt        DateTime?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  missionId          String?              @unique
-  mission            Mission?             @relation(fields: [missionId], references: [id], map: "mission_duplication_missionId_fkey")
+  id                String             @id @default(uuid())
+  name              String
+  problemSummary    String?
+  objectives        String?
+  assumptions       String?
+  audiences         Json?
+  status            String?
+  updatedType       String?
+  type              String?
+  internal          Boolean?           @default(false)
+  isPublic          Boolean?           @default(true)
+  validationStatus  String             @default("pending")
+  validatedAt       DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  missionId         String?            @unique
+  mission           Mission?           @relation(fields: [missionId], references: [id], map: "mission_duplication_missionId_fkey")
   tempSubDashboards TempSubDashboard[]
+
   @@map("temp_mission")
 }
 
 model TempSubDashboard {
-  id                      String                    @id @default(uuid())
-  tempMissionId           String
-  name                    String
-  isShared                Boolean                   @default(true)
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
-  tempMission             TempMission               @relation(fields: [missionDuplicationId], references: [id], onDelete: Cascade)
-  tempItems               TempSubDashboardItem[]
+  id            String                 @id @default(uuid())
+  tempMissionId String
+  name          String
+  isShared      Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  tempMission   TempMission            @relation(fields: [missionDuplicationId], references: [id], onDelete: Cascade)
+  tempItems     TempSubDashboardItem[]
 
   @@map("temp_sub_dashboard")
 }
@@ -502,8 +543,8 @@ model TempSubDashboardItem {
   content            String?
   surveyKey          String?
   imageUrl           String?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
   tempSubDashboard   TempSubDashboard @relation(fields: [tempSubDashboardId], references: [id], onDelete: Cascade)
 
   @@map("temp_sub_dashboard_item")
@@ -542,36 +583,36 @@ model BillingInfo {
 }
 
 model MissionChart {
-  id             String       @id @default(uuid())
+  id String @id @default(uuid())
 
   // Relations
-  missionId      String
-  mission        Mission      @relation(fields: [missionId], references: [id], onDelete: Cascade)
-  surveyId       String?
-  survey         Survey?      @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  missionId String
+  mission   Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  surveyId  String?
+  survey    Survey? @relation(fields: [surveyId], references: [id], onDelete: Cascade)
 
   // Configuration du graphique
-  name           String
-  type           String // "bar", "pie", "line", "doughnut", "radar", "polar", "kpi", "gauge"
-  subType        String? // Pour des variantes (grouped_bar, stacked_bar, etc.)
+  name    String
+  type    String // "bar", "pie", "line", "doughnut", "radar", "polar", "kpi", "gauge"
+  subType String? // Pour des variantes (grouped_bar, stacked_bar, etc.)
 
   // Données et configuration
-  chartData      Json // Données du graphique
-  filters        Json? // Filtres appliqués au graphique
+  chartData Json // Données du graphique
+  filters   Json? // Filtres appliqués au graphique
 
   // Options d'affichage
-  title          String?
-  description    String? @db.Text
+  title       String?
+  description String? @db.Text
 
   // Insights AI - générés quand mission = "completed"
-  insights       Json? // Array d'insights générés par l'IA
+  insights          Json? // Array d'insights générés par l'IA
   insightsUpdatedAt DateTime? // Dernière génération des insights
 
   // Métadonnées
-  public         Boolean @default(false)
-  shareable      Boolean @default(false)
-  status         String  @default("published") // "draft", "published", "archived"
-  language       String  @default("fr")
+  public    Boolean @default(false)
+  shareable Boolean @default(false)
+  status    String  @default("published") // "draft", "published", "archived"
+  language  String  @default("fr")
 
   // Layout et ordre
   dashboardOrder Int?
@@ -581,8 +622,9 @@ model MissionChart {
   isAutoGenerated Boolean @default(true) // true si généré automatiquement
 
   // Timestamps
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("mission_chart")
 }
 
@@ -590,7 +632,7 @@ model DashboardFilter {
   id            String    @id @default(uuid())
   projectId     String
   configuration Json
-  onReport      Boolean  @default(false)
+  onReport      Boolean   @default(false)
   createdAt     DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt     DateTime? @updatedAt @db.Timestamptz(6)
   project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -760,7 +802,7 @@ model verification {
 }
 
 model feedback_entry {
-  id                String          @id
+  id                String         @id
   qualityControlId  String
   feedbackType      String
   source            String
@@ -769,11 +811,11 @@ model feedback_entry {
   explanation       String?
   providedBy        String?
   confidence        Float?
-  impactOnModel     Boolean         @default(false)
-  applied           Boolean         @default(false)
+  impactOnModel     Boolean        @default(false)
+  applied           Boolean        @default(false)
   appliedAt         DateTime?
-  createdAt         DateTime        @default(now())
-  qualityControl   qualityControl @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
+  createdAt         DateTime       @default(now())
+  qualityControl    qualityControl @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -851,7 +893,7 @@ model qualityControl {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime
   feedback_entry    feedback_entry[]
-  surveyResponse   SurveyResponse   @relation(fields: [surveyResponseId], references: [id], onDelete: Cascade)
+  surveyResponse    SurveyResponse   @relation(fields: [surveyResponseId], references: [id], onDelete: Cascade)
   qualityIssues     qualityIssue[]
   quality_metric    quality_metric[]
 
@@ -872,13 +914,13 @@ model qualityIssue {
   confidence       Float             @default(0)
   suggestions      Json?
   createdAt        DateTime          @default(now())
-  qualityControl  qualityControl   @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
+  qualityControl   qualityControl    @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
 
   @@map("quality_issue")
 }
 
 model quality_metric {
-  id               String          @id
+  id               String         @id
   qualityControlId String
   metricName       String
   metricType       String
@@ -887,8 +929,8 @@ model quality_metric {
   description      String?
   category         String?
   subcategory      String?
-  createdAt        DateTime        @default(now())
-  qualityControl  qualityControl @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  qualityControl   qualityControl @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
 
   @@index([metricName, metricType])
 }
@@ -909,20 +951,20 @@ model quality_pattern {
 }
 
 model AudienceAttribute {
-  id               String   @id @default(cuid())
-  name             String   // Nom affiché (ex: "Compétences professionnelles")
-  key              String   @unique // Clé technique (ex: "professional_skills")
-  type             String   // Type: text, number, select, multiselect, date, boolean, range
-  category         String   // Catégorie: demographics, profile, professional, interests, technical, availability
-  description      String?  // Description de l'attribut
-  required         Boolean  @default(false) // Champ obligatoire
-  enrichmentOnly   Boolean  @default(false) // Collecté uniquement via missions d'enrichissement
-  options          String?  // Options pour select/multiselect (JSON)
-  active           Boolean  @default(true) // Attribut actif
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String // Nom affiché (ex: "Compétences professionnelles")
+  key            String   @unique // Clé technique (ex: "professional_skills")
+  type           String // Type: text, number, select, multiselect, date, boolean, range
+  category       String // Catégorie: demographics, profile, professional, interests, technical, availability
+  description    String? // Description de l'attribut
+  required       Boolean  @default(false) // Champ obligatoire
+  enrichmentOnly Boolean  @default(false) // Collecté uniquement via missions d'enrichissement
+  options        String? // Options pour select/multiselect (JSON)
+  active         Boolean  @default(true) // Attribut actif
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  values           ContributorAttributeValue[]
+  values ContributorAttributeValue[]
 
   @@index([category])
   @@index([active])
@@ -934,12 +976,12 @@ model ContributorAttributeValue {
   id          String   @id @default(cuid())
   attributeId String
   userId      String
-  value       String   // Valeur stockée (peut être JSON pour multiselect)
+  value       String // Valeur stockée (peut être JSON pour multiselect)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  attribute   AudienceAttribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attribute AudienceAttribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([attributeId, userId])
   @@index([userId])
@@ -948,16 +990,16 @@ model ContributorAttributeValue {
 }
 
 model RewardConfig {
-  id          String        @id @default(uuid())
+  id          String          @id @default(uuid())
   name        String
   description String?
   type        RewardType
   trigger     String
   value       Int
-  status      RewardStatus  @default(active)
+  status      RewardStatus    @default(active)
   conditions  Json?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   history     RewardHistory[]
 
   @@index([status])
@@ -966,16 +1008,16 @@ model RewardConfig {
 }
 
 model RewardHistory {
-  id             String       @id @default(uuid())
+  id             String   @id @default(uuid())
   userId         String
   rewardConfigId String
   amount         Int
   reason         String?
   metadata       Json?
-  awardedAt      DateTime     @default(now())
+  awardedAt      DateTime @default(now())
 
-  user          User         @relation(fields: [userId], references: [id])
-  rewardConfig  RewardConfig @relation(fields: [rewardConfigId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  rewardConfig RewardConfig @relation(fields: [rewardConfigId], references: [id])
 
   @@index([userId])
   @@index([rewardConfigId])
@@ -1038,12 +1080,12 @@ enum UserRole {
 }
 
 enum AdminSubRole {
-  super_admin           // Super Administrateur - Accès complet
-  operations_admin      // Administrateur des Opérations
-  customer_admin        // Administrateur Client
-  content_moderator     // Modérateur de Contenu
-  finance_admin         // Administrateur Financier
-  auditor              // Auditeur (lecture seule)
+  super_admin // Super Administrateur - Accès complet
+  operations_admin // Administrateur des Opérations
+  customer_admin // Administrateur Client
+  content_moderator // Modérateur de Contenu
+  finance_admin // Administrateur Financier
+  auditor // Auditeur (lecture seule)
 }
 
 enum QualityIssueLevel {
@@ -1087,4 +1129,305 @@ enum RewardStatus {
   active
   inactive
   expired
+}
+
+model Workspace {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String?
+  logo        String?
+
+  // L'organisation cliente qui "possède" ce workspace (facultatif si tu veux aussi du solo)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  // Propriétaire du workspace
+  ownerId String
+  owner   User   @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+
+  // Relations
+  missions    Mission[]
+  members     WorkspaceMember[]
+  invitations WorkspaceInvitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Ai Analysis relations
+  aiDatasets AiDataset[]
+  aiAnalyses AiAnalysis[]
+
+  @@map("workspace")
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // owner, admin, editor, viewer...
+  role String @default("member")
+
+  // pending, active, removed...
+  status String @default("active")
+
+  invitedById String?
+  invitedBy   User?   @relation("WorkspaceMemberInvitedBy", fields: [invitedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_member")
+}
+
+model WorkspaceInvitation {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  email String
+  role  String @default("member")
+
+  token     String    @unique
+  status    String    @default("pending") // pending, accepted, expired, cancelled
+  expiresAt DateTime?
+
+  invitedById String
+  invitedBy   User   @relation("WorkspaceInvitationInvitedBy", fields: [invitedById], references: [id])
+
+  createdAt  DateTime  @default(now())
+  acceptedAt DateTime?
+
+  @@unique([workspaceId, email])
+  @@map("workspace_invitation")
+}
+
+model AiDataset {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+
+  // Rattachement "business"
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  // Propriétaire du dataset (qui a uploadé)
+  ownerId String
+  owner   User   @relation("AiDatasetOwner", fields: [ownerId], references: [id])
+
+  // Infos sur la source
+  sourceType       String  @default("upload") // upload, api, copy, etc.
+  originalFilename String
+  fileType         String // "csv", "xlsx", "pdf", "docx", ...
+  fileSize         BigInt? // en octets
+  storagePath      String // chemin local ou URL (S3, Supabase, ...)
+
+  // Infos structurelles (pour générer le dashboard)
+  rowCount       Int?
+  columnCount    Int?
+  detectedSchema Json? // ex: { columns: [{ name, type, role }, ...] }
+  sampleData     Json? // quelques lignes pour le preview
+
+  // Lifecycle du dataset
+  status       String  @default("uploaded") // uploaded, processing, ready, failed
+  errorMessage String?
+
+  analyses AiAnalysis[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_dataset")
+}
+
+model AiAnalysis {
+  id String @id @default(uuid()) @db.Uuid
+
+  datasetId String    @db.Uuid
+  dataset   AiDataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  title       String
+  type        String  @default("exploratory")
+  description String? @db.Text
+
+  filters  Json?
+  settings Json?
+
+  aiSummary          String?   @db.Text
+  aiSummaryUpdatedAt DateTime?
+
+  createdById String
+  createdBy   User   @relation("AiAnalysisCreatedBy", fields: [createdById], references: [id])
+
+  charts  AiAnalysisChart[]
+  queries AiAnalysisQuery[]
+
+  status   String @default("published")
+  language String @default("fr")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_analysis")
+}
+
+model AiAnalysisChart {
+  id String @id @default(uuid())
+
+  analysisId String
+  analysis   AiAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Type de viz
+  type    String // bar, line, pie, table, kpi, boxplot, ...
+  subType String? // stacked_bar, grouped_bar, etc.
+
+  title       String?
+  description String? @db.Text
+
+  // Data prête à être affichée côté front
+  chartData Json // ex: { labels: [...], datasets: [...] }
+  config    Json? // ex: { xField, yField, aggregation, ... }
+
+  // Layout sur le dashboard
+  layout Json? // ex: { x, y, w, h, breakpointLayout... }
+  order  Int? // ordre d’affichage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_analysis_chart")
+}
+
+model AiAnalysisQuery {
+  id String @id @default(uuid()) @db.Uuid
+
+  analysisId String     @db.Uuid
+  analysis   AiAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  question   String  @db.Text
+  answer     String? @db.Text
+  answerJson Json?
+
+  model     String?
+  latencyMs Int?
+
+  createdAt DateTime @default(now())
+
+  @@map("ai_analysis_query")
+}
+
+//Model AudienceAttributeSuggestion
+
+model AudienceAttributeSuggestion {
+  id String @id @default(uuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  missionId String?
+  mission   Mission? @relation(fields: [missionId], references: [id])
+
+  groupId     String?
+  filterId    String?
+  label       String
+  description String?
+
+  status String @default("pending")
+
+  createdById String?
+  createdBy   User?   @relation("AudienceSuggestionCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime  @default(now())
+  decidedAt DateTime?
+
+  @@map("audience_attribute_suggestion")
+}
+
+//comment 
+model Comment {
+  id String @id @default(uuid())
+
+  missionId String?  @map("mission_id")
+  mission   Mission? @relation(fields: [missionId], references: [id])
+
+  surveyId String? @map("survey_id")
+  survey   Survey? @relation(fields: [surveyId], references: [id])
+
+  surveyResponseId String?         @map("survey_response_id")
+  surveyResponse   SurveyResponse? @relation(fields: [surveyResponseId], references: [id])
+
+  questionKey String? @map("question_key")
+
+  parentId String?   @map("parent_id")
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  content String @db.Text
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation("CommentsCreatedBy", fields: [createdById], references: [id])
+
+  status String @default("open")
+
+  resolvedById String?   @map("resolved_by_id")
+  resolvedBy   User?     @relation("ResolvedComments", fields: [resolvedById], references: [id])
+  resolvedAt   DateTime? @map("resolved_at")
+
+  editedAt  DateTime? @map("edited_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  mentions      CommentMention[]
+  commentEvents CommentEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comment")
+}
+
+model CommentMention {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  seenAt    DateTime? @map("seen_at")
+
+  @@unique([commentId, userId])
+  @@map("comment_mention")
+}
+
+model CommentEvent {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  type    String
+  payload Json?
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("comment_event")
 }

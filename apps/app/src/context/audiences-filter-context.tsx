@@ -38,11 +38,32 @@ interface SelectedFilters {
   };
 }
 
+type AudiencePayload = {
+  filters: SelectedFilters;
+  suggestions?: {
+    groupId?: string;
+    label: string;
+    description?: string;
+  }[];
+};
+
+interface AudienceSuggestion {
+  groupId?: string;
+  label: string;
+  description?: string;
+}
+
 // Type pour le contexte
 interface AudiencesFilterContextType {
   activeFiltersCount: number;
   selectedFilters: SelectedFilters;
   filterGroups: FilterGroup[];
+
+  suggestions: AudienceSuggestion[];
+  addSuggestion: (suggestion: AudienceSuggestion) => void;
+
+  submitSuggestion: (suggestion: AudienceSuggestion) => Promise<void>;
+
   setActiveFiltersCount: React.Dispatch<React.SetStateAction<number>>;
   setSelectedFilters: React.Dispatch<React.SetStateAction<SelectedFilters>>;
   handleOptionSelect: (
@@ -60,39 +81,52 @@ const AudiencesFilterContext = createContext<
 export function AudiencesFilterProvider({
   children,
   audiences,
+  organizationId,
+  workspaceId,
+  missionId,
 }: {
   children: React.ReactNode;
   audiences?: any;
+  organizationId: string;
+  workspaceId: string;
+  missionId: string | null;
 }) {
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(
     () => {
       const initialFilters: SelectedFilters = {};
-      // Initialiser selectedFilters à partir de audiences
+
+      if (!audiences) {
+        return initialFilters;
+      }
 
       for (const groupKey in audiences) {
-        if (audiences.hasOwnProperty(groupKey)) {
+        if (Object.prototype.hasOwnProperty.call(audiences, groupKey)) {
           const groupFilters = audiences[groupKey];
           for (const filterKey in groupFilters) {
-            if (groupFilters.hasOwnProperty(filterKey)) {
+            if (Object.prototype.hasOwnProperty.call(groupFilters, filterKey)) {
               const values = groupFilters[filterKey];
               if (Array.isArray(values) && values.length > 0) {
-                // Utiliser un Set pour s'assurer que les valeurs sont uniques
                 const uniqueValues = Array.from(new Set(values));
-                if (uniqueValues.length > 0) {
-                  if (!initialFilters[groupKey]) {
-                    initialFilters[groupKey] = {};
-                  }
-                  initialFilters[groupKey][filterKey] = uniqueValues;
+                if (!initialFilters[groupKey]) {
+                  initialFilters[groupKey] = {};
                 }
+                initialFilters[groupKey]![filterKey] = uniqueValues;
               }
             }
           }
         }
       }
+
       return initialFilters;
     }
   );
+
+  const [suggestions, setSuggestions] = useState<AudienceSuggestion[]>([]);
+
+  const addSuggestion = (suggestion: AudienceSuggestion) => {
+    setSuggestions((prev) => [...prev, suggestion]);
+  };
 
   const t = useI18n();
 
@@ -1303,6 +1337,51 @@ export function AudiencesFilterProvider({
     });
   };
 
+  const submitSuggestion = async (suggestion: AudienceSuggestion) => {
+    if (!organizationId) {
+      console.warn(
+        "[AudiencesFilterProvider] submitSuggestion called without organizationId"
+      );
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/audience-attribute-suggestions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          organizationId,
+          missionId: missionId ?? null,
+          groupId: suggestion.groupId ?? null,
+          label: suggestion.label,
+          description: suggestion.description ?? null,
+          // createdById => tu peux laisser le serveur le remplir via la session
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create suggestion");
+      }
+
+      const created = await res.json();
+
+      // on garde en mémoire locale (optionnel, mais pratique)
+      setSuggestions((prev) => [
+        ...prev,
+        {
+          groupId: created.groupId ?? undefined,
+          label: created.label,
+          description: created.description ?? undefined,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error submitting audience suggestion", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     let count = 0;
     // biome-ignore lint/complexity/noForEach: <explanation>
@@ -1323,6 +1402,9 @@ export function AudiencesFilterProvider({
         activeFiltersCount,
         selectedFilters,
         filterGroups,
+        suggestions,
+        addSuggestion,
+        submitSuggestion,
         setActiveFiltersCount,
         setSelectedFilters,
         handleOptionSelect,

@@ -1,5 +1,11 @@
 import { formatDistanceToNow } from "date-fns";
 import { enUS, fr } from "date-fns/locale";
+import type { VisualizationId } from "./chart-types";
+import { getVisualizationSettingsForQuestionType, QuestionTypeDashboard } from "./question-vizualisation";
+import { extractAllQuestionsDataWithConfig } from "./survey-chart-extractor";
+
+export { extractAllQuestionsDataWithConfig } from "./survey-chart-extractor";
+
 
 export function stripSpecialCharacters(inputString: string) {
   // Use a regular expression to replace all non-alphanumeric characters except hyphen, space, dot,and parentheses with an empty string
@@ -68,7 +74,7 @@ export function getNumericKeysDescending<
 
   // Filtrer les clés qui ont des valeurs numériques et créer des paires [clé, valeur]
   const numericKeyValuePairs = Object.entries(firstObject!)
-    .filter(([key, value]) => typeof value === "number")
+    .filter(([_, value]) => typeof value === "number")
     .map(([key, value]) => ({ key, value: value as number }));
 
   // Trier par valeur décroissante et extraire les clés
@@ -76,6 +82,7 @@ export function getNumericKeysDescending<
     .sort((a, b) => b.value - a.value)
     .map((item) => item.key);
 }
+
 interface Participant {
   sexe: string;
   age: string;
@@ -175,8 +182,8 @@ export function groupParticipantsByAge(
 export interface QuestionData {
   question: string;
   type: string;
-  chart_type: string;
-  allowed_chart: string[];
+  chart_type: VisualizationId;
+  allowed_chart: VisualizationId[];
   participants_responded: number;
   data:
     | Array<{
@@ -267,239 +274,12 @@ export function generateBooleanChartConfig(
   return config;
 }
 
-export function extractAllQuestionsDataWithConfig(
-  surveyResponses: SurveyData
-): QuestionData[] {
-  const questionsData: QuestionData[] = [];
-
-  Object.entries(surveyResponses.questions_responses).forEach(
-    ([question, questionData]: [string, any]) => {
-      const questionType = questionData.type;
-      const participantsCount = questionData.responses.length;
-
-      switch (questionType) {
-        case "dropdown":
-          // Use the dropdown function logic
-          const answerCounts: Record<string, number> = {};
-
-          questionData.responses.forEach((response: any) => {
-            const answer = response.answer;
-            answerCounts[answer] = (answerCounts[answer] || 0) + 1;
-          });
-
-          const chartData = Object.entries(answerCounts).map(
-            ([label, value]) => ({
-              label,
-              value,
-            })
-          );
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "BarChartHorizontalCard",
-            allowed_chart: [
-              "BarChartHorizontalCard",
-              "PieChart",
-              "BarChartVerticalCard",
-            ],
-            participants_responded: participantsCount,
-            data: chartData,
-            config: generateChartConfig(chartData),
-          });
-          break;
-
-        case "text":
-          // Collect all text responses
-          const textResponses = questionData.responses.map(
-            (response: any) => response.answer
-          );
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "ArrayChartCard",
-            allowed_chart: ["ArrayChartCard"],
-            participants_responded: participantsCount,
-            data: textResponses, // Return array of strings
-            config: {},
-          });
-          break;
-
-        case "checkbox":
-          // Use the checkbox function logic for multiple choices
-          const checkboxCounts: Record<string, number> = {};
-
-          questionData.responses.forEach((response: any) => {
-            // response.answer is an array for checkbox questions
-            const answers = Array.isArray(response.answer)
-              ? response.answer
-              : [response.answer];
-
-            answers.forEach((answer: string) => {
-              checkboxCounts[answer] = (checkboxCounts[answer] || 0) + 1;
-            });
-          });
-
-          const checkboxChartData = Object.entries(checkboxCounts).map(
-            ([label, value]) => ({
-              label,
-              value,
-            })
-          );
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "BarChartHorizontalCard",
-            allowed_chart: ["BarChartHorizontalCard", "PieChart"],
-            participants_responded: participantsCount,
-            data: checkboxChartData,
-            config: generateChartConfig(checkboxChartData),
-          });
-          break;
-
-        case "comment":
-          // Collect all comment responses
-          const commentResponses = questionData.responses.map(
-            (response: any) => response.answer
-          );
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "ArrayChartCard",
-            allowed_chart: ["ArrayChartCard"],
-            participants_responded: participantsCount,
-            data: commentResponses, // Return array of strings
-            config: {},
-          });
-          break;
-
-        case "boolean":
-          // Use the boolean function logic similar to dropdown
-          const booleanCounts: Record<string, number> = {};
-
-          questionData.responses.forEach((response: any) => {
-            const answer = response.answer ? "Oui" : "Non";
-            booleanCounts[answer] = (booleanCounts[answer] || 0) + 1;
-          });
-
-          const booleanChartData = Object.entries(booleanCounts).map(
-            ([label, value]) => ({
-              label,
-              value,
-              fill: `var(--color-${label.toLowerCase()})`,
-            })
-          );
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "PieChart",
-            allowed_chart: ["PieChart", "BarChartHorizontalCard"],
-            participants_responded: participantsCount,
-            data: booleanChartData,
-            config: generateBooleanChartConfig(booleanChartData),
-          });
-          break;
-
-        case "rating":
-          // Find min and max ratings from responses
-          const ratings = questionData.responses.map((response: any) =>
-            parseInt(response.answer, 10)
-          );
-          const minRating = Math.min(...ratings);
-          const maxRating = Math.max(...ratings);
-
-          // Initialize rating data structure based on actual min/max
-          const ratingData = [
-            {
-              category: "Évaluation",
-              ...Object.fromEntries(
-                Array.from({ length: maxRating - minRating + 1 }, (_, i) => {
-                  const rating = minRating + i;
-                  return [rating.toString(), 0];
-                })
-              ),
-            },
-          ];
-
-          // Count ratings
-          questionData.responses.forEach((response: any) => {
-            const rating = response.answer.toString();
-            if (
-              ratingData[0]![rating as keyof (typeof ratingData)[0]] !==
-              undefined
-            ) {
-              (ratingData[0] as any)[rating]++;
-            }
-          });
-
-          // Generate config for actual rating range
-          const ratingConfig: ChartConfig = {};
-          const ratingKeys: string[] = [];
-
-          for (let i = minRating; i <= maxRating; i++) {
-            const key = i.toString();
-            ratingKeys.push(key);
-            ratingConfig[key] = {
-              label: `${i} étoile${i > 1 ? "s" : ""}`,
-              color: `hsl(var(--chart-${((i - minRating) % 10) + 1}))`,
-            };
-          }
-
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "BarChartHorizontalStackedCard",
-            allowed_chart: [
-              "BarChartHorizontalStackedCard",
-              "BarChartHorizontalCard",
-              "LineChart",
-              "BarChartVerticalCard",
-            ],
-            participants_responded: participantsCount,
-            data: ratingData as unknown as Array<{
-              label: string;
-              value: number;
-            }>,
-            config: ratingConfig,
-            primaryKeys: ratingKeys,
-            min: minRating,
-            max: maxRating,
-          });
-          break;
-
-        case "file":
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "not implemented",
-            allowed_chart: [],
-            participants_responded: participantsCount,
-            data: "not implemented",
-            config: {},
-          });
-          break;
-
-        default:
-          questionsData.push({
-            question,
-            type: questionType,
-            chart_type: "not implemented",
-            allowed_chart: [],
-            participants_responded: participantsCount,
-            data: "not implemented",
-            config: {},
-          });
-          break;
-      }
-    }
-  );
-
-  return questionsData;
+export interface SurveyData {
+  survey_title: string;
+  questions_responses: Record<string, QuestionDataRaw>;
+  metadata: SurveyMetadata;
 }
+
 
 interface StatisticalSummary {
   survey_info: {
@@ -562,8 +342,6 @@ interface StatisticalSummary {
   };
 }
 
-// ... existing code ...
-
 // Types pour les données de sondage
 interface Location {
   lat: number;
@@ -604,14 +382,7 @@ interface SurveyResponse extends BaseResponse {
   answer: ResponseAnswer;
 }
 
-type QuestionType =
-  | "dropdown"
-  | "text"
-  | "checkbox"
-  | "comment"
-  | "boolean"
-  | "rating"
-  | "file";
+type QuestionType = QuestionTypeDashboard;
 
 interface QuestionDataRaw {
   type: QuestionType;
@@ -629,12 +400,6 @@ interface SurveyMetadata {
     female: number;
   };
   response_rate: string;
-}
-
-export interface SurveyData {
-  survey_title: string;
-  questions_responses: Record<string, QuestionDataRaw>;
-  metadata: SurveyMetadata;
 }
 
 export function generateStatisticalSummary(
@@ -675,8 +440,8 @@ export function generateStatisticalSummary(
 
   // Process each question
   questionsData.forEach((question) => {
-    switch (question.type) {
-      case "dropdown":
+    switch (question.type as QuestionType) {
+      case "dropdown": {
         const dropdownData = question.data as Array<{
           label: string;
           value: number;
@@ -692,8 +457,9 @@ export function generateStatisticalSummary(
           })),
         });
         break;
+      }
 
-      case "boolean":
+      case "boolean": {
         const booleanData = question.data as Array<{
           label: string;
           value: number;
@@ -713,14 +479,16 @@ export function generateStatisticalSummary(
           ),
         });
         break;
+      }
 
-      case "rating":
-        // Calculate statistics for rating questions
+      case "rating": {
         const questionData =
           surveyResponses.questions_responses[question.question];
         const ratingResponses =
           questionData?.responses?.map((r: any) => parseInt(r.answer, 10)) ||
           [];
+
+        if (ratingResponses.length === 0) break;
 
         const average =
           ratingResponses.reduce(
@@ -730,7 +498,6 @@ export function generateStatisticalSummary(
         const min = Math.min(...ratingResponses);
         const max = Math.max(...ratingResponses);
 
-        // Calculate distribution
         const ratingCounts: Record<number, number> = {};
         ratingResponses.forEach((rating: number) => {
           ratingCounts[rating] = (ratingCounts[rating] || 0) + 1;
@@ -752,8 +519,9 @@ export function generateStatisticalSummary(
           distribution,
         });
         break;
+      }
 
-      case "checkbox":
+      case "checkbox": {
         const checkboxData = question.data as Array<{
           label: string;
           value: number;
@@ -762,6 +530,15 @@ export function generateStatisticalSummary(
           (sum, item) => sum + item.value,
           0
         );
+
+        if (totalSelections === 0) {
+          summary.questions_stats.checkbox.push({
+            question: question.question,
+            total_selections: 0,
+            options: [],
+          });
+          break;
+        }
 
         summary.questions_stats.checkbox.push({
           question: question.question,
@@ -773,15 +550,14 @@ export function generateStatisticalSummary(
           })),
         });
         break;
+      }
 
       case "text":
-      case "comment":
+      case "comment": {
         const textData = question.data as string[];
 
-        // Get sample responses (first 3-5)
         const sampleResponses = textData.slice(0, Math.min(5, textData.length));
 
-        // Basic theme extraction (could be enhanced with NLP)
         const commonThemes = extractCommonThemes(textData);
 
         summary.questions_stats.text_comment.push({
@@ -792,6 +568,7 @@ export function generateStatisticalSummary(
           common_themes: commonThemes,
         });
         break;
+      }
     }
   });
 
@@ -856,11 +633,22 @@ export function convertPrismaSurveyToSurveyData(
     throw new Error("No survey found in mission");
   }
 
-  const survey = mission.survey[0]; // Assuming one survey per mission
+  const survey = mission.survey[0]; 
   const surveyResponses = survey?.response || [];
 
   if (!surveyResponses || surveyResponses.length === 0) {
-    throw new Error("No responses found in survey");
+    return {
+      survey_title: survey?.name || mission.name,
+      questions_responses: {},
+      metadata: {
+        total_responses: 0,
+        collection_period: "N/A",
+        locations_covered: [],
+        age_range: "N/A",
+        gender_distribution: { male: 0, female: 0 },
+        response_rate: "0%",
+      },
+    };
   }
 
   // Initialize questions_responses structure
@@ -875,16 +663,47 @@ export function convertPrismaSurveyToSurveyData(
         : response.responses;
 
     Object.entries(responseAnswers).forEach(
-      ([question, questionData]: [string, any]) => {
-        if (
-          questionData &&
-          typeof questionData === "object" &&
-          questionData.type
-        ) {
-          allQuestions.set(question, questionData.type as QuestionType);
-        }
+  ([question, questionData]: [string, any]) => {
+    if (
+      questionData &&
+      typeof questionData === "object" &&
+      questionData.type
+    ) {
+      const rawType = String(questionData.type).toLowerCase();
+
+      let normalizedType: QuestionType;
+      switch (rawType) {
+        case "dropdown":
+        case "radiogroup":
+          normalizedType = "dropdown";
+          break;
+        case "text":
+          normalizedType = "text";
+          break;
+        case "checkbox":
+          normalizedType = "checkbox";
+          break;
+        case "comment":
+          normalizedType = "comment";
+          break;
+        case "boolean":
+          normalizedType = "boolean";
+          break;
+        case "rating":
+          normalizedType = "rating";
+          break;
+        case "file":
+          normalizedType = "file";
+          break;
+        default:
+          normalizedType = "file";
+          break;
       }
-    );
+
+      allQuestions.set(question, normalizedType);
+    }
+  }
+);
   });
 
   // Initialize each question in questionsResponses

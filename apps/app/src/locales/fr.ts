@@ -1,3 +1,6 @@
+import { remove } from "lodash";
+import { title } from "vega-lite/types_unstable/channeldef.js";
+
 export default {
   common: {
     search: {
@@ -12,6 +15,9 @@ export default {
     save: "Enregistrer",
     success: "Succès",
     add: "Ajouter",
+    edit: "Éditer",
+    remove: "Supprimer",
+    deleting: "Suppression…",
     delete: "Supprimer",
     update: "Modifier",
     updateConfig: "Modifier la configuration",
@@ -44,10 +50,46 @@ export default {
       clearFilters: "Annuler les filtres",
     },
   },
+  comments:{
+      title: "Commentaires",
+      titleQuestion : "Commentaires sur la question",
+      countLabel: "{count} commentaire(s)",
+      loading: "Chargement des commentaires...",
+      newQuestion: "Nouveau commentaire sur la question",
+      empty: "Pas encore de commentaires.",
+      emptyQuestion: "Pas encore de commentaires sur cette question.",
+      newGlobal: "Nouveau commentaire",
+      newPlaceholder: "Écrire un commentaire...",
+      newPlaceholderQuestion: "Commenter cette question...",
+      sending: "Envoi en cours...",
+      send: "Envoyer",
+      openButton: "Ouvrir les commentaires",
+      status:{
+        open: "Ouvert",
+        resolved: "Résolu",
+        archived: "Archivé",
+      },
+      actions: {
+      reply: "Répondre",
+      edit: "Modifier",
+      reopen: "Rouvrir",
+      resolve: "Résoudre",
+      delete: "Supprimer",
+      cancel: "Annuler",
+      save: "Enregistrer",
+      replyPlaceholder: "Écrire une réponse...",
+      sendReply: "Envoyer la réponse",
+    },
+    filter:{
+      all: "Tous",
+      resolved: "Résolu",
+      open: "Ouvert",
+    }
+    },
   billing: {
     success: {
       title: "Paiement réussi !",
-      subscriptionActivated: "Abonnement activé avec succès 🎉",
+      subscriptionActivated: "Abonnement activé avec succès",
     },
     error: {
       title: "Erreur",
@@ -321,6 +363,8 @@ export default {
     missions: "Projets",
     templatesSurveys: "Modèles",
     workspace: "Espace de travail",
+    createWorkspace: "Créer un espace de travail",
+    workspaceSettings: "Paramètres de l’espace de travail",
     explore: "Explorer",
     knowledge: "Connaissances",
     dashboard: "Tableau de bord",
@@ -563,6 +607,7 @@ export default {
       title: "Membres actuels",
       description:
         "Gérez votre équipe existante et modifiez les rôles / autorisations.",
+      membersCountLabel: "membre(s)",
       columns: {
         name: "Nom",
         role: "Rôle",
@@ -682,7 +727,91 @@ export default {
         "Demandez à votre entreprise de vous inviter pour rejoindre leur espace",
     },
   },
+  workspace: {
+    defaultName: "My Workspace",
+      defaultNamePlaceholder: "Entrez le nom du workspace",
+      helper: "Entrez le nom de votre workspace.",
+    informationTitle: "Informations sur le workspace",
+      inviteTitle: "Inviter des membres de l'équipe",
+      inviteHint:
+        "Ajoutez des membres de l'équipe pour collaborer sur des projets au sein de cet espace de travail.",
+      saveButton: "Enregistrer les modifications",
+          settings: {
+            title: "Paramètres du workspace",
+            generalTitle: "Informations générales",
+            subtitle:
+              "Gérez les paramètres de votre workspace, y compris les membres de l'équipe et les options de suppression.",
+            teamTitle: "Équipe du workspace",
+            invitePlaceholder: "Invitez des membres de l'équipe par email",
+            rolePlaceholder: "Sélectionner un rôle",
+            emptyMembers: "Aucun membre n'a été ajouté pour le moment.",
+            inviteButton: "Envoyer l'invitation",
+            fields:{
+              logo: "Logo du workspace",
+          name: "Nom du workspace",
+          slug: "Slug du workspace",
+          slugHelp: "Le slug du workspace est utilisé dans l'URL pour identifier votre workspace.",
+        },
+        menu: {
+          generalTitle: "Général",
+          generalSubtitle: "Informations de base du workspace",
+          membersTitle: "Membres",
+          membersSubtitle: "Gérer les membres de l'équipe",
+          billingTitle: "Facturation & Plans",
+          billingSubtitle: "Gérer la facturation",
+        },
+            columns: {
+              member: "Membre",
+              role: "Rôle",
+              status: "Statut",
+              actions: "Actions",
+            },
+            dangerTitle: "Zone dangereuse",
+            dangerDescription:
+              "Supprimez définitivement ce workspace et toutes ses données. Cette action est irréversible.",
+            deleteButton: "Supprimer le workspace",
+            deleteDialogTitle: "Supprimer le workspace «{{name}}»",
+        deleteDialogDescription:
+      "Veuillez taper le nom du workspace «{{name}}» pour confirmer la suppression.",
+    workspaceNameLabel: "Nom du workspace",
+    confirmDeleteButton: "Supprimer le workspace",
+            deleteConfirmTitle: "Êtes-vous sûr ?",
+            deleteConfirmDescription:
+              "Cette action supprimera définitivement le workspace et toutes ses données. Cette action est irréversible.",
+            deleteConfirmInputPlaceholder: "Tapez SUPPRIMER pour confirmer",
+            deleteConfirmButton: "Oui, supprimer le workspace",
+            deleteSuccessTitle: "Workspace supprimé",
+            deleteSuccessDescription:
+              "Le workspace a été supprimé avec succès.",
+          },
+        },
   missions: {
+    list:{
+          columns: {
+            name: "Nom",
+            progress: "Progression",
+            submissions: "Soumissions",
+            updated: "Dernière mise à jour",
+            actions: "Actions",
+          },
+        },
+      delete: {
+            title: "Supprimer la mission",
+            description: "Voulez-vous supprimer cette mission ?",
+            cancel: "Non",
+            confirmCta: "Oui, supprimer",
+            deleting: "Suppression en cours...",
+            successTitle: "Mission supprimée",
+            successMessage: "La mission a été supprimée avec succès.",
+            successDescription: "La mission a été supprimée avec succès.",
+            label: "Supprimer la mission",
+            disabledTooltip:
+          "Cette mission ne peut pas être supprimée car elle a des soumissions.",
+            errorTitle: "Erreur",
+            errorMessage: "Une erreur est survenue lors de la suppression de la mission.",
+            errorDescription:
+              "Une erreur est survenue lors de la suppression de la mission. Veuillez réessayer.",
+          },
     duplicate: {
       success: "Mission dupliquée avec succès",
       error: "Une erreur est survenue lors de la duplication de la mission",
@@ -721,37 +850,38 @@ export default {
       },
     },
     createSurveyModal: {
-      createButton: "Créer un nouveau sondage",
-      title: "Créer un nouveau sondage",
+      createButton: "Créer le questionnaire",
+      title: "Créer le questionnaire",
       loading: "Chargement...",
       ai: {
-        title: "Grâce à l'IA",
-        feature1: "Questionnaire personnalisé",
-        feature2: "Audience cible sur mesure",
+        title: "Construire avec l'IA",
+        feature1: "Lancement rapide",
+        feature2: "Questions illimitées, plus de 20 formats, ciblage complet",
         description:
-          "Questions illimitées, audiences personnalisées, plus de 20 types de questions et fonctionnalités avancées",
+          "Décrivez votre objectif, et l'IA génère automatiquement le brief et le questionnaire. Modifiez les questions, définissez le ciblage et soumettez pour validation",
       },
       template: {
-        title: "Depuis un modèle",
-        feature1: "1–3 questions",
-        feature2: "Échantillon représentatif national",
+        title: "Commencer à partir d'un modèle",
+        feature1: "Études rapides et standard",
+        feature2: "Structure préconstruite, 1 à 10 questions, livraison rapide",
         description:
-          "Sondages économiques avec jusqu’à trois questions et un échantillon national représentatif",
+          "Choisissez un format d'enquête prêt à l'emploi et lancez-le en quelques minutes.",
       },
       upload: {
-        title: "Importer un sondage",
-        feature1: "Inclus dans les forfaits annuels",
-        feature2: "Votre propre audience cible",
+        title: "Importer votre questionnaire",
+        feature1: "Enquêtes internes nécessitant une exécution sur le terrain",
+        feature2: "Importation de fichiers, audience personnalisée, tableau de bord analytique",
         description:
-          "Collectez les opinions de votre communauté ou audience via vos propres canaux.",
+          "Importez votre questionnaire existant — nous nous occupons de la distribution",
       },
       manuel: {
-        title: "Créer manuellement",
-        feature1: "Questionnaire personnalisé",
-        feature2: "Audience cible sur mesure",
+        title: "Construire manuellement",
+        feature1: "Recherche personnalisée avancée",
+        feature2: "Questions illimitées, tâches média + GPS, contrôles logiques",
         description:
-          "Questions illimitées, audiences personnalisées, plus de 20 types de questions et fonctionnalités avancées",
+          "Créez votre questionnaire de A à Z avec une flexibilité totale.",
       },
+      comingSoon: "Bientôt disponible",
     },
     addSubDashboard: {
       title: "Ajouter un sous dashboard",
@@ -766,7 +896,7 @@ export default {
         namePlaceholder: "Entrez le nom",
         visibilityLabel: "Partager ce tableau de bord",
         visibilityDescription:
-          "Ce TDB sera visible par tous les membres de l'organisation",
+          "Ce TDB sera visible par tous les membres du workspace.",
         cancelButton: "Annuler",
         addButton: "Ajouter",
         submittingButton: "Ajout en cours...",
@@ -1006,19 +1136,35 @@ export default {
       filedFilled: "Champs remplis(...)",
       form: {
         researchMarket: "Analyse de marché",
+        aiUpdateFromConversations: "Mettre à jour avec l'IA à partir des conversations",
         filterAudiences: "Filtrer les audiences",
         problemSummary: "Enoncé du problème",
-        strategicGoal: "Objectif stratégique",
+        strategicGoal: "Objectifs stratégiques",
         assumptions:
           "Hypothèses potentielles à explorer - sélectionnez celles que vous pensez être les plus pertinentes",
         audiences: "Publics ciblés/marchés",
         name: "Nom de la mission",
         placeholder:
           "Répondez aux questions dans le chat pour générer cette section",
+        targetPlaceholder: "Choisissez qui et où cibler—atteignez les bons répondants avec plus de 2500 caractéristiques",
         surveys: "Questionnaires",
         success: "Mission créée avec succès",
         error: "Une erreur est survenue lors de la création de la mission",
         showSurveys: "Afficher les questionnaires",
+        aiProposeFullBrief: "Générer avec l'IA",
+        aiProposeFullStudy: "Générer avec l'IA",
+        aiGenerating: "L'IA génère votre brief...",
+        aiBriefFilled: "L'IA a rempli votre brief",
+        aiBriefGenerating: "L'IA génère votre brief...",
+        audienceSuggestionHelper:
+          "suggère des audiences basées sur votre brief. Nous ajouterons bientôt plus d'options de ciblage.",
+        audienceSuggestionGroupPlaceHolder: "Sélectionnez un groupe d'audience",
+        audienceSuggestionLabelPlaceholder: "Libellé de l'audience suggérée",
+        suggestionDescriptionPlaceholder:
+          "Description de l'audience suggérée",
+        useSuggestion: "Utiliser la suggestion",
+        audienceSuggestionCta: "Envoyer la proposition d'audience",
+        audienceSuggestionSending: "Envoi de la proposition...",
       },
     },
     missionSubmission: {
@@ -1036,6 +1182,13 @@ export default {
     progress: {
       title: "Progression",
       description: "Suivez la progression de votre mission",
+      subtitle: "Suivez l'achèvement de chaque section",
+      sectionTitle: "Section",
+      briefScoreLabel: "Score du brief",
+      briefScoreDescription:
+        "Le score du brief est calculé en fonction de l'exhaustivité de votre brief. Plus le score est élevé, plus votre brief est complet.",
+      briefHelperText:
+        "Continuez à répondre aux questions pour améliorer votre brief",
       score: "Le score de votre brief",
       rating:
         "Répondez aux questions dans le chat pour améliorer la qualité de votre brief",
@@ -1048,6 +1201,7 @@ export default {
     surveys: {
       title: "Questions du questionnaire",
       yourBrief: "Votre brief",
+      aiInfoBanner: "L'IA a généré des questions de questionnaire basées sur votre brief.",
       saveAfterSurvey: "Enregistrer avant d'acceder au questionnaire",
       saveDraft: "Enregistrer",
       publishSurvey: "Soumettre",
@@ -1085,6 +1239,56 @@ export default {
         update: "Mettre à jour",
         editQuestion: "Modifier la question",
         deleteQuestion: "Supprimer la question",
+        aiModeDisabled:
+          "Le mode IA est désactivé. Veuillez l'activer pour générer des questions.",
+        deleteConfirm: "Êtes-vous sûr de vouloir supprimer cette question ?",
+        questionDescription: "Description de la question (optionnel)",
+        scaleSettings: "Paramètres de l'échelle",
+        minValue: "Valeur minimale",
+        maxValue: "Valeur maximale",
+        hasOtherOption: "Autre option",
+        minLabel: "Minimum Label",
+        maxLabel: "Maximum Label",
+        matrixRows: "Ligne de la matrice",
+        addRow: "Ajouter une ligne",
+        matrixColumns: "Colonne de la matrice",
+        addColumn: "Ajouter une colonne",
+        mediaTypes: "Media Types",
+        maxSizeMb: "Max size (MB)",
+        maxFiles: "Max files",
+        captureRequired: "Capture requise",
+        gpsMode: "Mode GPS",
+        locationLabel: "Étiquette de localisation",
+        maxDistanceMeters: "Distance maximale (mètres)",
+        minTimeOnSiteSeconds: "Temps minimum sur le site (secondes)",
+        gpsTolerance: "Tolérance GPS",
+        requiresPathTracking: "Nécessite le suivi du chemin",
+        rankingOptionsLabel: "Étiquette de l'option de classement",
+        rankingOptionsHelp:
+          "Faites glisser et déposez pour réorganiser les options de classement",
+        addRankingOption: "Ajouter une option de classement",
+        sectionSelectLabel: "Sélectionner une section",
+        noSection: "Aucune section",
+        option: "Option {number}",
+        imageRanking: {
+          imageLabel: "Image Label",
+          addImage: "Add Image",
+          imagePlaceholder: "Upload an image",
+          uploadButton: "Click to upload",
+        },
+        mediaMode:{
+          title: "Type de Média",
+          upload: "Télécharger",
+          stimulus: "Stimulus",
+          both: "Les deux",
+        },
+        mediaPresets: {
+            title: "Préréglages Média",
+          },
+        stimulus:{
+          title: "Type de Stimulus",
+
+        }
       },
       questionCategories: {
         common: "Communes",
@@ -1178,6 +1382,50 @@ export default {
           title: "NPS",
           description: "Question de Net Promoter Score",
         },
+        singleChoice: {
+          title: "Choix unique",
+          description: "Choisissez une option dans une liste",
+        },
+        multipleChoice: {
+          title: "Choix multiple",
+          description: "Choisissez plusieurs options dans une liste",   
+        },
+        likert: {
+          title: "Échelle de Likert",
+          description: "Évaluez l'accord sur une échelle",
+        },
+        numericScale: {
+          title: "Échelle numérique",
+          description: "Évaluez sur une échelle numérique",
+        },
+        open: {
+          title: "Question ouverte",
+          description: "Fournissez une réponse détaillée",
+        },
+        matrix:{
+          title: "Matrice",
+          description: "Matrice de choix",
+        },
+        imageRanking: {
+          title: "Classement d'images",
+          description: "Classez les images par ordre de préférence",
+        },
+        media: {
+          title: "Média",
+          description: "Intégrez des vidéos ou audio",
+        },
+        gps: {
+          title: "Localisation GPS",
+          description: "Capture de la localisation GPS",
+        },
+        section: {
+          title: "Section",
+          description: "Regrouper les questions en sections",
+        },
+        dragDropRanking: {
+          title: "Classement par glisser-déposer",
+          description: "Classez les éléments en les faisant glisser et en les déposant",
+        }
       },
     },
     templates: {
@@ -1305,6 +1553,10 @@ export default {
         update: "Erreur lors de la mise à jour des permissions",
       },
     },
+  },
+  analysis:{
+    title: "Analyse des données",
+    subtitle: "Explorez et analysez vos données collectées",
   },
   filters: {
     groups: {

@@ -54,6 +54,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // tout sauf assets, api et images statiques
+    //"/((?!_next/static|api|_next/image|favicon.ico|.\\.(?:svg|png|jpg|jpeg|gif|webp)$).)",
     "/((?!_next/static|api|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

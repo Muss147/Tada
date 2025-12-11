@@ -16,29 +16,23 @@ import {
 } from "@tada/ui/components/dialog";
 import { Input } from "@tada/ui/components/input";
 import {
-  Award,
   Bot,
-  Calendar,
   CheckSquare,
   ChevronDown,
-  Clock,
   FilePlus,
   FileText,
-  Hash,
   Image,
-  List,
   Loader2,
-  Mail,
-  MapPin,
-  Phone,
   Plus,
   Radio,
   Search,
-  Sliders,
   Star,
   Text,
   ToggleLeft,
   X,
+  Video,
+  Music,
+  Mic,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -61,6 +55,7 @@ interface QuestionType {
 interface QuestionTypes {
   common: QuestionType[];
   advanced: QuestionType[];
+  media: QuestionType[];
   ai: QuestionType[];
 }
 
@@ -76,14 +71,18 @@ export function AddNewQuestionModal({
   const { surveys, setSurveys } = useSurveysBuilder();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermAi, setSearchTermAi] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("common");
-  const [selectedQuestionType, setSelectedQuestionType] = useState(null);
+  const [selectedCategory, setSelectedCategory] =
+    useState<keyof QuestionTypes>("common");
+  const [selectedQuestionType, setSelectedQuestionType] = useState<
+    string | null
+  >(null);
   const [questionTitle, setQuestionTitle] = useState("");
   const [options, setOptions] = useState<string[]>(["default option"]);
   const [isRequired, setIsRequired] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [maxRating, setMaxRating] = useState(5);
   const [displayAsStars, setDisplayAsStars] = useState(false);
+
   const questionTypes: QuestionTypes = {
     common: [
       {
@@ -130,42 +129,88 @@ export function AddNewQuestionModal({
         title: t("missions.surveys.questionTypes.file.title"),
         description: t("missions.surveys.questionTypes.file.description"),
       },
-      /* {
-        id: "image",
-        icon: <Image size={20} />,
-        title: t("missions.surveys.questionTypes.image.title"),
-        description: t("missions.surveys.questionTypes.image.description"),
-      }, */
       {
         id: "rating",
         icon: <Star size={20} />,
         title: t("missions.surveys.questionTypes.rating.title"),
         description: t("missions.surveys.questionTypes.rating.description"),
       },
+    ],
+    media: [
+      {
+        id: "image-question",
+        icon: <Image size={20} />,
+        title: t("missions.surveys.questionTypes.imageQuestion.title"),
+        description: t(
+          "missions.surveys.questionTypes.imageQuestion.description"
+        ),
+      },
       {
         id: "imagepicker",
         icon: <Image size={20} />,
         title: t("missions.surveys.questionTypes.imagepicker.title"),
         description: t(
-          "missions.surveys.questionTypes.imagepicker.description",
+          "missions.surveys.questionTypes.imagepicker.description"
+        ),
+      },
+      {
+        id: "gallery",
+        icon: <Image size={20} />,
+        title: t("missions.surveys.questionTypes.gallery.title"),
+        description: t("missions.surveys.questionTypes.gallery.description"),
+      },
+      {
+        id: "video",
+        icon: <Video size={20} />,
+        title: t("missions.surveys.questionTypes.video.title"),
+        description: t("missions.surveys.questionTypes.video.description"),
+      },
+      {
+        id: "audio-player",
+        icon: <Music size={20} />,
+        title: t("missions.surveys.questionTypes.audioPlayer.title"),
+        description: t(
+          "missions.surveys.questionTypes.audioPlayer.description"
+        ),
+      },
+      {
+        id: "audio-record",
+        icon: <Mic size={20} />,
+        title: t("missions.surveys.questionTypes.audioRecord.title"),
+        description: t(
+          "missions.surveys.questionTypes.audioRecord.description"
         ),
       },
     ],
-    ai: [],
+    ai: [
+      {
+        id: "ai-open",
+        icon: <Bot size={20} />,
+        title: "Question ouverte IA",
+        description:
+          "L’IA génère une question ouverte à partir de votre prompt.",
+      },
+    ],
   };
+
+  const categories: (keyof QuestionTypes)[] = [
+    "common",
+    "advanced",
+    "media",
+    "ai",
+  ];
 
   const getFilteredQuestionTypes = () => {
     if (!searchTerm) {
-      return questionTypes[selectedCategory as keyof typeof questionTypes];
+      return questionTypes[selectedCategory];
     }
 
-    // Recherche dans toutes les catégories si la recherche est active
     return Object.values(questionTypes)
       .flat()
       .filter(
         (type) =>
           type.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          type.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          type.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
   };
 
@@ -180,31 +225,100 @@ export function AddNewQuestionModal({
     setSearchTerm("");
     setSearchTermAi("");
   };
+
   const handleAddQuestion = () => {
-    const updatedSurveys = {
+    if (!selectedQuestionType) return;
+
+    const baseName = stripSpecialCharacters(questionTitle || "question");
+
+    let element: any = {
+      name: baseName,
+      title: questionTitle,
+      isRequired,
+    };
+
+    switch (selectedQuestionType) {
+      // textes & choix classiques
+      case "text":
+      case "comment":
+      case "boolean":
+        element.type = selectedQuestionType;
+        break;
+
+      case "checkbox":
+      case "radiogroup":
+      case "dropdown":
+        element.type = selectedQuestionType;
+        element.choices = options;
+        break;
+
+      case "rating":
+        element.type = "rating";
+        element.rateMin = minRating;
+        element.rateMax = maxRating;
+        element.displayRateDescriptionsAsExtremeItems = displayAsStars;
+        break;
+
+      case "file":
+        element.type = "file";
+        break;
+
+      // ---------- MEDIA ----------
+      case "image-question":
+        element.type = "image";
+        element.imageLink = "";
+        element.description = questionTitle;
+        break;
+
+      case "imagepicker":
+        element.type = "imagepicker";
+        element.choices = [];
+        break;
+
+      case "gallery":
+        element.type = "imagepicker";
+        element.multiSelect = true;
+        element.choices = [];
+        break;
+
+      case "video":
+        element.type = "html";
+        element.html =
+          "<p>Remplacez ce bloc par votre vidéo (iframe, balise &lt;video&gt;, etc.).</p>";
+        break;
+
+      case "audio-player":
+        element.type = "html";
+        element.html =
+          "<p>Remplacez ce bloc par un lecteur audio (balise &lt;audio&gt; ...).</p>";
+        break;
+
+      case "audio-record":
+        element.type = "file";
+        element.acceptedTypes = "audio/*";
+        element.showPreview = true;
+        element.storeDataAsText = false;
+        element.maxSize = 10240;
+        break;
+
+      default:
+        element.type = "text";
+        break;
+    }
+
+    const updatedSurveys: Survey = {
       ...surveys,
       pages: surveys.pages.map((page, index) => {
         if (index === 0) {
           return {
             ...page,
-            elements: [
-              ...page.elements,
-              {
-                type: selectedQuestionType!,
-                title: questionTitle,
-                name: stripSpecialCharacters(questionTitle),
-                isRequired,
-                choices: options,
-                minRateDescription: minRating?.toString(),
-                maxRateDescription: maxRating?.toString(),
-                displayRateDescriptionsAsExtremes: displayAsStars,
-              },
-            ],
+            elements: [...page.elements, element],
           };
         }
         return page;
       }),
     };
+
     setSurveys(updatedSurveys);
     updateSurveyQuestions(updatedSurveys);
     resetForm();
@@ -234,7 +348,7 @@ export function AddNewQuestionModal({
                 <input
                   type="text"
                   placeholder={t(
-                    "missions.surveys.addNewQuestion.searchPlaceholder",
+                    "missions.surveys.addNewQuestion.searchPlaceholder"
                   )}
                   className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   value={searchTerm}
@@ -242,31 +356,33 @@ export function AddNewQuestionModal({
                 />
               </div>
 
-              {/* Catégories (masquées si recherche active) */}
+              {/* Catégories */}
               {!searchTerm && (
                 <div className="flex mb-6 border-b border-gray-200 overflow-x-auto">
-                  {Object.keys(questionTypes).map((category) => (
+                  {categories.map((category) => (
                     <button
                       type="button"
                       key={category}
-                      className={`px-4 py-2 whitespace-nowrap ${selectedCategory === category ? "border-b-2 border-primary text-primary font-medium" : "text-gray-600"}`}
+                      className={`px-4 py-2 whitespace-nowrap ${
+                        selectedCategory === category
+                          ? "border-b-2 border-primary text-primary font-medium"
+                          : "text-gray-600"
+                      }`}
                       onClick={() => setSelectedCategory(category)}
                     >
-                      {t(
-                        `missions.surveys.questionCategories.${category}` as keyof typeof t,
-                      )}
+                      {t(`missions.surveys.questionCategories.${category}`)}
                     </button>
                   ))}
                 </div>
               )}
 
               {/* Types de questions */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  max-h-96 overflow-y-auto  thin-scrollbar">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto thin-scrollbar">
                 {getFilteredQuestionTypes().map((type) => (
                   <button
                     type="button"
                     key={type.id}
-                    className="border border-gray-200 rounded-lg p-4 text-left  hover:border-primary transition-colors"
+                    className="border border-gray-200 rounded-lg p-4 text-left hover:border-primary transition-colors"
                     onClick={() => setSelectedQuestionType(type.id)}
                   >
                     <div className="flex items-center mb-2">
@@ -284,8 +400,9 @@ export function AddNewQuestionModal({
                     {t("missions.surveys.addNewQuestion.noResults")}
                   </div>
                 )}
+
               {selectedCategory === "ai" && (
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 mt-4">
                   <div className="relative w-full">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Search size={16} className="text-gray-400" />
@@ -293,7 +410,7 @@ export function AddNewQuestionModal({
                     <input
                       type="text"
                       placeholder={t(
-                        "missions.surveys.addNewQuestion.searchPlaceholderAi",
+                        "missions.surveys.addNewQuestion.searchPlaceholderAi"
                       )}
                       className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                       value={searchTermAi}
@@ -304,7 +421,7 @@ export function AddNewQuestionModal({
                     <Button
                       variant="outline"
                       size="sm"
-                      className=" gap-2"
+                      className="gap-2"
                       onClick={async () => {
                         await addQuestionAI(searchTermAi);
                         onOpenChange(false);
@@ -319,7 +436,7 @@ export function AddNewQuestionModal({
                         <>
                           <Bot size={16} />
                           {t(
-                            "missions.surveys.addNewQuestion.generateQuestion",
+                            "missions.surveys.addNewQuestion.generateQuestion"
                           )}
                         </>
                       )}
@@ -334,7 +451,7 @@ export function AddNewQuestionModal({
               <div className="flex items-center mb-4 text-sm">
                 <button
                   type="button"
-                  className="flex items-center "
+                  className="flex items-center"
                   onClick={() => {
                     setSelectedQuestionType(null);
                     setOptions(["default option"]);
@@ -349,7 +466,7 @@ export function AddNewQuestionModal({
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {t("missions.surveys.addNewQuestion.questionType")}
                 </label>
-                <div className="flex items-center p-2  rounded-md">
+                <div className="flex items-center p-2 rounded-md">
                   {
                     Object.values(questionTypes)
                       .flat()
@@ -363,7 +480,7 @@ export function AddNewQuestionModal({
                     }
                   </span>
                 </div>
-                <p className="mt-1 text-sm ">
+                <p className="mt-1 text-sm">
                   {
                     Object.values(questionTypes)
                       .flat()
@@ -383,13 +500,13 @@ export function AddNewQuestionModal({
                   value={questionTitle}
                   onChange={(e) => setQuestionTitle(e.target.value)}
                   placeholder={t(
-                    "missions.surveys.addNewQuestion.questionPlaceholder",
+                    "missions.surveys.addNewQuestion.questionPlaceholder"
                   )}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
-              {/* Options spécifiques en fonction du type de question */}
+              {/* Options spécifiques pour les questions à choix */}
               {(selectedQuestionType === "checkbox" ||
                 selectedQuestionType === "radiogroup" ||
                 selectedQuestionType === "dropdown" ||
@@ -398,29 +515,22 @@ export function AddNewQuestionModal({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t("missions.surveys.addNewQuestion.options")}
                   </label>
-                  <div className="space-y-2 max-h-96 overflow-y-auto  thin-scrollbar">
+                  <div className="space-y-2 max-h-96 overflow-y-auto thin-scrollbar">
                     {options.map((option, index) => (
                       <div
                         className="flex items-center"
-                        key={`${option}-${
-                          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                          index
-                        }`}
+                        key={`${option}-${index}`}
                       >
                         <Input
                           autoFocus
                           name={`option-${index}`}
                           value={option}
-                          key={`option-${
-                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                            index
-                          }`}
                           placeholder={`Option ${index + 1}`}
                           onChange={(e) =>
                             setOptions(
                               options.map((o, i) =>
-                                i === index ? e.target.value : o,
-                              ),
+                                i === index ? e.target.value : o
+                              )
                             )
                           }
                         />
@@ -429,9 +539,7 @@ export function AddNewQuestionModal({
                           className="ml-2 text-gray-400 hover:text-gray-600"
                           onClick={() =>
                             setOptions(
-                              options.filter(
-                                (_, index) => index !== options.length - 1,
-                              ),
+                              options.filter((_, i) => i !== options.length - 1)
                             )
                           }
                         >
@@ -445,7 +553,7 @@ export function AddNewQuestionModal({
                       className="text-sm text-teal-500 hover:text-teal-700 flex items-center"
                       onClick={() => setOptions([...options, "new option"])}
                     >
-                      <Plus size={14} className="mr-1" />{" "}
+                      <Plus size={14} className="mr-1" />
                       {t("missions.surveys.addNewQuestion.addOption")}
                     </button>
                   </div>
@@ -500,7 +608,7 @@ export function AddNewQuestionModal({
                 </div>
               )}
 
-              {/* Options communes à tous les types de questions */}
+              {/* Options communes */}
               <div className="space-y-2 mb-6">
                 <div className="flex items-center">
                   <input

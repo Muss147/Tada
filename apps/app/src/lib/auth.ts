@@ -24,11 +24,16 @@ import {
 } from "./permissions-organization";
 import { transporter } from "./transporter";
 
+const appUrl = process.env.APP_URL ?? "http://localhost:3000";
+const isLocal =
+  process.env.NODE_ENV !== "production" ||
+  appUrl.includes("localhost");
+  
 export const auth = betterAuth({
-  baseURL: process.env.APP_URL,
+  baseURL: appUrl,
   secret: process.env.BETTER_AUTH_SECRET,
   appName: "Tada",
-  trustedOrigins: [process.env.APP_URL!],
+  trustedOrigins: [appUrl],
   user: {
     additionalFields: {
       position: {
@@ -80,6 +85,9 @@ export const auth = betterAuth({
   },
   database: new Pool({
     connectionString: process.env.DATABASE_URL,
+    ssl: {
+    rejectUnauthorized: false,
+    },
   }),
   plugins: [
     organization({
@@ -172,6 +180,16 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: false,
     sendVerificationEmail: async ({ user, url, token }, request) => {
+
+      // 🔥 En local : on log juste le lien au lieu d'envoyer un mail
+      if (isLocal) {
+        console.log("====================================");
+        console.log("🔐 Email verification link (LOCAL) :");
+        console.log(url);
+        console.log("====================================");
+        return;
+      }
+
       const payloadWithUnEscapedSubject = {
         from: "no-reply@monrezo.net",
         to: [user?.email as string],
