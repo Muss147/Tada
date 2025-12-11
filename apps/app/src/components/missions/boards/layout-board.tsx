@@ -34,7 +34,7 @@ import {
   TooltipTrigger,
 } from "@tada/ui/components/tooltip";
 import { Tabs, TabsList, TabsTrigger } from "@tada/ui/components/tabs";
-import { useI18n, useCurrentLocale } from "@/locales/client";
+import { useI18n } from "@/locales/client";
 import _, { isEqual } from "lodash";
 import { TextWidget } from "./widgets/text-widget";
 import {
@@ -89,7 +89,6 @@ export function LayoutBoard() {
     size: 0,
   });
   const t = useI18n();
-  const currentLocale = useCurrentLocale();
   const router = useRouter();
   const dashboardRef = useRef<HTMLDivElement>(null);
   const dashboardParentRef = useRef<HTMLDivElement>(null);
@@ -517,7 +516,7 @@ export function LayoutBoard() {
                       <DropdownMenuItem
                         onClick={() => {
                           router.push(
-                            `/${currentLocale}/missions/${orgId}/${missionId}/${boardId}/create`
+                            `/missions/${orgId}/${missionId}/${boardId}/create`
                           );
                         }}
                       >
@@ -674,7 +673,7 @@ export function LayoutBoard() {
                   color="primary"
                   onClick={() =>
                     router.push(
-                      `/${currentLocale}/missions/${orgId}/${missionId}/${boardId}/create`
+                      `/missions/${orgId}/${missionId}/${boardId}/create`
                     )
                   }
                 >

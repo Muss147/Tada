@@ -92,7 +92,7 @@ export function Sidebar() {
         {
           icon: <Home className="h-5 w-5" />,
           text: t("navigation.home"),
-          href: `/${currentLocale}`,
+          href: "/",
           target: "_self",
         },
       ],
@@ -109,13 +109,13 @@ export function Sidebar() {
         {
           icon: <Bot className="h-5 w-5" />,
           text: t("navigation.analysis"),
-          href: `/${currentLocale}/analysis`,
+          href: `/analysis`,
           target: "_self",
         },
         {
           icon: <Users className="h-5 w-5" />,
           text: t("navigation.userManagement"),
-          href: `/${currentLocale}/settings/users`,
+          href: `/settings/users`,
           target: "_self",
         },
       ],
@@ -132,7 +132,7 @@ export function Sidebar() {
         {
           icon: <TrendingUp className="h-5 w-5" />,
           text: t("navigation.marketBeats"),
-          href: `/${currentLocale}/market-beats/${organizations ? organizations![0]?.id : "dev-org"}`,
+          href: `/market-beats/${organizations ? organizations![0]?.id : ""}`,
           target: "_self",
         },
       ],
@@ -204,8 +204,47 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Currency */}
+      {/* Language and Currency */}
       <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800">
+        {/* <div className="mb-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            {t("common.language")}
+          </p>
+          <Select
+            value={currentLanguage.code}
+            onValueChange={(value: LanguageCode) => changeLocale(value)}
+          >
+            <SelectTrigger className="w-full">
+              <div className="flex items-center">
+                <Image
+                  src={currentLanguage.flag}
+                  alt={`${currentLanguage.name} flag`}
+                  width={20}
+                  height={15}
+                  className="mr-2"
+                />
+                <span>{currentLanguage.name}</span>
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map((language) => (
+                <SelectItem key={language.code} value={language.code}>
+                  <div className="flex items-center">
+                    <Image
+                      src={language.flag}
+                      alt={`${language.name} flag`}
+                      width={20}
+                      height={15}
+                      className="mr-2"
+                    />
+                    <span>{language.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div> */}
+
         <div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
             {t("common.currency")}

@@ -19,11 +19,11 @@ export default async function Page({
   const resolvedSearchParams = await searchParams;
 
   const value = {
-    ...(resolvedSearchParams.q && { query: resolvedSearchParams.q }),
-    ...(resolvedSearchParams.sort && { sort: resolvedSearchParams.sort }),
-    ...(resolvedSearchParams.page && { page: resolvedSearchParams.page }),
-    ...(resolvedSearchParams.status && { status: resolvedSearchParams.status }),
-    ...(resolvedSearchParams.date && { date: resolvedSearchParams.date }),
+    ...(searchParams.q && { query: searchParams.q }),
+    ...(searchParams.sort && { sort: searchParams.sort }),
+    ...(searchParams.page && { page: searchParams.page }),
+    ...(searchParams.status && { status: searchParams.status }),
+    ...(searchParams.date && { date: searchParams.date }),
   };
 
   const loadingKey = JSON.stringify(value);

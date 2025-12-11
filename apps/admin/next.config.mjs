@@ -4,6 +4,9 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   output: "standalone",
+  experimental: {
+    instrumentationHook: false,
+  },
   images: {
     remotePatterns: [
       {
@@ -17,9 +20,6 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-  experimental: {
-    instrumentationHook: false,
   },
   async headers() {
     return [
