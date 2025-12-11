@@ -1,9 +1,6 @@
-/**
- * Permission checking utilities for API routes and server actions
- */
+// apps/admin/src/lib/rbac/check-permission.ts
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth"; // Better Auth
 import { prisma } from "@/lib/prisma";
 import {
   type Permission,
@@ -14,11 +11,11 @@ import {
 } from "./roles";
 
 /**
- * Get current user with admin sub-role from session
+ * Get current user with admin sub-role from Better Auth session
  */
 export async function getCurrentUser() {
-  const session = await getServerSession(authOptions);
-  
+  const session = await auth.api.getSession(); // Better Auth session
+
   if (!session?.user?.email) {
     return null;
   }
@@ -44,12 +41,8 @@ export async function getCurrentUser() {
  */
 export async function checkPermission(permission: Permission): Promise<boolean> {
   const user = await getCurrentUser();
-  
-  if (!user) {
-    return false;
-  }
 
-  if (user.banned) {
+  if (!user || user.banned) {
     return false;
   }
 
@@ -61,22 +54,22 @@ export async function checkPermission(permission: Permission): Promise<boolean> 
 }
 
 /**
- * Require a specific permission (throws error if not authorized)
+ * Require a specific permission
  */
 export async function requirePermission(permission: Permission): Promise<void> {
   const hasPermission = await checkPermission(permission);
-  
+
   if (!hasPermission) {
     throw new Error(`Unauthorized: Missing permission ${permission}`);
   }
 }
 
 /**
- * Check if current user is a super admin
+ * Check if current user is super admin
  */
 export async function isSuperAdmin(): Promise<boolean> {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     return false;
   }
@@ -88,13 +81,13 @@ export async function isSuperAdmin(): Promise<boolean> {
 }
 
 /**
- * Check multiple permissions (user must have ALL)
+ * Check multiple permissions (require all)
  */
 export async function checkAllPermissions(
   permissions: Permission[]
 ): Promise<boolean> {
   const user = await getCurrentUser();
-  
+
   if (!user || user.banned) {
     return false;
   }
@@ -109,13 +102,13 @@ export async function checkAllPermissions(
 }
 
 /**
- * Check multiple permissions (user must have AT LEAST ONE)
+ * Check multiple permissions (require at least one)
  */
 export async function checkAnyPermission(
   permissions: Permission[]
 ): Promise<boolean> {
   const user = await getCurrentUser();
-  
+
   if (!user || user.banned) {
     return false;
   }
@@ -134,13 +127,13 @@ export async function checkAnyPermission(
  */
 export async function getCurrentUserPermissions(): Promise<Permission[]> {
   const user = await getCurrentUser();
-  
+
   if (!user || user.banned) {
     return [];
   }
 
   const { getEffectiveAdminPermissions } = await import("./roles");
-  
+
   return getEffectiveAdminPermissions(
     user.role as UserRole,
     user.adminSubRole as AdminSubRole | null
