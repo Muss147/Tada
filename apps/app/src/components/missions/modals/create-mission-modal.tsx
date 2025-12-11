@@ -20,7 +20,7 @@ import {
   Bot,
   TableOfContents,
 } from "lucide-react";
-import { useI18n, useCurrentLocale } from "@/locales/client";
+import { useI18n } from "@/locales/client";
 
 interface CreateSurveyModalProps {
   trigger?: React.ReactNode;
@@ -34,7 +34,6 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
 
   const router = useRouter();
   const t = useI18n();
-  const currentLocale = useCurrentLocale();
 
   const surveyOptions = [
     {
@@ -57,10 +56,14 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.ai.description"),
+<<<<<<< HEAD
       onClick: () =>
         router.push(
           `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=ai`
         ),
+=======
+      onClick: () => router.push(`/missions/${orgId}/create?mode=ai`),
+>>>>>>> tada-admin
     },
     {
       id: "template",
@@ -82,10 +85,14 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.template.description"),
+<<<<<<< HEAD
       onClick: () =>
         router.push(
           `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=template`
         ),
+=======
+      onClick: () => router.push(`/missions/${orgId}/templates?mode=template`),
+>>>>>>> tada-admin
     },
     {
       id: "manuel",
@@ -107,10 +114,14 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.manuel.description"),
+<<<<<<< HEAD
       onClick: () =>
         router.push(
           `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=manual`
         ),
+=======
+      onClick: () => router.push(`/missions/${orgId}/create?mode=manual`),
+>>>>>>> tada-admin
     },
     {
       id: "survey",
@@ -132,10 +143,14 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.upload.description"),
+<<<<<<< HEAD
       onClick: () =>
         router.push(
           `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=upload`
         ),
+=======
+      onClick: () => router.push(`/missions/${orgId}/create?mode=survey`),
+>>>>>>> tada-admin
     },
   ];
 

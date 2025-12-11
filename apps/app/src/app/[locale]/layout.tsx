@@ -35,16 +35,15 @@ const sora = Sora({
 export const preferredRegion = ["fra1", "sfo1", "iad1"];
 export const maxDuration = 60;
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }) {
-  const { locale } = await params;
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           `${GeistSans.variable} ${GeistMono.variable} ${sora.variable}`,
@@ -53,7 +52,7 @@ export default async function RootLayout({
       >
         <NavigationLoadingProviders>
           <ThemeProvider attribute="class" defaultTheme="light">
-            <Providers params={{ locale }}>
+            <Providers params={params}>
               <Toaster />
               {children}
             </Providers>
