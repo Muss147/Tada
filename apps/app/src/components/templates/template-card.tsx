@@ -21,8 +21,8 @@ export function TemplateCard({ template, orgId }: TemplateCardProps) {
 
   const navigateUrl =
     mode === "template"
-      ? `/missions/${orgId}/create?t=${template.id}`
-      : `/missions/${orgId}/templates/${template.id}`;
+      ? `/${currentLocale}/missions/${orgId}/create?t=${template.id}`
+      : `/${currentLocale}/missions/${orgId}/templates/${template.id}`;
 
   return (
     <Link href={navigateUrl} className="grid grid-cols-4 py-6 px-4 gap-4">
