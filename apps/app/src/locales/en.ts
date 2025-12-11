@@ -3,6 +3,7 @@ import { upload } from "@tada/supabase/storage";
 import { image } from "@uiw/react-markdown-editor";
 import { maxSize } from "better-auth";
 import { organization } from "better-auth/plugins";
+import { allTasks } from "better-auth/react";
 import { add, max, min } from "lodash";
 import { arch } from "os";
 import { send } from "process";
@@ -78,6 +79,22 @@ export default {
       open: "Open",
       resolved: "Resolved",
       archived: "Archived",
+    },
+    actions: {
+      reply: "Reply",
+      edit: "Edit",
+      reopen: "Reopen",
+      resolve: "Resolve",
+      delete: "Delete",
+      cancel: "Cancel",
+      save: "Save",
+      replyPlaceholder: "Write a reply...",
+      sendReply: "Send reply",
+    },
+    filter:{
+      all: "All",
+      resolved: "Resolved",
+      open: "Open",
     }
   },
   billing: {

@@ -18,10 +18,7 @@ export async function POST(req: Request, { params }: RouteParams) {
   const { status } = body as { status: "open" | "resolved" };
 
   if (!["open", "resolved"].includes(status)) {
-    return NextResponse.json(
-      { error: "Invalid status" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
   const existing = await prisma.comment.findUnique({

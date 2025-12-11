@@ -1,4 +1,3 @@
-// app/api/comments/[id]/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";
@@ -14,23 +13,35 @@ export async function PATCH(req: Request, { params }: RouteParams) {
   }
 
   const { id } = params;
-  const body = await req.json();
-  const { content, mentions } = body as {
+  const body = await req.json().catch(() => ({} as any));
+
+  const {
+    content,
+    mentions,
+    status,
+  }: {
     content?: string;
     mentions?: string[];
-  };
+    status?: "open" | "resolved" | "archived";
+  } = body;
 
   const existing = await prisma.comment.findUnique({
     where: { id },
     select: {
       id: true,
       content: true,
+      status: true,
       createdById: true,
+      deletedAt: true,
     },
   });
 
   if (!existing) {
     return new NextResponse("Not found", { status: 404 });
+  }
+
+  if (existing.deletedAt) {
+    return new NextResponse("Comment deleted", { status: 400 });
   }
 
   const isAuthor = existing.createdById === user.id;
@@ -40,46 +51,104 @@ export async function PATCH(req: Request, { params }: RouteParams) {
     return new NextResponse("Forbidden", { status: 403 });
   }
 
+  const trimmedContent = typeof content === "string" ? content.trim() : undefined;
+  const previousContent = existing.content;
+  const previousStatus = existing.status;
+
   const result = await prisma.$transaction(async (tx) => {
+    const data: any = {};
+
+    // 1) Contenu + editedAt
+    let contentChanged = false;
+    if (typeof trimmedContent === "string" && trimmedContent.length > 0) {
+      if (trimmedContent !== existing.content) {
+        data.content = trimmedContent;
+        data.editedAt = new Date();
+        contentChanged = true;
+      }
+    }
+
+    // 2) Status (open / resolved / archived)
+    let statusChanged = false;
+    if (status && status !== existing.status) {
+      if (!["open", "resolved", "archived"].includes(status)) {
+        throw new Error("Invalid status");
+      }
+
+      data.status = status;
+      statusChanged = true;
+
+      if (status === "resolved") {
+        // On marque qui a résolu + quand
+        data.resolvedById = user.id;
+        data.resolvedAt = new Date();
+      } else if (status === "open") {
+        // On ré-ouvre : on nettoie les infos de résolution
+        data.resolvedById = null;
+        data.resolvedAt = null;
+      } else if (status === "archived") {
+        // Archivé : à toi de décider, ici on garde resolvedBy/At tels quels
+      }
+    }
+
     const updated = await tx.comment.update({
       where: { id },
-      data: {
-        content: content?.trim() ?? existing.content,
-        editedAt: new Date(),
-      },
+      data,
     });
 
-    // on reset les mentions et on les recrée
+    // 3) Mentions : reset + recreate si fourni
     if (Array.isArray(mentions)) {
       await tx.commentMention.deleteMany({
         where: { commentId: id },
       });
 
-      await Promise.all(
-        mentions.map((userId) =>
-          tx.commentMention.create({
-            data: { commentId: id, userId },
-          })
-        )
-      );
+      if (mentions.length > 0) {
+        await tx.commentMention.createMany({
+          data: mentions.map((userId) => ({
+            commentId: id,
+            userId,
+          })),
+        });
+      }
     }
 
-    await tx.commentEvent.create({
-      data: {
-        commentId: id,
-        type: "edited",
-        payload: {
-          previousContent: existing.content,
-          newContent: content?.trim() ?? existing.content,
+    // 4) CommentEvents
+    if (contentChanged) {
+      await tx.commentEvent.create({
+        data: {
+          commentId: id,
+          type: "edited",
+          payload: {
+            previousContent,
+            newContent: trimmedContent,
+          },
+          createdById: user.id,
         },
-        createdById: user.id,
-      },
-    });
+      });
+    }
 
+    if (statusChanged) {
+      await tx.commentEvent.create({
+        data: {
+          commentId: id,
+          type: "status_changed",
+          payload: {
+            previousStatus,
+            newStatus: status,
+          },
+          createdById: user.id,
+        },
+      });
+    }
+
+    // 5) On renvoie le commentaire complet pour le front (CommentLite)
     const fullComment = await tx.comment.findUnique({
       where: { id },
       include: {
         createdBy: {
+          select: { id: true, name: true, email: true, image: true },
+        },
+        resolvedBy: {
           select: { id: true, name: true, email: true, image: true },
         },
         mentions: {
@@ -88,6 +157,14 @@ export async function PATCH(req: Request, { params }: RouteParams) {
               select: { id: true, name: true, email: true, image: true },
             },
           },
+        },
+        replies: {
+          include: {
+            createdBy: {
+              select: { id: true, name: true, email: true, image: true },
+            },
+          },
+          orderBy: { createdAt: "asc" },
         },
       },
     });
@@ -111,6 +188,7 @@ export async function DELETE(req: Request, { params }: RouteParams) {
     select: {
       id: true,
       createdById: true,
+      deletedAt: true,
     },
   });
 
@@ -118,12 +196,15 @@ export async function DELETE(req: Request, { params }: RouteParams) {
     return new NextResponse("Not found", { status: 404 });
   }
 
-
   const isAuthor = existing.createdById === user.id;
   const isAdmin = (user as any).role === "admin";
 
   if (!isAuthor && !isAdmin) {
     return new NextResponse("Forbidden", { status: 403 });
+  }
+
+  if (existing.deletedAt) {
+    return new NextResponse("Already deleted", { status: 400 });
   }
 
   await prisma.$transaction(async (tx) => {

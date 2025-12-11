@@ -9,8 +9,20 @@ export type CommentLite = {
   content: string;
   status: string;
   questionKey?: string | null;
-  createdAt: string;
-  createdBy: UserLite;
+  createdAt: string | Date;
+  createdBy: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+  };
+  resolvedBy?: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+  } | null;
+  resolvedAt?: string | Date | null;
   replies?: CommentLite[];
 };
 
