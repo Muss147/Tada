@@ -17,6 +17,7 @@ export default {
     add: "Ajouter",
     edit: "Éditer",
     remove: "Supprimer",
+    deleting: "Suppression…",
     delete: "Supprimer",
     update: "Modifier",
     updateConfig: "Modifier la configuration",
@@ -769,6 +770,32 @@ export default {
           },
         },
   missions: {
+    list:{
+          columns: {
+            name: "Nom",
+            progress: "Progression",
+            submissions: "Soumissions",
+            updated: "Dernière mise à jour",
+            actions: "Actions",
+          },
+        },
+      delete: {
+            title: "Supprimer la mission",
+            description: "Voulez-vous supprimer cette mission ?",
+            cancel: "Non",
+            confirmCta: "Oui, supprimer",
+            deleting: "Suppression en cours...",
+            successTitle: "Mission supprimée",
+            successMessage: "La mission a été supprimée avec succès.",
+            successDescription: "La mission a été supprimée avec succès.",
+            label: "Supprimer la mission",
+            disabledTooltip:
+          "Cette mission ne peut pas être supprimée car elle a des soumissions.",
+            errorTitle: "Erreur",
+            errorMessage: "Une erreur est survenue lors de la suppression de la mission.",
+            errorDescription:
+              "Une erreur est survenue lors de la suppression de la mission. Veuillez réessayer.",
+          },
     duplicate: {
       success: "Mission dupliquée avec succès",
       error: "Une erreur est survenue lors de la duplication de la mission",

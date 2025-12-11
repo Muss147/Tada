@@ -233,8 +233,8 @@ const AssistantMessage: FC = () => {
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
       <Avatar className="flex size-8 flex-shrink-0 items-center justify-center rounded-[24px] border border-white/15 shadow ">
         <AvatarImage
-          src="/logo-icon.png"
-          alt="logo"
+          src="/avatar.png"
+          alt="avatar"
           className="max-w-6 h-full"
         />
       </Avatar>

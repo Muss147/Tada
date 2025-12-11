@@ -28,6 +28,7 @@ export default async function Page({
 
   const loadingKey = JSON.stringify(value);
 
+  console.log("Loading missions with params:", value);
   return (
     <ErrorBoundary errorComponent={ErrorFallback}>
       <Suspense

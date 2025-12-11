@@ -23,6 +23,7 @@ export default {
     currency: "Currency",
     cancel: "Cancel",
     save: "Save",
+    deleting: "Deleting...",
     delete: "Delete",
     update: "Update",
     updateConfig: "Update config",
@@ -707,6 +708,32 @@ export default {
     },
   },
   missions: {
+    list:{
+      columns: {
+        name: "Name",
+        progress: "Progress",
+        submissions: "Submissions",
+        updated: "Last update",
+        actions: "Actions",
+      },
+    },
+    delete: {
+        title: "Delete mission",
+        description: "Do you want to delete this mission?",
+        cancel: "No",
+        confirmCta: "Yes, delete",
+        deleting: "Deleting...",
+        successTitle: "Mission deleted",
+        successMessage: "The mission has been deleted successfully.",
+        successDescription: "The mission has been deleted successfully.",
+        label: "Delete mission",
+        disabledTooltip:
+          "This mission cannot be deleted because it has submissions.",
+        errorTitle: "Error",
+        errorMessage: "An error occurred while deleting the mission. Please try again.",
+        errorDescription:
+          "An error occurred while deleting the mission. Please try again.",
+      },
     duplicate: {
       success: "Mission duplicated successfully",
       error: "An error occurred while duplicating the mission",
