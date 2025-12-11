@@ -1,7 +1,6 @@
 "use client";
 
 import { I18nProviderClient } from "@/locales/client";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect } from "react";
 
 export const Providers = ({
@@ -51,8 +50,6 @@ export const Providers = ({
     };
   }, []);
   return (
-    <NuqsAdapter>
-      <I18nProviderClient locale={params.locale}>{children}</I18nProviderClient>
-    </NuqsAdapter>
+    <I18nProviderClient locale={params.locale}>{children}</I18nProviderClient>
   );
 };
