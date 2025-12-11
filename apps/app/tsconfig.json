@@ -1,5 +1,5 @@
 {
-  "extends": "@tada/typescript/nextjs.json",
+  "extends": "../../tooling/typescript/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

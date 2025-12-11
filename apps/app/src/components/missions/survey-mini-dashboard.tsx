@@ -39,11 +39,11 @@ import Link from "next/link";
 
 export const SurveyMiniDashboard = ({
   surveys,
-  orgId,
+  workspaceId,
   subDashboards,
 }: {
   surveys: TSurvey[];
-  orgId: string;
+  workspaceId: string;
   subDashboards: SubDashboard[];
 }) => {
   const t = useI18n();
@@ -197,7 +197,7 @@ export const SurveyMiniDashboard = ({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-4 py-3">
                       <Link
-                        href={`/missions/${orgId}/${row.original.missionId}/sub-dashboard/${row.original.id}`}
+                        href={`/missions/${workspaceId}/${row.original.missionId}/sub-dashboard/${row.original.id}`}
                         key={row.id}
                       >
                         {flexRender(
@@ -282,7 +282,7 @@ export const SurveyMiniDashboard = ({
         open={open}
         toggleOpen={setOpen}
         missionId={surveys[0]?.missionId || ""}
-        orgId={orgId || ""}
+        orgId={workspaceId || ""}
       />
     </div>
   );

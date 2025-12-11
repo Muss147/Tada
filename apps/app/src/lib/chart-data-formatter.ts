@@ -56,7 +56,7 @@ export function extractResponsesForQuestion(
 export function formatChartDataFromResponses(
   questionResponses: Array<{ answer: any; age: number; gender: string; location: any; responseId: string }>,
   questionType: string
-): Array<{ label: string; value: number }> | string[] | any[] {
+): any[] {
   if (!questionResponses || questionResponses.length === 0) {
     return [];
   }
@@ -106,36 +106,33 @@ export function formatChartDataFromResponses(
         fill: `var(--color-${label.toLowerCase()})`,
       }));
 
-    case "rating":
-      const ratings = questionResponses.map((response) =>
-        parseInt(String(response.answer), 10)
-      ).filter(rating => !isNaN(rating));
-      
+        case "rating": {
+      // 1. On récupère toutes les notes en nombre
+      const ratings = questionResponses
+        .map((response) => parseInt(String(response.answer), 10))
+        .filter((rating) => !isNaN(rating));
+
       if (ratings.length === 0) return [];
-      
-      const minRating = Math.min(...ratings);
-      const maxRating = Math.max(...ratings);
 
-      const ratingData = [
-        {
-          category: "Évaluation",
-          ...Object.fromEntries(
-            Array.from({ length: maxRating - minRating + 1 }, (_, i) => {
-              const rating = minRating + i;
-              return [rating.toString(), 0];
-            })
-          ),
-        },
-      ];
-
-      questionResponses.forEach((response) => {
-        const rating = String(response.answer);
-        if (!isNaN(parseInt(rating, 10)) && ratingData[0][rating] !== undefined) {
-          (ratingData[0] as any)[rating]++;
-        }
+      // 2. On compte combien de fois chaque note apparaît
+      const counts: Record<number, number> = {};
+      ratings.forEach((rating) => {
+        counts[rating] = (counts[rating] || 0) + 1;
       });
 
-      return ratingData;
+      const total = ratings.length;
+
+      // 3. On renvoie un tableau [{ label, value, percentage, rating }]
+      return Object.entries(counts)
+        .sort(([a], [b]) => Number(a) - Number(b)) // 1,2,3,4,5...
+        .map(([rating, count]) => ({
+          label: `${rating} étoile${Number(rating) > 1 ? "s" : ""}`,
+          value: count as number,
+          percentage: (Number(count) / total) * 100,
+          rating: Number(rating),
+        }));
+    }
+
 
     case "text":
     case "comment":
@@ -199,21 +196,25 @@ export function generateChartConfigFromData(
       }
       break;
 
-    case "rating":
-      // Pour les ratings, on génère une config basée sur la plage de notes
-      if (Array.isArray(data) && data.length > 0 && typeof data[0] === 'object') {
-        const ratingData = data[0] as any;
-        const keys = Object.keys(ratingData).filter(key => key !== 'category' && !isNaN(Number(key)));
-        
-        keys.forEach((key, index) => {
-          const rating = parseInt(key, 10);
-          config[key] = {
-            label: `${rating} étoile${rating > 1 ? "s" : ""}`,
-            color: `hsl(var(--chart-${(index % 10) + 1}))`,
+        case "rating":
+      // Nouvelle forme : data = [{ label: "3 étoiles", value, percentage, rating }, ...]
+      if (
+        Array.isArray(data) &&
+        data.length > 0 &&
+        typeof data[0] === "object" &&
+        "label" in data[0]
+      ) {
+        (data as Array<{ label: string }>).forEach((item, index) => {
+          config[item.label] = {
+            label: item.label,
+            color:
+              colorVariables[index % colorVariables.length] ||
+              "hsl(var(--chart-1))",
           };
         });
       }
       break;
+
 
     case "text":
     case "comment":

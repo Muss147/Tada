@@ -27,10 +27,10 @@ import Link from "next/link";
 
 export function NavigationBarMission({
   mission,
-  orgId,
+  workspaceId,
 }: {
   mission: Pick<Mission, "id" | "name" | "status">;
-  orgId: string;
+  workspaceId: string;
 }) {
   const t = useI18n();
   const { toast } = useToast();
@@ -80,7 +80,7 @@ export function NavigationBarMission({
           <button
             type="button"
             className="mr-2 text-gray-500 hover:text-gray-700"
-            onClick={() => router.push(`/missions/${orgId}`)}
+            onClick={() => router.push(`/missions/${workspaceId}`)}
           >
             <ArrowLeftIcon className="w-5 h-5" />
           </button>
@@ -90,7 +90,7 @@ export function NavigationBarMission({
         </div>
 
         <div className="text-right flex gap-2">
-          <Link href={`/missions/${orgId}/${mission.id}/surveys`}>
+          <Link href={`/missions/${workspaceId}/${mission.id}/surveys`}>
             <Button variant="outline" className="flex items-center gap-2">
               <PencilIcon className="w-5 h-5" />
               {t("missions.navigation.edit")}
@@ -103,7 +103,7 @@ export function NavigationBarMission({
               onValueChange={(value) =>
                 updateMissionStatus.execute({
                   missionId: mission.id,
-                  revalidateRoute: `/missions/${orgId}/${mission.id}`,
+                  revalidateRoute: `/missions/${workspaceId}/${mission.id}`,
                   status: value as
                     | "draft"
                     | "live"
@@ -137,7 +137,7 @@ export function NavigationBarMission({
           <button
             onClick={() => {
               if (tab.id === "dashboards")
-                router.push(`/missions/${orgId}/${mission.id}/dashboard`);
+                router.push(`/missions/${workspaceId}/${mission.id}/dashboard`);
               else {
                 setCurrentTab(tab.id);
               }

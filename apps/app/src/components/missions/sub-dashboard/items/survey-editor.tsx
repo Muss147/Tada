@@ -13,8 +13,13 @@ import { deleteSubDashboardItemAction } from "@/actions/missions/sub-dashboard/d
 import { useBoolean } from "@/hooks/use-boolean";
 import { DeleteConfirmation } from "@tada/ui/components/customs/delete-confirmation-modal";
 
-type QuestionnaireEditor = SubDashboardItem & {
+type ViewMode = "standard" | "insight";
+
+type SurveyEditorProps = SubDashboardItem & {
   isShared: boolean;
+  questionsData: QuestionData[];
+  responseDb: SurveyData;
+  viewMode: ViewMode;
 };
 
 type ChartData = {
@@ -29,7 +34,10 @@ export function SurveyEditor({
   surveyKey,
   content,
   isShared,
-}: QuestionnaireEditor) {
+  questionsData, // pour usage futur (insights, filtres…)
+  responseDb, // idem
+  viewMode, // pour adapter le style plus tard
+}: SurveyEditorProps) {
   const t = useI18n();
   const { toast } = useToast();
   const deleteSurveyModal = useBoolean();
@@ -59,9 +67,16 @@ export function SurveyEditor({
   };
 
   return (
-    <div>
-      {parsedContent.chart_type === "BarChartHorizontalCard" && (
-        <>
+    <div
+      className={
+        viewMode === "insight"
+          ? "rounded-2xl border bg-white shadow-md"
+          : "rounded-xl border bg-white shadow-sm"
+      }
+    >
+      {/* Tu peux wrap les cards dans un padding si tu veux un style différent en mode insight */}
+      <div className="p-2 md:p-4">
+        {parsedContent.chart_type === "BarChartHorizontalCard" && (
           <BarChartHorizontalCard
             primaryDataKey="value"
             categoryKey="label"
@@ -74,10 +89,9 @@ export function SurveyEditor({
             isDeletable
             subDashboardItemId={id}
           />
-        </>
-      )}
-      {parsedContent.chart_type === "PieChart" && (
-        <>
+        )}
+
+        {parsedContent.chart_type === "PieChart" && (
           <PieChartCard
             categoryKey="label"
             primaryDataKey="value"
@@ -91,10 +105,9 @@ export function SurveyEditor({
             subDashboardItemId={id}
             isDeletable
           />
-        </>
-      )}
-      {parsedContent.chart_type === "BarChartHorizontalStackedCard" && (
-        <>
+        )}
+
+        {parsedContent.chart_type === "BarChartHorizontalStackedCard" && (
           <BarChartHorizontalStackedCard
             categoryKey="label"
             data={parsedContent.data as ChartData[]}
@@ -110,10 +123,9 @@ export function SurveyEditor({
             subDashboardItemId={id}
             isDeletable
           />
-        </>
-      )}
-      {parsedContent.chart_type === "ArrayChartCard" && (
-        <>
+        )}
+
+        {parsedContent.chart_type === "ArrayChartCard" && (
           <ArrayChartCard
             texts={parsedContent.data as string[]}
             title={parsedContent.question}
@@ -123,8 +135,8 @@ export function SurveyEditor({
             subDashboardItemId={id}
             isDeletable
           />
-        </>
-      )}
+        )}
+      </div>
 
       <DeleteConfirmation
         isOpen={deleteSurveyModal.value}

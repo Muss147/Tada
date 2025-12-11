@@ -60,7 +60,6 @@ const currencies: Currency[] = [
   { code: "JOD", symbol: "د.ا", name: "Jordanian Dinar" },
   { code: "LBP", symbol: "ل.ل", name: "Lebanese Pound" },
   { code: "ILS", symbol: "₪", name: "Israeli New Shekel" },
-  { code: "EGP", symbol: "£", name: "Egyptian Pound" },
 
   // South American Currencies
   { code: "BRL", symbol: "R$", name: "Brazilian Real" },

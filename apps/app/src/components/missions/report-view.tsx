@@ -63,7 +63,7 @@ export function ReportView({
   surveys,
   surveyResponses,
   columns,
-  orgId,
+  workspaceId,
   subDashboards,
 }: {
   barChartData: MonthlySurveyCount[];
@@ -71,7 +71,7 @@ export function ReportView({
   surveys: TSurvey[];
   surveyResponses: SurveyResponse[];
   columns: string[];
-  orgId: string;
+  workspaceId: string;
   subDashboards: SubDashboard[];
 }) {
   const t = useI18n();
@@ -145,7 +145,7 @@ export function ReportView({
       <div className="mt-6 bg-white dark:bg-gray-700 border p-6">
         <SurveyMiniDashboard
           surveys={surveys}
-          orgId={orgId}
+          workspaceId={workspaceId}
           subDashboards={subDashboards}
         />
       </div>

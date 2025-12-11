@@ -25,6 +25,77 @@ type Props = {
   isLoadingUpdate: boolean;
 };
 
+// Tous les types “conceptuels” que tu as dans AddNewQuestionModal
+type SemanticQuestionType =
+  | "text"
+  | "comment"
+  | "checkbox"
+  | "radiogroup"
+  | "dropdown"
+  | "boolean"
+  | "file"
+  | "rating"
+  | "image-question"
+  | "imagepicker"
+  | "gallery"
+  | "video"
+  | "audio-player"
+  | "audio-record";
+
+function inferSemanticType(q: SurveyQuestion): SemanticQuestionType {
+  // Types natifs simples
+  if (
+    q.type === "text" ||
+    q.type === "comment" ||
+    q.type === "checkbox" ||
+    q.type === "radiogroup" ||
+    q.type === "dropdown" ||
+    q.type === "boolean" ||
+    q.type === "file" ||
+    q.type === "rating"
+  ) {
+    return q.type as SemanticQuestionType;
+  }
+
+  // Image-question → type "image"
+  if (q.type === "image") {
+    return "image-question";
+  }
+
+  // Imagepicker / gallery
+  if (q.type === "imagepicker") {
+    const anyQ = q as any;
+    if (anyQ.multiSelect) return "gallery";
+    return "imagepicker";
+  }
+
+  // Video / audio-player → type "html" avec un texte spécifique
+  if (q.type === "html") {
+    const anyQ = q as any;
+    const html = (anyQ.html as string | undefined) || "";
+    if (html.includes("vidéo") || html.includes("<video")) {
+      return "video";
+    }
+    if (html.includes("lecteur audio") || html.includes("<audio")) {
+      return "audio-player";
+    }
+    // fallback : on va considérer ça comme "video" par défaut
+    return "video";
+  }
+
+  // audio-record → type file + acceptedTypes = audio/*
+  if (q.type === "file") {
+    const anyQ = q as any;
+    if (anyQ.acceptedTypes === "audio/*") {
+      return "audio-record";
+    }
+    return "file";
+  }
+
+  // fallback
+  return "text";
+}
+
 export function EditQuestionModal({
   question,
   onOpenChange,
@@ -33,58 +104,66 @@ export function EditQuestionModal({
   isLoadingUpdate,
 }: Props) {
   const { surveys, setSurveys } = useSurveysBuilder();
-  const [options, setOptions] = useState<string[]>(["default option"]);
+  const t = useI18n();
+
+  const [semanticType, setSemanticType] =
+    useState<SemanticQuestionType>("text");
+
+  // génériques
   const [questionTitle, setQuestionTitle] = useState("");
   const [isRequired, setIsRequired] = useState(false);
+
+  // description éventuelle (utile par ex pour image-question)
+  const [description, setDescription] = useState("");
+
+  // options (checkbox / radio / dropdown)
+  const [options, setOptions] = useState<string[]>(["Option 1", "Option 2"]);
+
+  // rating
   const [minRating, setMinRating] = useState(0);
   const [maxRating, setMaxRating] = useState(5);
   const [displayAsStars, setDisplayAsStars] = useState(false);
-  const [questionType, setQuestionType] = useState<string>("text");
-  const t = useI18n();
 
   const resetForm = () => {
-    setQuestionType("text");
+    setSemanticType("text");
     setQuestionTitle("");
-    setOptions(["default option"]);
     setIsRequired(false);
+    setDescription("");
+    setOptions(["Option 1", "Option 2"]);
     setMinRating(0);
     setMaxRating(5);
     setDisplayAsStars(false);
   };
-  const handleUpdateQuestion = () => {
-    const updatedSurveys = {
-      ...surveys,
-      pages: surveys.pages.map((page) => ({
-        ...page,
-        elements: page.elements.map((element) =>
-          element.name === question?.name
-            ? {
-                ...element,
-                title: questionTitle,
-                type: questionType,
-                choices: options,
-                isRequired,
-                rateMin: minRating,
-                rateMax: maxRating,
-                displayRateDescriptionsAsExtremes: displayAsStars,
-              }
-            : element,
-        ),
-      })),
-    };
-    setSurveys(updatedSurveys);
-    updateSurveyQuestions(updatedSurveys);
-    onOpenChange(false);
-  };
 
   useEffect(() => {
-    if (question) {
-      setQuestionTitle(question.title);
-      setOptions(question.choices || ["default option"]);
-      setIsRequired(question.isRequired || false);
-      setMinRating(question.rateMin || 0);
-      setMaxRating(question.rateMax || 5);
-      setQuestionType(question.type);
+    if (!question) {
+      resetForm();
+      return;
+    }
+
+    const semType = inferSemanticType(question);
+    setSemanticType(semType);
+    setQuestionTitle(question.title ?? "");
+    setIsRequired(question.isRequired ?? false);
+    setDescription(question.description ?? "");
+
+    if (
+      semType === "checkbox" ||
+      semType === "radiogroup" ||
+      semType === "dropdown"
+    ) {
+      setOptions(
+        question.choices && question.choices.length > 0
+          ? question.choices
+          : ["Option 1", "Option 2"]
+      );
+    }
+
+    if (semType === "rating") {
+      setMinRating(question.rateMin ?? 0);
+      setMaxRating(question.rateMax ?? 5);
+      const anyQ = question as any;
+      setDisplayAsStars(Boolean(anyQ.displayRateDescriptionsAsExtremeItems));
     }
 
     return () => {
@@ -92,6 +171,73 @@ export function EditQuestionModal({
       document.body.style.pointerEvents = "auto";
     };
   }, [question]);
+
+  const handleUpdateQuestion = () => {
+    if (!question) return;
+
+    const updatedSurveys: Survey = {
+      ...surveys,
+      pages: surveys.pages.map((page) => ({
+        ...page,
+        elements: page.elements.map((element) => {
+          if (element.name !== question.name) return element;
+
+          // base commun
+          let updated: any = {
+            ...element,
+            title: questionTitle,
+            isRequired,
+          };
+
+          if (description) {
+            updated.description = description;
+          }
+
+          switch (semanticType) {
+            case "text":
+            case "comment":
+            case "boolean":
+            case "file":
+            case "image-question":
+            case "imagepicker":
+            case "gallery":
+            case "video":
+            case "audio-player":
+            case "audio-record":
+              // Ces types n'ont pas de logique spéciale ici,
+              // on garde le type et les props spécifiques déjà présents.
+              // On ne touche pas à type, html, acceptedTypes, etc.
+              return updated;
+
+            case "checkbox":
+            case "radiogroup":
+            case "dropdown":
+              updated.choices = options;
+              return updated;
+
+            case "rating":
+              updated.rateMin = minRating;
+              updated.rateMax = maxRating;
+              updated.displayRateDescriptionsAsExtremeItems = displayAsStars;
+              return updated;
+
+            default:
+              return updated;
+          }
+        }),
+      })),
+    };
+
+    setSurveys(updatedSurveys);
+    updateSurveyQuestions(updatedSurveys);
+    onOpenChange(false);
+  };
+
+  // Helpers UI
+  const isChoiceBased =
+    semanticType === "checkbox" ||
+    semanticType === "radiogroup" ||
+    semanticType === "dropdown";
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -101,8 +247,10 @@ export function EditQuestionModal({
             {t("missions.surveys.addNewQuestion.title")}
           </DialogTitle>
         </DialogHeader>
+
         <div className="p-6">
-          <div className="mb-6">
+          {/* Titre */}
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t("missions.surveys.addNewQuestion.questionText")}{" "}
               {isRequired && <span className="text-red-500">*</span>}
@@ -112,59 +260,57 @@ export function EditQuestionModal({
               value={questionTitle}
               onChange={(e) => setQuestionTitle(e.target.value)}
               placeholder={t(
-                "missions.surveys.addNewQuestion.questionPlaceholder",
+                "missions.surveys.addNewQuestion.questionPlaceholder"
               )}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
-          {/* Options spécifiques en fonction du type de question */}
-          {(questionType === "checkbox" ||
-            questionType === "radiogroup" ||
-            questionType === "dropdown") && (
+          {/* Description optionnelle (utile aussi pour image-question etc.) */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t("missions.surveys.addNewQuestion.questionDescription")}
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              rows={2}
+            />
+          </div>
+
+          {/* Options pour checkbox / radiogroup / dropdown */}
+          {isChoiceBased && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t("missions.surveys.addNewQuestion.options")}
               </label>
-              <div className="space-y-2 max-h-96 overflow-y-auto  thin-scrollbar">
+              <div className="space-y-2 max-h-96 overflow-y-auto thin-scrollbar">
                 {options.map((option, index) => (
-                  <div
-                    className="flex items-center"
-                    key={`${option}-${
-                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                      index
-                    }`}
-                  >
+                  <div className="flex items-center" key={`${option}-${index}`}>
                     <Input
-                      autoFocus
                       name={`option-${index}`}
                       value={option}
-                      key={`option-${
-                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                        index
-                      }`}
                       placeholder={`Option ${index + 1}`}
                       onChange={(e) =>
                         setOptions(
                           options.map((o, i) =>
-                            i === index ? e.target.value : o,
-                          ),
+                            i === index ? e.target.value : o
+                          )
                         )
                       }
                     />
-                    <button
-                      type="button"
-                      className="ml-2 text-gray-400 hover:text-gray-600"
-                      onClick={() =>
-                        setOptions(
-                          options.filter(
-                            (_, index) => index !== options.length - 1,
-                          ),
-                        )
-                      }
-                    >
-                      <X size={16} />
-                    </button>
+                    {options.length > 1 && (
+                      <button
+                        type="button"
+                        className="ml-2 text-gray-400 hover:text-gray-600"
+                        onClick={() =>
+                          setOptions(options.filter((_, i) => i !== index))
+                        }
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
                   </div>
                 ))}
 
@@ -180,7 +326,8 @@ export function EditQuestionModal({
             </div>
           )}
 
-          {questionType === "rating" && (
+          {/* Rating */}
+          {semanticType === "rating" && (
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t("missions.surveys.addNewQuestion.ratingOptions")}
@@ -192,12 +339,10 @@ export function EditQuestionModal({
                   </label>
                   <input
                     type="number"
-                    min="0"
-                    defaultValue="0"
-                    name="minRating"
+                    min={0}
                     value={minRating}
                     className="w-full p-2 border border-gray-300 rounded-md"
-                    onChange={(e) => setMinRating(+e.target.value)}
+                    onChange={(e) => setMinRating(Number(e.target.value))}
                   />
                 </div>
                 <div>
@@ -206,12 +351,10 @@ export function EditQuestionModal({
                   </label>
                   <input
                     type="number"
-                    min="1"
-                    name="maxRating"
+                    min={1}
                     value={maxRating}
-                    defaultValue="5"
                     className="w-full p-2 border border-gray-300 rounded-md"
-                    onChange={(e) => setMaxRating(+e.target.value)}
+                    onChange={(e) => setMaxRating(Number(e.target.value))}
                   />
                 </div>
               </div>
@@ -232,7 +375,7 @@ export function EditQuestionModal({
             </div>
           )}
 
-          {/* Options communes à tous les types de questions */}
+          {/* Options communes */}
           <div className="space-y-2 mb-6">
             <div className="flex items-center">
               <input
@@ -249,6 +392,7 @@ export function EditQuestionModal({
             </div>
           </div>
         </div>
+
         <DialogFooter>
           <Button
             variant="outline"

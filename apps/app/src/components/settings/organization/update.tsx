@@ -2,7 +2,8 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/lib/auth-client";
-import { updateOrganization } from "@/lib/update-organization";
+import { useAction } from "next-safe-action/hooks";
+
 import { useCurrentLocale, useI18n } from "@/locales/client";
 import {
   Avatar,
@@ -27,7 +28,6 @@ import {
   SelectItem,
 } from "@tada/ui/components/select";
 import { Icons } from "@/components/icons";
-import { stripSpecialCharacters } from "@/lib/utils";
 import { useUpload } from "@/hooks/use-upload";
 import { countries } from "@/constants/countries";
 import { sectors } from "@/constants/sectors";
@@ -83,6 +83,29 @@ export default function SettingsPage() {
     isPending: isLoadingOrganizations,
     refetch,
   } = authClient.useListOrganizations();
+
+  const updateOrg = useAction(updateOrganizationAction, {
+    onSuccess: ({ data }) => {
+      toast({
+        title: t("teamMembers.organization.edit.success.title"),
+        description: t("teamMembers.organization.edit.success.description", {
+          name: organizations?.[0]?.name,
+          newName: form.getValues("name"),
+        }),
+      });
+
+      refetch();
+      setAvatarFile(null);
+    },
+    onError: (error) => {
+      console.error("updateOrganizationAction error", error);
+      toast({
+        title: t("teamMembers.organization.edit.error.title"),
+        description: t("teamMembers.organization.edit.error.description"),
+        variant: "destructive",
+      });
+    },
+  });
 
   // Initialize form with react-hook-form
   const form = useForm<UpdateOrganizationFormData>({
@@ -152,18 +175,6 @@ export default function SettingsPage() {
     try {
       let logoUrl = avatarUrl;
 
-      if (avatarFile) {
-        setIsAvatarUploading(true);
-        const filename = stripSpecialCharacters(avatarFile.name);
-        const { url } = await uploadFile({
-          file: avatarFile,
-          path: [organizations?.[0]?.id || "unknown", filename],
-          bucket: "avatars",
-        });
-        logoUrl = url;
-        setIsAvatarUploading(false);
-      }
-
       const orgId = organizations?.[0]?.id;
       if (!orgId) {
         toast({
@@ -171,6 +182,29 @@ export default function SettingsPage() {
           variant: "destructive",
         });
         return;
+      }
+
+      if (avatarFile) {
+        setIsAvatarUploading(true);
+
+        const fd = new FormData();
+        fd.append("file", avatarFile);
+        fd.append("orgId", orgId);
+
+        const res = await fetch("/api/uploads/organization-logo", {
+          method: "POST",
+          body: fd,
+        });
+
+        const json = await res.json();
+
+        if (!res.ok) {
+          console.error("Upload error:", json);
+          throw new Error(json.error || "Upload failed");
+        }
+
+        logoUrl = json.url;
+        setIsAvatarUploading(false);
       }
 
       const result = await updateOrganizationAction({
@@ -195,6 +229,7 @@ export default function SettingsPage() {
       setAvatarFile(null);
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
+      setIsAvatarUploading(false);
       toast({
         title: t("teamMembers.organization.edit.error.title"),
         description: t("teamMembers.organization.edit.error.description"),

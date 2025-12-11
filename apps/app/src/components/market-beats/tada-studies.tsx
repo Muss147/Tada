@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { Input } from "@tada/ui/components/input";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 import {
   Select,
   SelectContent,
@@ -33,6 +34,8 @@ import {
   DialogFooter,
 } from "@tada/ui/components/dialog";
 import { recordMissionConsultation } from "@/actions/missions/consulted-mission";
+
+const DEFAULT_MISSION_IMAGE = "/images/missions/default.jpeg";
 
 interface DisplayMission {
   id: string;
@@ -345,7 +348,7 @@ export function TadaStudies({
         )}
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center lg:place-items-start">
         {filteredMissions.map((mission, index) => {
           const isAlreadyConsulted = consultedMissionIds.includes(mission.id);
           const isLockedForNewConsultation =
@@ -353,6 +356,11 @@ export function TadaStudies({
             consultedMissionIds.length >= maxMissionsAllowed;
           const isCurrentlyLoading = loadingMissionId === mission.id;
           const shouldBlur = hasLoadingMission && !isCurrentlyLoading;
+
+          const imageUrl =
+            (mission as any).image && (mission as any).image.trim() !== ""
+              ? (mission as any).image
+              : DEFAULT_MISSION_IMAGE;
 
           const displayMission: DisplayMission = {
             id: mission.id,
@@ -364,95 +372,101 @@ export function TadaStudies({
                 month: "short",
               })
               .toUpperCase(),
-            bgColor: getMissionBgColor(index), // Assign color based on index
+            bgColor: "", // Assign color based on index
           };
 
           return (
             <div
               key={displayMission.id}
-              onClick={() => handleMissionClick(mission)} // Pass the original mission object
-              className={`relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300 group h-80 ${
-                isLockedForNewConsultation ? "opacity-75" : ""
-              } ${shouldBlur ? "blur-sm opacity-50" : ""} ${
-                hasLoadingMission
-                  ? "cursor-not-allowed"
-                  : "cursor-pointer hover:shadow-xl"
-              } ${
-                isCurrentlyLoading ? "ring-2 ring-blue-500 ring-opacity-50" : ""
-              }`}
+              onClick={() => handleMissionClick(mission)}
+              className={`
+      relative group
+      w-full max-w-[330px] h-[158px]
+      rounded-3xl overflow-hidden
+      shadow-lg transition-all duration-300
+      ${isLockedForNewConsultation ? "opacity-75" : ""}
+      ${shouldBlur ? "blur-sm opacity-50" : ""}
+      ${
+        hasLoadingMission
+          ? "cursor-not-allowed"
+          : "cursor-pointer hover:-translate-y-1 hover:shadow-2xl"
+      }
+      ${isCurrentlyLoading ? "ring-2 ring-blue-500 ring-opacity-50" : ""}
+    `}
             >
-              {/* Background with gradient overlay */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${displayMission.bgColor}`}
-              >
+              {/* IMAGE BACKGROUND */}
+              <div className="absolute inset-0">
+                <Image
+                  src={imageUrl}
+                  alt={displayMission.title}
+                  fill
+                  className="
+          object-cover
+          transition-transform duration-500
+          group-hover:scale-105                    /* 👉 zoom image au hover */
+        "
+                  priority={index < 4}
+                />
+                {/* Overlay sombre permanent */}
                 <div
                   className={`absolute inset-0 ${
-                    isLockedForNewConsultation ? "bg-black/50" : "bg-black/20"
+                    isLockedForNewConsultation ? "bg-black/55" : "bg-black/35"
                   }`}
                 />
               </div>
+
               {/* Loading Overlay */}
               {isCurrentlyLoading && (
-                <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/30 backdrop-blur-sm">
-                  <div className="bg-white/95 backdrop-blur-sm rounded-full p-4 shadow-lg">
+                <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/40 backdrop-blur-sm">
+                  <div className="bg-white/95 rounded-full p-4 shadow-lg">
                     <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
                   </div>
                 </div>
               )}
+
               {/* Lock Overlay */}
               {isLockedForNewConsultation && !isCurrentlyLoading && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-3">
-                    <Lock className="h-5 w-5 text-gray-700" />
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-md">
+                    <Lock className="h-5 w-5 text-gray-800" />
                   </div>
                 </div>
               )}
-              {isCurrentlyLoading && (
-                <div className="absolute inset-0 z-10 bg-transparent" />
-              )}
-              <div className="relative h-full p-6 flex flex-col">
-                <div className="mb-4">
-                  <span className="inline-block bg-white/90 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-md">
+
+              {/* CONTENU TEXTE */}
+              <div className="relative h-full p-4 flex flex-col justify-between z-10">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="inline-block bg-white/90 text-gray-900 text-[11px] font-semibold px-2.5 py-1 rounded-md">
                     {displayMission.date}
                   </span>
-                  {isCurrentlyLoading && (
-                    <Badge
-                      variant="default"
-                      className="ml-2 bg-blue-100 text-blue-800"
-                    >
-                      {studiesT("card.loadingStudy")}
-                    </Badge>
-                  )}
                 </div>
-                <div className="flex-1 flex">
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-white text-2xl font-bold leading-tight line-clamp-4 mb-2">
-                        {displayMission.title}
-                      </h3>
-                    </div>
-                    {displayMission.subtitle && (
-                      <p className="text-white/90 text-xs font-medium mt-auto line-clamp-5">
-                        {displayMission.subtitle}
-                      </p>
-                    )}
-                  </div>
+
+                <div className="mt-auto">
+                  <h3 className="text-white text-[18px] font-bold leading-tight line-clamp-2">
+                    {displayMission.title}
+                  </h3>
                 </div>
               </div>
-              {/* Hover overlay */}
-              {!hasLoadingMission && (
+
+              {/* HOVER OVERLAY + FLECHE */}
+              {/* {!hasLoadingMission && (
                 <div
-                  className={`absolute inset-0 transition-opacity duration-300 ${
-                    !isLockedForNewConsultation
-                      ? "bg-black/10 opacity-0 group-hover:opacity-100"
-                      : "bg-black/20 opacity-0 group-hover:opacity-100"
-                  }`}
+                  className={`
+          absolute inset-0
+          transition-opacity duration-300
+          ${
+            !isLockedForNewConsultation
+              ? "bg-black/10 opacity-0 group-hover:opacity-100"
+              : "bg-black/20 opacity-0 group-hover:opacity-100"
+          }
+        `}
                 />
-              )}
+              )} */}
+
               {!isLockedForNewConsultation && !hasLoadingMission && (
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="bg-[#FF5B4A] rounded-full p-1">
-                    <ArrowRight className="h-4 w-4 text-white" />
+                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform group-hover:translate-x-1">
+                  <div className="bg-[#FF5B4A] rounded-full p-1.5 shadow-md">
+                    <ArrowRight className="h-3.5 w-3.5 text-white" />
                   </div>
                 </div>
               )}
