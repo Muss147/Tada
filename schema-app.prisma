@@ -44,7 +44,7 @@ model User {
   projectRoles                                          ProjectRole[]
   session                                               session[]
   subDashboard                                          SubDashboard[]
-  support                                               Support[]
+  support                                               support[]
   surveyResponses                                       SurveyResponse[]
   validationComments                                    ValidationComment[]
   contributorAttributes                                 ContributorAttributeValue[]
@@ -105,10 +105,10 @@ model Mission {
   contributors         MissionAssignment[]
   missionCharts              MissionChart[]
   mission_config_contributor MissionConfigContributor[]
-  missionPermission          MissionPermission[]
+  missionPermission         missionPermission[]
   project                    Project[]
   subDashboard               SubDashboard[]
-  survey                     Survey[]
+  survey                     survey[]
   tempMission                TempMission[]
   consultingOrganizations Organization[]      @relation("ConsultedSuperAdminMissions")
 
@@ -172,14 +172,14 @@ model SurveyResponse {
   updatedAt          DateTime?           @updatedAt @db.Timestamptz(6)
   userId             String?
   qualityControl    qualityControl?
-  survey             Survey              @relation(fields: [surveyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  survey             survey              @relation(fields: [surveyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user               User?               @relation(fields: [userId], references: [id], onUpdate: NoAction)
   validationComment ValidationComment[]
 
   @@map("survey_response")
 }
 
-model Template {
+model template {
   id             String        @id @default(uuid())
   name           String
   questions      Json?
@@ -483,16 +483,14 @@ model TempMission {
 }
 
 model TempSubDashboard {
-  id            String           @id @default(uuid())
-  tempMissionId String
-  name          String
-  isShared      Boolean          @default(true)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-
-  tempMission   TempMission      @relation(fields: [tempMissionId], references: [id], onDelete: Cascade)
-
-  tempItems     TempSubDashboardItem[]
+  id                      String                    @id @default(uuid())
+  tempMissionId           String
+  name                    String
+  isShared                Boolean                   @default(true)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  tempMission             TempMission               @relation(fields: [missionDuplicationId], references: [id], onDelete: Cascade)
+  tempItems               TempSubDashboardItem[]
 
   @@map("temp_sub_dashboard")
 }
@@ -625,7 +623,7 @@ model SupportTicket {
   message   String
   createdAt DateTime @default(now())
 
-  @@map("support_ticket")
+  @@map("support")
 }
 
 // Ajout dash admin (Muss)
@@ -737,7 +735,7 @@ model report_problems {
   @@map("report_problems")
 }
 
-model Support {
+model support {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   message   String?
