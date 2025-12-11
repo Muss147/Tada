@@ -137,7 +137,7 @@ export default async function Page({
 
   if (mission.missionCharts?.length) {
     questionsData = mission.missionCharts
-      .map((chart) => {
+      .map((chart): QuestionData | null => {
         const chartData = chart.chartData as any;
         if (!chartData?.question || !chartData?.type) return null;
 
@@ -154,7 +154,10 @@ export default async function Page({
           chartData.type
         );
 
-        let primaryKeys, min, max;
+        let primaryKeys: string[] | undefined;
+        let min: number | undefined;
+        let max: number | undefined;
+
         if (chartData.type === "rating" && Array.isArray(realData)) {
           primaryKeys = extractPrimaryKeysFromRatingData(realData);
           const range = extractRatingRange(realData);
@@ -176,9 +179,10 @@ export default async function Page({
           insights: chart.insights ?? null,
           insightsUpdatedAt: chart.insightsUpdatedAt,
           chartId: chart.id,
-        } satisfies QuestionData;
+          rawResponses: qResponses,
+        };
       })
-      .filter(Boolean) as QuestionData[];
+      .filter((q): q is QuestionData => q !== null);
   }
 
   if (questionsData.length === 0) {
@@ -187,6 +191,13 @@ export default async function Page({
 
   const totalResponses = responseDb.metadata.total_responses;
 
+  console.log(
+    "Questions rawResponses:",
+    questionsData.map((q) => ({
+      question: q.question,
+      rawCount: q.rawResponses?.length,
+    }))
+  );
   return (
     <div>
       <MissionCommentsDrawer

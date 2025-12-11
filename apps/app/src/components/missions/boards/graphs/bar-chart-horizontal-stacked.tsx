@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useRef, useState, useEffect } from "react";
+import { FC, useRef, useState, useEffect, useMemo } from "react";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import { DataKey } from "recharts/types/util/types";
 
@@ -15,16 +15,12 @@ import {
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { CardHeaderChart } from "./ui/card-header";
 import { BarChartCardProps } from "./type";
-import {
-  useSetDocumentId,
-  VeltComments,
-  VeltCommentTool,
-} from "@veltdev/react";
+import { useSetDocumentId, VeltComments } from "@veltdev/react";
 import { StackedBarLegend } from "./stacked-bar-legend";
 
 export const BarChartHorizontalStackedCard: FC<
   Omit<BarChartCardProps, "primaryDataKey"> & {
-    max?: number;
+    max?: number; // gardés pour compat, mais non utilisés
     min?: number;
     subDashboardItemId: string;
   }
@@ -37,8 +33,8 @@ export const BarChartHorizontalStackedCard: FC<
   participationQuestions,
   primaryKeys,
   label = "key",
-  max = 100,
-  min = 0,
+  // max = 100,
+  // min = 0,
   onDelete,
   isDeletable,
   subDashboardItemId,
@@ -46,13 +42,31 @@ export const BarChartHorizontalStackedCard: FC<
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
 
-  // ✅ clés actuellement visibles
-  const [activeKeys, setActiveKeys] = useState<string[]>(primaryKeys ?? []);
+  const typedData = useMemo(
+    () => (data ?? []) as Array<Record<string, any>>,
+    [data]
+  );
 
-  // si `primaryKeys` change (autre question / autre mission), on reset
+  // 🔹 Si primaryKeys n'est pas fourni, on les déduit du config
+  const derivedKeys = useMemo(() => {
+    if (primaryKeys && primaryKeys.length > 0) return primaryKeys;
+
+    if (!config) return [] as string[];
+
+    return Object.keys(config).filter((key) => {
+      if (key === "value") return false; // clé spéciale souvent utilisée
+      const cfg = (config as any)[key];
+      return cfg && typeof cfg === "object";
+    });
+  }, [primaryKeys, config]);
+
+  // ✅ clés actuellement visibles
+  const [activeKeys, setActiveKeys] = useState<string[]>(derivedKeys);
+
+  // si primaryKeys/config change (autre question / autre mission), on reset
   useEffect(() => {
-    setActiveKeys(primaryKeys ?? []);
-  }, [primaryKeys?.join(",")]);
+    setActiveKeys(derivedKeys);
+  }, [derivedKeys.join(",")]);
 
   const toggleKey = (key: string) => {
     setActiveKeys((prev) =>
@@ -63,7 +77,7 @@ export const BarChartHorizontalStackedCard: FC<
   return (
     <div data-velt-id={`item-${subDashboardItemId}`}>
       <VeltComments />
-      <Card className="border-none mx-auto w-full px-4">
+      <Card className="border-none mx-auto w-full px-4" ref={chartRef}>
         <CardHeader>
           <CardHeaderChart
             participationQuestions={participationQuestions}
@@ -79,12 +93,12 @@ export const BarChartHorizontalStackedCard: FC<
 
         <CardContent className="pt-0 pb-3">
           {/* 🔹 Légende type Appinio */}
-          {primaryKeys && primaryKeys.length > 0 && (
+          {derivedKeys.length > 0 && (
             <StackedBarLegend
-              items={primaryKeys.map((key) => ({
+              items={derivedKeys.map((key) => ({
                 key,
-                label: config[key]?.label ?? key,
-                color: config[key]?.color,
+                label: (config as any)?.[key]?.label ?? key,
+                color: (config as any)?.[key]?.color,
               }))}
               activeKeys={activeKeys}
               onToggle={toggleKey}
@@ -92,19 +106,19 @@ export const BarChartHorizontalStackedCard: FC<
           )}
 
           <ChartContainer
-            ref={chartRef}
             className="mx-auto aspect-square w-full max-h-[350px]"
             config={config}
           >
             <BarChart
               accessibilityLayer
-              data={data}
+              data={typedData}
               layout="vertical"
               margin={{ top: 10, right: 30, left: 100, bottom: 5 }}
               barCategoryGap={0}
               maxBarSize={60}
             >
-              <XAxis domain={[min, max]} type="number" hide />
+              {/* ✅ Domaine basé sur les données, plus sur min/max */}
+              <XAxis type="number" hide domain={[0, "dataMax"]} />
               <YAxis
                 dataKey={categoryKey}
                 type="category"
@@ -119,19 +133,21 @@ export const BarChartHorizontalStackedCard: FC<
               />
 
               {/* 🔹 On ne rend que les Bar dont la clé est active */}
-              {primaryKeys?.map((key, index) =>
+              {derivedKeys.map((key, index) =>
                 activeKeys.includes(key) ? (
                   <Bar
                     key={key}
                     dataKey={key as DataKey<any>}
                     layout="vertical"
-                    fill={config[key]?.color ?? `var(--color-${key})`}
+                    fill={
+                      (config as any)?.[key]?.color ?? `var(--color-${key})`
+                    }
                     stackId="a"
                     barSize={80}
                     radius={
                       index === 0
                         ? [5, 0, 0, 5]
-                        : index === primaryKeys.length - 1
+                        : index === derivedKeys.length - 1
                           ? [0, 5, 5, 0]
                           : 0
                     }
@@ -166,7 +182,7 @@ export const BarChartHorizontalStackedCard: FC<
                               className="fill-[--color-label]"
                               fontSize={12}
                             >
-                              {config[key]?.label || key}
+                              {(config as any)?.[key]?.label || key}
                             </text>
                           );
                         }}
@@ -175,14 +191,6 @@ export const BarChartHorizontalStackedCard: FC<
                   </Bar>
                 ) : null
               )}
-
-              {/* ❌ On enlève l’ancienne legend Recharts */}
-              {/* 
-              <ChartLegend
-                content={<ChartLegendContent />}
-                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-              />
-              */}
             </BarChart>
           </ChartContainer>
         </CardContent>

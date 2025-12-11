@@ -32,7 +32,7 @@ export interface ArrayChartCardProps {
   title: string;
   description: string;
   participationQuestions: string;
-  texts: string[];
+  texts: unknown[];
   subDashboardItemId: string;
   isDeletable?: boolean;
   onDelete?: () => void;

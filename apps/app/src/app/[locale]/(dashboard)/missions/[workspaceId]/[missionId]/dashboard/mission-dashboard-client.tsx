@@ -13,18 +13,20 @@ import { BarChartStackedCard } from "@/components/missions/boards/graphs/bar-cha
 import { PieChartCard } from "@/components/missions/boards/graphs/pie-chart";
 import { RadarChartCard } from "@/components/missions/boards/graphs/radar-chart";
 import { ArrayChartCard } from "@/components/missions/boards/graphs/array-chart";
+
 import { ChartConfig } from "@/components/missions/boards/graphs/ui/chart";
+import { applyFilterAndSort, QuestionWithView } from "@/lib/chart-filtering";
+
 import { InsightsSection } from "@/components/missions/boards/insights-section";
 import FilterChangeChartType from "@/components/missions/boards/modals/filter-change-chart-type";
 
 import type { QuestionData } from "@/lib/utils";
 import type { VisualizationId } from "@/lib/chart-types";
-import type {
-  WorkspaceMember,
-  CommentLite,
-} from "@/components/comments/comments-types";
+import type { WorkspaceMember } from "@/components/comments/comments-types";
 import { QuestionCommentsBubble } from "@/components/missions/comments/question-comments-bubble";
 import { CommentPin } from "@/components/missions/comments/comment-pin";
+import { DashboardActionsRail } from "@/components/missions/boards/dashboard-actions-rail";
+import { ExportOptionsDialog } from "@/components/missions/boards/modals/export-options-dialog";
 
 interface MissionDashboardClientProps {
   missionId: string;
@@ -45,7 +47,15 @@ export default function MissionDashboardClient({
   currentUserId,
   workspaceMembers,
 }: MissionDashboardClientProps) {
-  const [questions, setQuestions] = useState<QuestionData[]>(initialQuestions);
+  // On enrichit QuestionData avec l’état de vue (filter + sorted)
+  const [questions, setQuestions] = useState<QuestionWithView[]>(() =>
+    initialQuestions.map((q) => ({
+      ...q,
+      activeFilter: "standard",
+      isSorted: false,
+    }))
+  );
+
   const [activeBubbleQuestionKey, setActiveBubbleQuestionKey] = useState<
     string | null
   >(null);
@@ -53,14 +63,15 @@ export default function MissionDashboardClient({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const openCommentsForQuestion = (question: QuestionData) => {
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [showRail, setShowRail] = useState(false);
+
+  const openCommentsForQuestion = (question: QuestionWithView) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("commentQuestionKey", question.question);
 
-    // on garde l’URL à jour pour le drawer global
     router.replace(`?${params.toString()}`, { scroll: false });
 
-    // scroll vers la question
     if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("scroll-to-question", {
@@ -69,18 +80,16 @@ export default function MissionDashboardClient({
       );
     }
 
-    // ouvre / ferme la bulle locale façon Figma
     setActiveBubbleQuestionKey((prev) =>
       prev === question.question ? null : question.question
     );
   };
 
-  // paramètre partagé avec le modal de changement de chart
   const [, setQuestionId] = useQueryState("questionId", {
     defaultValue: "",
   });
 
-  const openChangeChartModal = (question: QuestionData) => {
+  const openChangeChartModal = (question: QuestionWithView) => {
     const id = question.chartId ?? question.question;
     setQuestionId(id);
   };
@@ -109,14 +118,19 @@ export default function MissionDashboardClient({
       isSorted,
     }: {
       questionId: string;
-      filter: string;
+      filter: "standard" | "age" | "gender" | "genre";
       chartType: VisualizationId;
       isSorted: boolean;
     }) => {
       setQuestions((prev) =>
         prev.map((q) =>
           q.chartId === questionId || q.question === questionId
-            ? { ...q, chart_type: chartType }
+            ? {
+                ...q,
+                chart_type: chartType,
+                activeFilter: filter,
+                isSorted,
+              }
             : q
         )
       );
@@ -124,7 +138,6 @@ export default function MissionDashboardClient({
     []
   );
 
-  // Listener pour "scroll-to-question" (depuis le drawer)
   useEffect(() => {
     const handler = (e: Event) => {
       const custom = e as CustomEvent<{ questionKey: string }>;
@@ -149,6 +162,29 @@ export default function MissionDashboardClient({
     return () => window.removeEventListener("scroll-to-question", handler);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const y =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+
+      // Debug temporaire
+      // console.log("[Dashboard] scrollY =", y);
+
+      setShowRail(y > 200);
+    };
+
+    // Évalue une première fois au mount
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <>
       {questions
@@ -167,10 +203,21 @@ export default function MissionDashboardClient({
             !!question.insights && !!question.insightsUpdatedAt;
 
           const type = question.chart_type;
-
           const questionKey = question.question;
           const domId = `question-${index + 1}`;
           const bubbleOpen = activeBubbleQuestionKey === questionKey;
+
+          // Valeurs par défaut : pour les viz non bar/column
+          let chartData: Array<{ label: string; value: number }> | any =
+            question.data;
+          let chartConfig: ChartConfig = question.config as ChartConfig;
+
+          // Pour bar / column → on délègue au helper applyFilterAndSort
+          if (type === "bar" || type === "column") {
+            const result = applyFilterAndSort(question, type);
+            chartData = result.data;
+            chartConfig = result.config;
+          }
 
           return (
             <div
@@ -228,13 +275,13 @@ export default function MissionDashboardClient({
                 <BarChartHorizontalCard
                   subDashboardItemId={question.chartId ?? ""}
                   data={
-                    question.data as Array<{
+                    chartData as Array<{
                       label: string;
                       value: number;
                       percentage?: number;
                     }>
                   }
-                  config={question.config as ChartConfig}
+                  config={chartConfig}
                   primaryDataKey="value"
                   categoryKey="label"
                   title={question.question}
@@ -247,13 +294,13 @@ export default function MissionDashboardClient({
                 <BarChartCard
                   subDashboardItemId={question.chartId ?? ""}
                   data={
-                    question.data as Array<{
+                    chartData as Array<{
                       label: string;
                       value: number;
                       percentage?: number;
                     }>
                   }
-                  config={question.config as ChartConfig}
+                  config={chartConfig}
                   primaryDataKey="value"
                   categoryKey="label"
                   title={question.question}
@@ -262,9 +309,28 @@ export default function MissionDashboardClient({
                 />
               )}
 
-              {/* STACKED BAR / STACKED COLUMN */}
-              {(type === "stacked_bar" || type === "stacked_column") && (
+              {/* STACKED BAR (horizontal) */}
+              {type === "stacked_bar" && (
                 <BarChartHorizontalStackedCard
+                  subDashboardItemId={question.chartId ?? ""}
+                  data={question.data as any}
+                  config={question.config as ChartConfig}
+                  categoryKey={
+                    question.type === "rating" ? "category" : "label"
+                  }
+                  title={question.question}
+                  description=""
+                  participationQuestions={participationLabel}
+                  participantCount={question.participants_responded}
+                  primaryKeys={question.primaryKeys}
+                  min={question.min || 0}
+                  max={question.max || 100}
+                />
+              )}
+
+              {/* STACKED COLUMN (vertical) */}
+              {type === "stacked_column" && (
+                <BarChartStackedCard
                   subDashboardItemId={question.chartId ?? ""}
                   data={question.data as any}
                   config={question.config as ChartConfig}
@@ -286,7 +352,10 @@ export default function MissionDashboardClient({
                 <PieChartCard
                   subDashboardItemId={question.chartId ?? ""}
                   data={
-                    question.data as Array<{ label: string; value: number }>
+                    (question.data as Array<{
+                      label: string;
+                      value: number;
+                    }>) ?? []
                   }
                   config={question.config as ChartConfig}
                   primaryDataKey="value"
@@ -302,7 +371,7 @@ export default function MissionDashboardClient({
               {type === "table" && (
                 <ArrayChartCard
                   subDashboardItemId={question.chartId ?? ""}
-                  texts={question.data as string[]}
+                  texts={question.data as unknown[]}
                   title={question.question}
                   description=""
                   participationQuestions={participationLabel}
@@ -325,7 +394,6 @@ export default function MissionDashboardClient({
                 />
               )}
 
-              {/* Bulle de commentaires façon Figma, ancrée sur la question */}
               {bubbleOpen && (
                 <QuestionCommentsBubble
                   missionId={missionId}
@@ -340,10 +408,20 @@ export default function MissionDashboardClient({
           );
         })}
 
-      {/* Modal de changement de type de graphe */}
       <FilterChangeChartType
         getQuestionConfig={getQuestionConfig}
         onApply={handleApply}
+      />
+
+      <DashboardActionsRail
+        onExportClick={() => setIsExportDialogOpen(true)}
+        visible={true}
+      />
+
+      {/* Modal d’export */}
+      <ExportOptionsDialog
+        open={isExportDialogOpen}
+        onOpenChange={setIsExportDialogOpen}
       />
     </>
   );

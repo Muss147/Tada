@@ -1,6 +1,6 @@
 "use client";
 
-import { Label, Pie, PieChart, Sector } from "recharts";
+import { Label, Pie, PieChart, Sector, Cell } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 import {
@@ -49,6 +49,15 @@ export const PieChartCard: FC<BarChartCardProps> = ({
     setActiveIndex(-1);
   };
 
+  // Récupère la couleur dans config pour une catégorie (ex: "Femme", "Homme")
+  const getColorForCategory = (category: string): string => {
+    const cfg = (config as Record<string, { color?: string }>)[category];
+    // Si pas de couleur dans le config, fallback sur chart-1
+    return cfg?.color ?? "hsl(var(--chart-1))";
+  };
+
+  const typedData = (data ?? []) as Array<Record<string, any>>;
+
   return (
     <>
       <VeltComments />
@@ -84,7 +93,7 @@ export const PieChartCard: FC<BarChartCardProps> = ({
                 content={<ChartTooltipContent hideLabel />}
               />
               <Pie
-                data={data}
+                data={typedData}
                 dataKey={primaryDataKey}
                 nameKey={categoryKey}
                 innerRadius={60}
@@ -106,6 +115,17 @@ export const PieChartCard: FC<BarChartCardProps> = ({
                   </g>
                 )}
               >
+                {/* ✅ Une couleur par entrée, basée sur config */}
+                {typedData.map((entry, index) => {
+                  const category = String(entry[categoryKey]);
+                  return (
+                    <Cell
+                      key={`${category}-${index}`}
+                      fill={getColorForCategory(category)}
+                    />
+                  );
+                })}
+
                 <Label
                   content={({ viewBox }) => {
                     if (viewBox && "cx" in viewBox && "cy" in viewBox) {
