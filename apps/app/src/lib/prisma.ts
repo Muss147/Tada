@@ -33,18 +33,13 @@ const prismaClient =
 
 if (process.env.NODE_ENV !== "production") {
     prismaClient.$on("query", (e) => {
-  const q = e.query.toLowerCase();
-    if (
-      q.includes('"mission"') ||
-      q.includes('"survey"') ||
-      q.includes('"response"') ||
-      q.includes('"missionpermission"')
-    ) {
-      console.log("prisma:query", e.query);
-      console.log("prisma:params", e.params);
-      console.log("prisma:duration(ms)", e.duration);
-    }
-  });
+      const q = e.query.toLowerCase();
+      if (q.includes('"mission"') || q.includes('"survey"') || q.includes('"response"')) {
+        console.log("prisma:query", e.query);
+        console.log("prisma:params", e.params);
+        console.log("prisma:duration(ms)", e.duration);
+      }
+    });
 
   global.prisma = prismaClient;
 }
