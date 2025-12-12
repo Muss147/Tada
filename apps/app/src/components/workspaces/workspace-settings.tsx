@@ -36,6 +36,7 @@ import {
   WorkspaceSettingsMenu,
   WorkspaceSettingsTab,
 } from "@/components/workspaces/workspace-settings-menu";
+import { getPublicUrlForPath } from "@/lib/uploads.public";
 
 type WorkspaceMember = {
   id: string;
@@ -69,15 +70,6 @@ type WorkspaceSettingsData = {
   members: WorkspaceMember[];
   invitations: WorkspaceInvitation[];
 };
-
-const WORKSPACE_LOGO_BASE_URL =
-  process.env.NEXT_PUBLIC_WORKSPACE_LOGO_BASE_URL || "/uploads/workspaces";
-
-function buildWorkspaceLogoUrl(logo?: string | null) {
-  if (!logo) return null;
-  if (logo.startsWith("http://") || logo.startsWith("https://")) return logo;
-  return `${WORKSPACE_LOGO_BASE_URL}/${encodeURIComponent(logo)}`;
-}
 
 export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
   const t = useI18n();
@@ -156,7 +148,12 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
       setWorkspaceNameInput(ws.name || "");
       setWorkspaceSlugInput(ws.slug || "");
 
-      setLogoPreview(buildWorkspaceLogoUrl(ws.logo || null));
+      setLogoPreview(
+        getPublicUrlForPath({
+          category: "workspaceLogo",
+          pathOrUrl: ws.logo,
+        })
+      );
       setNewLogoFile(null);
     } catch (e) {
       console.error("Error loading workspace settings", e);
@@ -181,7 +178,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     const file = e.target.files?.[0];
     if (!file) {
       setNewLogoFile(null);
-      setLogoPreview(buildWorkspaceLogoUrl(data?.workspace.logo));
+      setLogoPreview(
+        getPublicUrlForPath({
+          category: "workspaceLogo",
+          pathOrUrl: data?.workspace.logo,
+        })
+      );
+
       return;
     }
     setNewLogoFile(file);
@@ -230,7 +233,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
           : prev
       );
 
-      setLogoPreview(buildWorkspaceLogoUrl(updated.logo));
+      setLogoPreview(
+        getPublicUrlForPath({
+          category: "workspaceLogo",
+          pathOrUrl: updated.logo,
+        })
+      );
+
       setNewLogoFile(null);
     } catch (e) {
       console.error("Error updating workspace", e);
@@ -434,6 +443,14 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
       setRemovingMemberId(null);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (logoPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(logoPreview);
+      }
+    };
+  }, [logoPreview]);
 
   const workspaceName = data?.workspace.name || "Workspace";
 
