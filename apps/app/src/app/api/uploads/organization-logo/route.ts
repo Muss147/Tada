@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { uploadFileToSupabase } from "@/lib/uploads";
+import { uploadFileToSupabase } from "@/lib/uploads.server";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
@@ -8,21 +10,21 @@ export async function POST(req: Request) {
     const orgId = (formData.get("orgId") as string | null) ?? "unknown";
 
     if (!file) {
-      return NextResponse.json(
-        { error: "Aucun fichier reçu" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Aucun fichier reçu" }, { status: 400 });
     }
 
-    // Upload centralisé sur Supabase
-    const { publicUrl } = await uploadFileToSupabase({
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Le logo doit être une image" }, { status: 400 });
+    }
+
+    const { path } = await uploadFileToSupabase({
       file,
       category: "organizationLogo",
       baseName: orgId,
     });
 
-    // On retourne l’URL publique qui sera stockée dans organization.logo
-    return NextResponse.json({ url: publicUrl }, { status: 200 });
+    // On retourne le PATH (à stocker en DB), l'URL sera reconstruite côté client
+    return NextResponse.json({ path }, { status: 200 });
   } catch (error) {
     console.error("[UPLOAD_ORGANIZATION_LOGO_ERROR]", error);
     return NextResponse.json(

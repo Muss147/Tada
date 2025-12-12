@@ -1,5 +1,6 @@
+import "server-only";
 import crypto from "crypto";
-import { supabaseAdmin } from "./supabase-server";
+import { getSupabaseAdmin } from "./supabase-server";
 import { UPLOAD_CONFIG, type UploadCategory } from "./uploads.config";
 
 export async function uploadFileToSupabase(options: {
@@ -8,6 +9,8 @@ export async function uploadFileToSupabase(options: {
   baseName?: string;
 }) {
   const { file, category, baseName } = options;
+
+  const supabaseAdmin = getSupabaseAdmin();
 
   const config = UPLOAD_CONFIG[category];
 
@@ -55,6 +58,9 @@ export async function deleteFromSupabase(options: {
   path: string;
 }) {
   const { category, path } = options;
+
+  const supabaseAdmin = getSupabaseAdmin();
+
   const config = UPLOAD_CONFIG[category];
 
   const { error } = await supabaseAdmin.storage

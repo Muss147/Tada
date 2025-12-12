@@ -1,19 +1,23 @@
-// src/lib/supabase-server.ts
+import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.NEXT_SERVICE_ROLE_KEY!;
+let _client: ReturnType<typeof createClient> | null = null;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error("Supabase env vars manquantes");
-}
+export function getSupabaseAdmin() {
+  if (_client) return _client;
 
-export const supabaseAdmin = createClient(
-  SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      persistSession: false,
-    },
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRole = process.env.NEXT_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceRole) {
+    throw new Error(
+      "Supabase env vars manquantes (NEXT_PUBLIC_SUPABASE_URL / NEXT_SERVICE_ROLE_KEY)"
+    );
   }
-);
+
+  _client = createClient(url, serviceRole, {
+    auth: { persistSession: false },
+  });
+
+  return _client;
+}
