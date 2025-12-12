@@ -1,4 +1,15 @@
+import { createWorkspace } from "@/lib/workspaces";
+import { upload } from "@tada/supabase/storage";
+import { image } from "@uiw/react-markdown-editor";
+import { maxSize } from "better-auth";
 import { organization } from "better-auth/plugins";
+import { allTasks } from "better-auth/react";
+import { add, max, min } from "lodash";
+import { arch } from "os";
+import { send } from "process";
+import { settings } from "survey-core";
+import { title } from "vega-lite/types_unstable/channeldef.js";
+import { no } from "zod/v4/locales";
 
 export default {
   common: {
@@ -13,10 +24,13 @@ export default {
     currency: "Currency",
     cancel: "Cancel",
     save: "Save",
+    deleting: "Deleting...",
     delete: "Delete",
     update: "Update",
     updateConfig: "Update config",
     add: "Add",
+    edit: "Edit",
+    remove: "Remove",
     loading: "Loading...",
     close: "Close",
     all: "All",
@@ -46,6 +60,42 @@ export default {
       withFilters: "Try a different search or adjust the filters.",
       clearFilters: "Clear filters",
     },
+  },
+  comments:{
+    title: "Comments",
+    titleQuestion : "Comments on question",
+    countLabel: "{count} comment(s)",
+    loading: "Loading comments...",
+    newQuestion: "New comment on question",
+    empty: "No comments yet.",
+    emptyQuestion: "No comments on this question yet.",
+    newGlobal: "New comment",
+    newPlaceholder: "Write a comment...",
+    newPlaceholderQuestion: "Comment on this question...",
+    sending: "Sending...",
+    send: "Send",
+    openButton: "Open comments",
+    status:{
+      open: "Open",
+      resolved: "Resolved",
+      archived: "Archived",
+    },
+    actions: {
+      reply: "Reply",
+      edit: "Edit",
+      reopen: "Reopen",
+      resolve: "Resolve",
+      delete: "Delete",
+      cancel: "Cancel",
+      save: "Save",
+      replyPlaceholder: "Write a reply...",
+      sendReply: "Send reply",
+    },
+    filter:{
+      all: "All",
+      resolved: "Resolved",
+      open: "Open",
+    }
   },
   billing: {
     success: {
@@ -321,6 +371,8 @@ export default {
     missions: "Projects",
     templatesSurveys: "Templates surveys",
     workspace: "Workspace",
+    createWorkspace: "Create Workspace",
+    workspaceSettings: "Workspace Settings",
     explore: "Explore",
     knowledge: "Knowledge",
     dashboard: "Dashboard",
@@ -557,6 +609,7 @@ export default {
     current: {
       title: "Current members",
       description: "Manage your existing team and modify roles/permissions.",
+      membersCountLabel: "member(s)",
       columns: {
         name: "Name",
         role: "Role",
@@ -672,6 +725,32 @@ export default {
     },
   },
   missions: {
+    list:{
+      columns: {
+        name: "Name",
+        progress: "Progress",
+        submissions: "Submissions",
+        updated: "Last update",
+        actions: "Actions",
+      },
+    },
+    delete: {
+        title: "Delete mission",
+        description: "Do you want to delete this mission?",
+        cancel: "No",
+        confirmCta: "Yes, delete",
+        deleting: "Deleting...",
+        successTitle: "Mission deleted",
+        successMessage: "The mission has been deleted successfully.",
+        successDescription: "The mission has been deleted successfully.",
+        label: "Delete mission",
+        disabledTooltip:
+          "This mission cannot be deleted because it has submissions.",
+        errorTitle: "Error",
+        errorMessage: "An error occurred while deleting the mission. Please try again.",
+        errorDescription:
+          "An error occurred while deleting the mission. Please try again.",
+      },
     duplicate: {
       success: "Mission duplicated successfully",
       error: "An error occurred while duplicating the mission",
@@ -713,33 +792,34 @@ export default {
       title: "Create New Survey",
       loading: "Loading...",
       ai: {
-        title: "From AI",
-        feature1: "Custom questionnaire",
-        feature2: "Bespoke target audience",
+        title: "Build with AI",
+        feature1: "Fast launch",
+        feature2: "Unlimited questions, 20+ formats, full targeting",
         description:
-          "Unlimited questions, custom audiences, 20+ question types & advanced survey features",
+          "Describe your goal, and the AI generates the brief + survey automatically. Edit questions, set targeting, and submit for validation",
       },
       template: {
-        title: "From template",
-        feature1: "1–3 Questions",
-        feature2: "Nationally representative",
+        title: "Start from Template",
+        feature1: "Quick, standard studies",
+        feature2: "Pre-built structure, 1–10 questions, fast delivery",
         description:
-          "Cost-effective surveys with up to three questions & nationally representative sample",
+          "Pick a ready-made survey format and launch in minutes.",
       },
       upload: {
-        title: "Upload a survey",
-        feature1: "Free in yearly plan packages",
-        feature2: "Your own target audience",
+        title: "Upload Your Survey",
+        feature1: "Internal surveys needing field execution",
+        feature2: "File import, custom audience, analytics dashboard",
         description:
-          "Collect opinions from your own community or audience, through your own channels.",
+          "Import your existing questionnaire — we handle distribution",
       },
       manuel: {
-        title: "Create manually",
-        feature1: "Custom questionnaire",
-        feature2: "Bespoke target audience",
+        title: "Build Manually",
+        feature1: "Advanced custom research",
+        feature2: "Unlimited questions, media + GPS tasks, logic controls",
         description:
-          "Unlimited questions, custom audiences, 20+ question types & advanced survey features",
+          "Create your questionnaire from scratch with full flexibility.",
       },
+      comingSoon: "Coming soon",
     },
     addSubDashboard: {
       title: "Add Sub Dashboard",
@@ -754,7 +834,7 @@ export default {
         namePlaceholder: "Enter the name",
         visibilityLabel: "Share this dashboard",
         visibilityDescription:
-          "This dashboard will be visible to all members of your organization.",
+          "This dashboard will be visible to all members of your workspace.",
         cancelButton: "Cancel",
         addButton: "Add",
         submittingButton: "Adding...",
@@ -980,18 +1060,34 @@ export default {
       filedFilled: "Fields filled(...)",
       form: {
         researchMarket: "Research a market",
+        aiUpdateFromConversations: "Update with AI from conversations",
         filterAudiences: "Filter audiences",
         problemSummary: "Problem statement",
-        strategicGoal: "Strategic goal",
+        strategicGoal: "Strategic goals",
         assumptions:
           "Potential hypotheses to investigate- select those you think are most relevant",
         audiences: "Target audiences/markets",
         name: "Name of the mission",
         placeholder: "Answer questions in the chat to generate this section",
+        targetPlaceholder: "Choose who and where to target—reach the right respondents with +2500 traits",
         surveys: "Surveys",
         success: "Mission created successfully",
         error: "An error occurred while creating the mission",
         showSurveys: "Show surveys",
+        aiProposeFullBrief: "Generate with AI",
+        aiProposeFullStudy: "Generate with AI",
+        aiGenerating: "AI is generating your brief...",
+        aiBriefFilled: "AI has filled in your brief",
+        aiBriefGenerating: "AI is generating your brief...",
+        audienceSuggestionHelper:
+          "suggests audiences based on your brief. We will add more targeting options soon.",
+        audienceSuggestionGroupPlaceHolder: "Select an audience group",
+        audienceSuggestionLabelPlaceholder: "Suggested audience label",
+        suggestionDescriptionPlaceholder:
+          "Description of the suggested audience",
+        useSuggestion: "Use suggestion",
+        audienceSuggestionCta: "Send audience suggestion",
+        audienceSuggestionSending: "Sending suggestion...",
       },
     },
     missionSubmission: {
@@ -1009,6 +1105,13 @@ export default {
     progress: {
       title: "Progress",
       description: "Follow the progress of your mission",
+      sectionTitle: "Sections",
+      subtitle: "Track the completion of each section",
+      briefScoreLabel: "Brief Score",
+      briefScoreDescription:
+        "The brief score is calculated based on the completeness of your brief. The higher the score, the more complete your brief is.",
+      briefHelperText:
+        "Keep answering the questions to improve your brief",
       score: "Your brief score",
       rating:
         "Keep answering questions in the chat to improve the quality of your brief",
@@ -1021,6 +1124,7 @@ export default {
     surveys: {
       title: "Survey questions",
       yourBrief: "Your brief",
+      aiInfoBanner: "AI has generated survey questions based on your brief.",
       publishSurvey: "Submit",
       saveAfterSurvey: "Save before accessing the survey",
       saveDraft: "Save",
@@ -1055,6 +1159,55 @@ export default {
         update: "Update",
         editQuestion: "Edit question",
         deleteQuestion: "Delete question",
+        aiModeDisabled:
+          "AI mode is disabled. Please enable it to generate questions.",
+        deleteConfirm: "Are you sure you want to delete this question?",
+        questionDescription: "Question Description (optional)",
+        scaleSettings: "Scale Settings",
+        minValue: "Minimum Value",
+        maxValue: "Maximum Value",
+        hasOtherOption: "Has 'Other' option",
+        minLabel: "Minimum Label",
+        maxLabel: "Maximum Label",
+        matrixRows: "Matrix Rows",
+        addRow: "Add Row",
+        matrixColumns: "Matrix Columns",
+        addColumn: "Add Column",
+        mediaTypes: "Media Types",
+        maxSizeMb: "Max size (MB)",
+        maxFiles: "Max files",
+        captureRequired: "Capture required",
+        gpsMode: "GPS Mode",
+        locationLabel: "Location Label",
+        maxDistanceMeters: "Max Distance (meters)",
+        minTimeOnSiteSeconds: "Min Time on Site (seconds)",
+        gpsTolerance: "GPS Tolerance",
+        requiresPathTracking: "Requires Path Tracking",
+        rankingOptionsLabel: "Ranking Options Label",
+        rankingOptionsHelp:
+          "Drag and drop to reorder the ranking options",
+        addRankingOption: "Add Ranking Option",
+        sectionSelectLabel: "Select Section",
+        noSection: "No section",
+        option: "Option {number}",
+        imageRanking: {
+          imageLabel: "Image Label",
+          addImage: "Add Image",
+          imagePlaceholder: "Upload an image",
+          uploadButton: "Click to upload",
+        },
+        mediaMode:{
+          title: "Media Mode",
+          upload: "Upload",
+          stimulus: "Stimulus",
+          both: "Both",
+        },
+        mediaPresets: {
+            title: "Media Presets",
+          },
+        stimulus: {
+          title: "Stimulus Type",
+        }
       },
       questionCategories: {
         common: "Common",
@@ -1148,6 +1301,50 @@ export default {
           title: "NPS",
           description: "Net Promoter Score question",
         },
+        singleChoice: {
+          title: "Single Choice",
+          description: "Choose one option from a list",
+        },
+        multipleChoice: {
+          title: "Multiple Choice",
+          description: "Choose multiple options from a list",   
+        },
+        likert: {
+          title: "Likert Scale",
+          description: "Rate agreement on a scale",
+        },
+        numericScale: {
+          title: "Numeric Scale",
+          description: "Rate on a numeric scale",
+        },
+        open: {
+          title: "Open-ended",
+          description: "Provide a detailed response",
+        },
+        matrix:{
+          title: "Matrix",
+          description: "Matrix of choices",
+        },
+        imageRanking: {
+          title: "Image Ranking",
+          description: "Rank images in order of preference",
+        },
+        media: {
+          title: "Media",
+          description: "Display media content",
+        },
+        gps: {
+          title: "GPS Location",
+          description: "Capture GPS location",
+        },
+        section: {
+          title: "Section",
+          description: "Group questions into sections",
+        },
+        dragDropRanking: {
+          title: "Drag and Drop Ranking",
+          description: "Rank items by dragging and dropping them",
+        }
       },
     },
     templates: {
@@ -1274,6 +1471,68 @@ export default {
       },
     },
   },
+  workspace: {
+      defaultName: "My Workspace",
+      defaultNamePlaceholder: "Enter workspace name",
+      informationTitle: "Workspace Information",
+      helper: "Enter the name of your workspace.",
+      inviteTitle: "Invite Team Members",
+      inviteHint:
+        "Add team members to collaborate on projects within this workspace.",
+      saveButton: "Save Changes",
+      settings: {
+        title: "Workspace Settings",
+        generalTitle: "General Information",
+        subtitle:
+          "Manage your workspace settings, including name, description, and other preferences.",
+        teamTitle: "Workspace team",
+        invitePlaceholder: "Invite team members by email",
+        rolePlaceholder: "Select a role",
+        emptyMembers: "No members have been added yet.",
+        inviteButton: "Send Invitation",
+        fields:{
+          logo: "Workspace Logo",
+          name: "Workspace Name",
+          slug: "Workspace Slug",
+          slugHelp: "The workspace slug is used in the URL to identify your workspace.",
+        },
+        menu: {
+          generalTitle: "General",
+          generalSubtitle: "Workspace Information",
+          membersTitle: "Members",
+          membersSubtitle: "Manage Team Members",
+          billingTitle: "Billing",
+          billingSubtitle: "Billing & Plans",
+        },
+        columns: {
+          member: "Member",
+          role: "Role",
+          status: "Status",
+          actions: "Actions",
+        },
+        dangerTitle: "Danger zone",
+        dangerDescription:
+          "Permanently delete this workspace and all its data. This action cannot be undone.",
+        deleteButton: "Delete Workspace",
+        deleteConfirmTitle: "Are you sure?",
+        deleteDialogTitle: "Delete Workspace «{{name}}»",
+        deleteDialogDescription:
+          "Please type the workspace name «{{name}}» in the box below to confirm the deletion of this workspace.",
+        workspaceNameLabel: "Workspace Name",
+        confirmDeleteButton: "Delete Workspace",
+        deleteConfirmDescription:
+          "This action will permanently delete the workspace and all its data. This cannot be undone.",
+        deleteConfirmInputPlaceholder: "Type DELETE to confirm",
+        deleteConfirmButton: "Yes, delete workspace",
+        deleteSuccessTitle: "Workspace deleted",
+        deleteSuccessDescription:
+          "The workspace has been deleted successfully.",
+      },
+    },
+  analysis:{
+      title: "Data Analysis",
+      subtitle: "Explore and analyze your collected data",
+    },
   filters: {
     groups: {
       personal_info: {

@@ -38,8 +38,10 @@ model User {
   missionAssignments                                    MissionAssignment[]  @relation("UserMissions")
   // Missions assignées par cet utilisateur
   assignedBy                                            MissionAssignment[]  @relation("UserAssignedMissions")
-  mission_permission_mission_permission_grantedByTouser mission_permission[] @relation("mission_permission_grantedByTouser")
-  mission_permission_mission_permission_userIdTouser    mission_permission[] @relation("mission_permission_userIdTouser")
+  // Permissions reçues (userId)
+  missionPermissions MissionPermission[] @relation("MissionPermissionUser")
+  // Permissions qu'il a accordées (grantedBy)
+  grantedPermissions MissionPermission[] @relation("MissionPermissionGrantedBy")
   payemts_contibutor                                    payemts_contibutor?
   projectRoles                                          ProjectRole[]
   session                                               session[]
@@ -49,7 +51,6 @@ model User {
   validationComments                                    ValidationComment[]
   contributorAttributes                                 ContributorAttributeValue[]
   rewardHistory                                         RewardHistory[]
-  grantedPermissions MissionPermission[] @relation("GrantedPermissions")
   SupportTicket      SupportTicket[]
 
   @@map("user")
@@ -75,6 +76,7 @@ model Organization {
   projects          Project[]
   subscription      Subscription?
   templates          Template[]
+  missionsConsulted Mission[] @relation("ConsultedSuperAdminMissions")
 
   @@map("organization")
 }
@@ -110,7 +112,7 @@ model Mission {
   subDashboard               SubDashboard[]
   survey                     Survey[]
   tempMission                TempMission[]
-  consultingOrganizations Organization[]      @relation("ConsultedSuperAdminMissions")
+  consultingOrganizations    Organization[]      @relation("ConsultedSuperAdminMissions")
 
   @@map("mission")
 }
@@ -602,14 +604,16 @@ model DashboardFilter {
 
 // Ajout Dash client (dodo)
 model MissionPermission {
-  id            String   @id @default(uuid())
-  missionId     String
-  mission       Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  grantedBy     String
-  grantedByUser User     @relation("GrantedPermissions", fields: [grantedBy], references: [id])
-  grantedAt     DateTime @default(now())
+  id        String   @id @default(uuid()) @db.Uuid
+  missionId String
+  userId    String
+  grantedBy String
+  grantedAt DateTime @default(now()) @db.Timestamp(6)
+
+  // Relations
+  mission   Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  user      User     @relation("MissionPermissionUser", fields: [userId], references: [id], onDelete: Cascade)
+  grantedByUser User @relation("MissionPermissionGrantedBy", fields: [grantedBy], references: [id])
 
   @@unique([missionId, userId])
   @@map("mission_permission")
@@ -710,21 +714,6 @@ model invitation {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("invitation")
-}
-
-model mission_permission {
-  id                                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  missionId                               String
-  userId                                  String
-  grantedBy                               String
-  grantedAt                               DateTime @default(now()) @db.Timestamp(6)
-  user_mission_permission_grantedByTouser User     @relation("mission_permission_grantedByTouser", fields: [grantedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  mission                                 Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user_mission_permission_userIdTouser    User     @relation("mission_permission_userIdTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([missionId, userId])
-  @@unique([missionId, userId], map: "mission_permission_missionid_userid_key")
-  @@map("mission_permission")
 }
 
 model report_problems {

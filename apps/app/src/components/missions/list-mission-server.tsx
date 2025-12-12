@@ -8,6 +8,7 @@ const maxItems = 100000;
 
 interface FetchMissionsParams {
   orgId: string;
+  workspaceId: string;
   query?: string;
   status?: string;
   date?: string;
@@ -19,6 +20,7 @@ interface FetchMissionsParams {
 
 function fetchMissions({
   orgId,
+  workspaceId,
   query,
   status,
   date,
@@ -28,7 +30,7 @@ function fetchMissions({
   sort = [],
 }: FetchMissionsParams) {
   const whereClause = {
-    organizationId: orgId,
+    workspaceId: workspaceId,
     ...(query && { name: { contains: query } }),
     ...(status && status !== "all" && { status }),
     ...(date && { createdAt: { gte: new Date(date) } }),
@@ -65,12 +67,14 @@ function fetchMissions({
 
 export async function ListMissionServer({
   orgId,
+  workspaceId,
   query,
   sort,
   page,
   status,
   date,
 }: {
+  workspaceId: string;
   orgId: string;
   query?: string;
   sort?: string[];
@@ -83,6 +87,7 @@ export async function ListMissionServer({
   );
   const missions = await fetchMissions({
     orgId,
+    workspaceId,
     query,
     status,
     date,
@@ -96,6 +101,7 @@ export async function ListMissionServer({
     "use server";
 
     return fetchMissions({
+      workspaceId,
       orgId,
       query,
       status,
@@ -113,7 +119,7 @@ export async function ListMissionServer({
 
   return (
     <div className="space-x-4 ">
-      <MissionFilter orgId={orgId} />
+      <MissionFilter orgId={workspaceId} />
       {missions.length > 0 ? (
         <ListMissions
           missions={missions.map((mission) => ({
@@ -127,6 +133,7 @@ export async function ListMissionServer({
           loadMore={loadMore}
           pageSize={pageSize}
           orgId={orgId}
+          workspaceId={workspaceId}
         />
       ) : (
         <NoResults />

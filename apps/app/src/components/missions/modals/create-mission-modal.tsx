@@ -45,6 +45,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
       iconHoverBg: "hover:bg-blue-600",
       hoverBg: "hover:bg-blue-50",
       themeColor: "text-blue-600",
+      isComingSoon: false,
       features: [
         {
           icon: <List className="h-4 w-4" />,
@@ -56,7 +57,10 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.ai.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=ai`),
+      onClick: () =>
+        router.push(
+          `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=ai`
+        ),
     },
     {
       id: "template",
@@ -66,6 +70,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
       iconHoverBg: "hover:bg-orange-600",
       hoverBg: "hover:bg-orange-100",
       themeColor: "text-orange-600",
+      isComingSoon: true,
       features: [
         {
           icon: <List className="h-4 w-4" />,
@@ -77,7 +82,10 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.template.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/templates?mode=template`),
+      onClick: () =>
+        router.push(
+          `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=template`
+        ),
     },
     {
       id: "manuel",
@@ -87,6 +95,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
       iconHoverBg: "hover:bg-gray-600",
       hoverBg: "hover:bg-gray-50",
       themeColor: "text-gray-600",
+      isComingSoon: true,
       features: [
         {
           icon: <List className="h-4 w-4" />,
@@ -98,7 +107,10 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.manuel.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=manual`),
+      onClick: () =>
+        router.push(
+          `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=manual`
+        ),
     },
     {
       id: "survey",
@@ -108,6 +120,7 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
       iconHoverBg: "hover:bg-red-600",
       hoverBg: "hover:bg-red-50",
       themeColor: "text-red-600",
+      isComingSoon: true,
       features: [
         {
           icon: <List className="h-4 w-4" />,
@@ -119,7 +132,10 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
         },
       ],
       description: t("missions.createSurveyModal.upload.description"),
-      onClick: () => router.push(`/${currentLocale}/missions/${orgId}/create?mode=survey`),
+      onClick: () =>
+        router.push(
+          `/${currentLocale}/missions/create?workspaceId=${orgId}&mode=upload`
+        ),
     },
   ];
 
@@ -150,94 +166,99 @@ export function CreateSurveyModal({ trigger, orgId }: CreateSurveyModalProps) {
 
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {surveyOptions.map((option, index) => (
-                <div key={option.id}>
-                  <div
-                    onMouseEnter={() =>
-                      !isLoading && setHoveredOption(option.id)
-                    }
-                    onMouseLeave={() => !isLoading && setHoveredOption(null)}
-                    className={`
-                      relative border group border-gray-200 rounded-lg p-6 transition-all duration-200
-                      ${
-                        isLoading
-                          ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer"
-                      }
-                      ${
-                        hoveredOption === option.id && !isLoading
-                          ? `border-gray-300 ${option.hoverBg.replace(
-                              "hover:",
-                              ""
-                            )}`
-                          : `bg-white ${!isLoading ? option.hoverBg : ""} ${
-                              !isLoading ? "hover:shadow-sm" : ""
-                            }`
-                      }
-                    `}
-                    onClick={() => {
-                      setIsLoading(true);
-                      option.onClick();
-                    }}
-                  >
-                    <div className="flex justify-center mb-6">
-                      <div
-                        className={`
-                          w-16 h-16 rounded-lg flex items-center justify-center transition-colors duration-200
-                          ${option.iconBg}
-                          ${
-                            hoveredOption === option.id && !isLoading
-                              ? option.iconHoverBg
-                              : ""
-                          }
-                        `}
-                      >
-                        {option.icon}
-                      </div>
-                    </div>
+              {surveyOptions.map((option, index) => {
+                const isDisabled = isLoading || option.isComingSoon;
 
-                    <h3 className="text-xl font-semibold text-center mb-6 text-gray-900">
-                      {option.title}
-                    </h3>
-
-                    <div className="space-y-3 flex flex-col items-center mb-6">
-                      {option.features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="flex bg-gray-100 rounded-full group-hover:bg-white group-hover:rounded-full p-1 px-2 items-center space-x-3"
-                        >
-                          <div
-                            className={
-                              hoveredOption === option.id && !isLoading
-                                ? option.themeColor
-                                : "text-gray-500"
-                            }
-                          >
-                            {feature.icon}
-                          </div>
-                          <span
-                            className={`text-xs ${
-                              hoveredOption === option.id && !isLoading
-                                ? option.themeColor
-                                : "text-gray-600"
-                            }`}
-                          >
-                            {feature.text}
-                          </span>
+                return (
+                  <div key={option.id}>
+                    <div
+                      onMouseEnter={() =>
+                        !isDisabled && setHoveredOption(option.id)
+                      }
+                      onMouseLeave={() => !isDisabled && setHoveredOption(null)}
+                      className={`
+          relative border group border-gray-200 rounded-lg p-6 transition-all duration-200
+          ${isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+          ${
+            hoveredOption === option.id && !isDisabled
+              ? `border-gray-300 ${option.hoverBg.replace("hover:", "")}`
+              : `bg-white ${!isDisabled ? option.hoverBg : ""} ${
+                  !isDisabled ? "hover:shadow-sm" : ""
+                }`
+          }
+        `}
+                      onClick={() => {
+                        if (isDisabled) return;
+                        setIsLoading(true);
+                        option.onClick();
+                      }}
+                    >
+                      {/* Badge Coming soon */}
+                      {option.isComingSoon && (
+                        <div className="absolute top-4 right-4 px-2 py-1 rounded-full bg-gray-900 text-white text-[10px] uppercase tracking-wide">
+                          {t("missions.createSurveyModal.comingSoon")}
                         </div>
-                      ))}
+                      )}
+
+                      <div className="flex justify-center mb-6">
+                        <div
+                          className={`
+              w-16 h-16 rounded-lg flex items-center justify-center transition-colors duration-200
+              ${option.iconBg}
+              ${
+                hoveredOption === option.id && !isDisabled
+                  ? option.iconHoverBg
+                  : ""
+              }
+            `}
+                        >
+                          {option.icon}
+                        </div>
+                      </div>
+
+                      <h3 className="text-xl font-semibold text-center mb-6 text-gray-900">
+                        {option.title}
+                      </h3>
+
+                      <div className="space-y-3 flex flex-col items-center mb-6">
+                        {option.features.map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex bg-gray-100 rounded-full group-hover:bg-white group-hover:rounded-full p-1 px-2 items-center space-x-3"
+                          >
+                            <div
+                              className={
+                                hoveredOption === option.id && !isDisabled
+                                  ? option.themeColor
+                                  : "text-gray-500"
+                              }
+                            >
+                              {feature.icon}
+                            </div>
+                            <span
+                              className={`text-xs ${
+                                hoveredOption === option.id && !isDisabled
+                                  ? option.themeColor
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              {feature.text}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="text-sm text-gray-500 text-center mb-6 leading-relaxed">
+                        {option.description}
+                      </p>
                     </div>
 
-                    <p className="text-sm text-gray-500 text-center mb-6 leading-relaxed">
-                      {option.description}
-                    </p>
+                    {index < surveyOptions.length - 1 && (
+                      <div className="hidden md:block absolute top-1/2 -right-3 w-px h-32 bg-gradient-to-b from-transparent via-gray-200 to-transparent transform -translate-y-1/2"></div>
+                    )}
                   </div>
-
-                  {index < surveyOptions.length - 1 && (
-                    <div className="hidden md:block absolute top-1/2 -right-3 w-px h-32 bg-gradient-to-b from-transparent via-gray-200 to-transparent transform -translate-y-1/2"></div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

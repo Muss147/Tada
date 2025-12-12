@@ -281,8 +281,9 @@ const TeamMembersPreview: React.FC = () => {
       </div>
 
       {/* Section des membres actuels */}
-      <div className="grid grid-cols-1 border-b border-gray-200 pb-8 md:grid-cols-2 gap-4">
-        <div className="mb-6 w-auto">
+      <div className="border-b border-gray-200 pb-8">
+        {/* Titre + description en haut */}
+        <div className="mb-4">
           <h2 className="text-lg font-semibold mb-1">
             {t("teamMembers.current.title")}
           </h2>
@@ -291,71 +292,93 @@ const TeamMembersPreview: React.FC = () => {
           </p>
         </div>
 
-        <div className="border border-gray-200 rounded-lg overflow-hidden w-full">
-          <div className="grid grid-cols-12 bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
-            <div className="col-span-5 p-4">
-              {t("teamMembers.current.columns.name")}
-            </div>
-            <div className="col-span-2 p-4">
-              {t("teamMembers.current.columns.role")}
-            </div>
-            <div className="col-span-4 p-4">
-              {t("teamMembers.current.columns.actions")}
-            </div>
+        {/* Carte/tableau des membres en dessous */}
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          {/* Header de la carte */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-800">
+              {t("teamMembers.current.title")}
+            </h3>
+            <span className="text-xs text-gray-500">
+              {members.length} {t("teamMembers.current.membersCountLabel")}
+            </span>
           </div>
 
-          <div>
-            {members.map((member) => (
-              <div
-                key={member.id}
-                className="grid grid-cols-12 border-b border-gray-200 bg-white items-center"
-              >
-                <div className="col-span-5 p-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage
-                        src={member.user.image}
-                        alt={`Avatar de ${member.user.name}`}
-                      />
-                      <AvatarFallback>
-                        {member.user.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium">{member.user.name}</div>
-                      <div className="text-sm text-gray-500">
-                        {member.user.email}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-2 p-4 font-medium">
-                  {t(`teamMembers.invite.roles.${member.role}`)}
-                </div>
-                <div className="col-span-4 p-4 flex gap-2">
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-sm font-medium text-red-500 border border-red-500 rounded-md hover:bg-red-50"
-                    onClick={() => handleDelete(member.id)}
-                  >
-                    {t("teamMembers.current.actions.delete")}
-                  </button>
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-sm font-medium text-red-500 border border-gray-200 rounded-md hover:bg-gray-50"
-                    onClick={() => handleEdit(member)}
-                  >
-                    {t("teamMembers.current.actions.edit")}
-                  </button>
+          {members.length === 0 ? (
+            <div className="px-6 py-8 text-center text-sm text-gray-500">
+              {t("teamMembers.current.empty")}
+            </div>
+          ) : (
+            <div className="min-w-full overflow-x-auto">
+              {/* En-têtes */}
+              <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] px-6 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500 bg-gray-50">
+                <div>{t("teamMembers.current.columns.name")}</div>
+                <div>{t("teamMembers.current.columns.role")}</div>
+                <div className="text-right">
+                  {t("teamMembers.current.columns.actions")}
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* Lignes membres */}
+              <div className="divide-y divide-gray-100">
+                {members.map((member) => (
+                  <div
+                    key={member.id}
+                    className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] px-6 py-3 items-center hover:bg-gray-50 transition-colors"
+                  >
+                    {/* Nom + email */}
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage
+                          src={member.user.image}
+                          alt={`Avatar de ${member.user.name}`}
+                        />
+                        <AvatarFallback>
+                          {member.user.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()
+                            .slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <div className="font-medium text-sm text-gray-900 truncate">
+                          {member.user.name}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate">
+                          {member.user.email}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Rôle */}
+                    <div className="text-sm font-medium text-gray-700">
+                      {t(`teamMembers.invite.roles.${member.role}`)}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        className="h-8 px-3 text-xs font-medium text-red-600 border border-red-200 rounded-full hover:bg-red-50"
+                        onClick={() => handleDelete(member.id)}
+                      >
+                        {t("teamMembers.current.actions.delete")}
+                      </button>
+                      <button
+                        type="button"
+                        className="h-8 px-3 text-xs font-medium text-gray-700 border border-gray-200 rounded-full hover:bg-gray-50"
+                        onClick={() => handleEdit(member)}
+                      >
+                        {t("teamMembers.current.actions.edit")}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

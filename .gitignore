@@ -12,6 +12,9 @@ out/
 .env.local
 .env.*.local
 
+apps/*/.env
+apps/*/.env.local
+
 # Monorepo apps
 apps/*/.next/
 apps/*/node_modules/

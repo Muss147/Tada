@@ -2,7 +2,7 @@
 
 import { useCurrency } from "@/hooks/use-currency";
 import { authClient, signOut, useSession } from "@/lib/auth-client";
-import { useChangeLocale, useCurrentLocale, useI18n } from "@/locales/client";
+import { useCurrentLocale, useI18n } from "@/locales/client";
 import {
   Select,
   SelectContent,
@@ -20,11 +20,14 @@ import {
   Users,
   Contact,
   Bot,
+  Settings,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarGroup } from "./sidebar-group";
+import { WorkspaceSwitcher } from "./workspace-switcher";
+import { useWorkspace } from "@/context/workspace-context";
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -63,12 +66,25 @@ export function Sidebar() {
   const t = useI18n();
   const pathname = usePathname();
   const router = useRouter();
-  const changeLocale = useChangeLocale();
   const { currencies, selectedCurrency, setSelectedCurrency } = useCurrency();
   const { data: session } = useSession();
   const { data: organizations } = authClient.useListOrganizations();
-  // Get current locale from pathname
   const currentLocale = useCurrentLocale();
+
+  const { currentWorkspace } = useWorkspace();
+
+  // 🔎 On essaie aussi de récupérer le workspaceId depuis l’URL
+  const parts = pathname.split("/"); // ["", "fr", "missions", "<workspaceId>", ...]
+  let workspaceIdFromUrl: string | undefined;
+  if (
+    parts.length > 3 &&
+    (parts[2] === "missions" || parts[2] === "market-beats")
+  ) {
+    workspaceIdFromUrl = parts[3];
+  }
+
+  const workspaceId =
+    currentWorkspace?.id || workspaceIdFromUrl || "dev-workspace";
 
   const navigationGroups = [
     {
@@ -76,7 +92,7 @@ export function Sidebar() {
         {
           icon: <Home className="h-5 w-5" />,
           text: t("navigation.home"),
-          href: `/${currentLocale}`,
+          href: "/",
           target: "_self",
         },
       ],
@@ -87,19 +103,19 @@ export function Sidebar() {
         {
           icon: <FolderOpen className="h-5 w-5" />,
           text: t("navigation.missions"),
-          href: `/${currentLocale}/missions/${organizations ? organizations![0]?.id : "dev-org"}`,
+          href: `/${currentLocale}/missions/${workspaceId}`,
           target: "_self",
         },
         {
           icon: <Bot className="h-5 w-5" />,
           text: t("navigation.analysis"),
-          href: `/${currentLocale}/analysis`,
+          href: `/analysis`,
           target: "_self",
         },
         {
           icon: <Users className="h-5 w-5" />,
           text: t("navigation.userManagement"),
-          href: `/${currentLocale}/settings/users`,
+          href: `/settings/users`,
           target: "_self",
         },
       ],
@@ -110,15 +126,13 @@ export function Sidebar() {
         {
           icon: <Layers className="h-5 w-5" />,
           text: t("navigation.templates"),
-          href: `/${currentLocale}/missions/${
-            organizations ? organizations![0]?.id : "dev-org"
-          }/templates`,
+          href: `/${currentLocale}/missions/org/${organizations ? organizations![0]?.id : "dev-org"}/templates`,
           target: "_self",
         },
         {
           icon: <TrendingUp className="h-5 w-5" />,
           text: t("navigation.marketBeats"),
-          href: `/${currentLocale}/market-beats/${organizations ? organizations![0]?.id : "dev-org"}`,
+          href: `/market-beats/${organizations ? organizations![0]?.id : ""}`,
           target: "_self",
         },
       ],
@@ -166,10 +180,16 @@ export function Sidebar() {
         </Link>
       </div>
 
+      {/* Sélecteur de workspace */}
+      <WorkspaceSwitcher />
+
       {/* Navigation Menu */}
       <nav className="flex-1 px-4 overflow-y-auto">
         {navigationGroups.map((group, index) => (
-          <SidebarGroup key={`${group.title || 'group'}-${index}`} title={group.title || ""}>
+          <SidebarGroup
+            key={`${group.title || "group"}-${index}`}
+            title={group.title || ""}
+          >
             {group.items.map((item) => (
               <SidebarItem
                 key={item.href}
@@ -184,8 +204,47 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Currency */}
+      {/* Language and Currency */}
       <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-800">
+        {/* <div className="mb-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            {t("common.language")}
+          </p>
+          <Select
+            value={currentLanguage.code}
+            onValueChange={(value: LanguageCode) => changeLocale(value)}
+          >
+            <SelectTrigger className="w-full">
+              <div className="flex items-center">
+                <Image
+                  src={currentLanguage.flag}
+                  alt={`${currentLanguage.name} flag`}
+                  width={20}
+                  height={15}
+                  className="mr-2"
+                />
+                <span>{currentLanguage.name}</span>
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map((language) => (
+                <SelectItem key={language.code} value={language.code}>
+                  <div className="flex items-center">
+                    <Image
+                      src={language.flag}
+                      alt={`${language.name} flag`}
+                      width={20}
+                      height={15}
+                      className="mr-2"
+                    />
+                    <span>{language.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div> */}
+
         <div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
             {t("common.currency")}

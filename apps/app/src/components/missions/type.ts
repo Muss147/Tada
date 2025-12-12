@@ -51,3 +51,13 @@ export type OrganizationMember = {
     image?: string;
   };
 };
+
+export interface Workspace {
+  id: string;
+  name: string;
+  slug: string;
+  organizationId?: string | null;
+  ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

@@ -9,7 +9,7 @@ const pageSize = 10;
 const maxItems = 100000;
 
 interface FetchMissionsParams {
-  orgId: string;
+  workspaceId: string;
   query?: string;
   status?: string;
   date?: string;
@@ -20,7 +20,7 @@ interface FetchMissionsParams {
 }
 
 function fetchMissions({
-  orgId,
+  workspaceId,
   query,
   status,
   date,
@@ -30,7 +30,7 @@ function fetchMissions({
   sort = [],
 }: FetchMissionsParams) {
   const whereClause = {
-    organizationId: orgId,
+    organizationId: workspaceId,
     ...(query && { name: { contains: query } }),
     ...(status && status !== "all" && { status }),
     ...(date && { createdAt: { gte: new Date(date) } }),
@@ -70,7 +70,7 @@ export async function ListBoardsServer({
     (value) => value !== null
   );
   const missions = await fetchMissions({
-    orgId,
+    workspaceId,
     query,
     status,
     date,
@@ -84,7 +84,7 @@ export async function ListBoardsServer({
     "use server";
 
     return fetchMissions({
-      orgId,
+      workspaceId,
       query,
       status,
       date,
