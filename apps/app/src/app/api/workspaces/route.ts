@@ -1,35 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { getCurrentUser } from "@/lib/current-user";
-import { assertWorkspaceAdmin, getUserWorkspaces } from "@/lib/workspaces";
-import { prisma } from "@/lib/prisma";
-
-import { promises as fs } from "fs";
-import path from "path";
 import crypto from "crypto";
 
+import { getCurrentUser } from "@/lib/current-user";
+import { getUserWorkspaces } from "@/lib/workspaces";
+import { prisma } from "@/lib/prisma";
 import { transporter } from "@/lib/transporter";
-import { uploadFileToSupabase } from "@/lib/uploads";
+import { uploadFileToSupabase, deleteFromSupabase } from "@/lib/uploads.server";
+
+export const runtime = "nodejs";
+
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
+
+function normalizeSlug(input: string) {
+  return input
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const workspaces = await getUserWorkspaces(user.id);
   return NextResponse.json(workspaces);
 }
 
 export async function POST(req: NextRequest) {
+  // Pour cleanup si la transaction échoue après upload
+  let uploadedLogoPath: string | null = null;
+
   try {
     const user = await getCurrentUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const contentType = req.headers.get("content-type") || "";
 
@@ -51,63 +56,76 @@ export async function POST(req: NextRequest) {
         .map((e) => String(e).toLowerCase().trim())
         .filter(Boolean);
 
-      logoFile = (formData.get("logo") as File) || null;
+      const rawLogo = formData.get("logo");
+      logoFile = rawLogo instanceof File ? rawLogo : null;
     } else {
+      const body = await req.json().catch(() => ({}));
 
-      const body = await req.json();
       name = String(body.name ?? "").trim();
       slug = String(body.slug ?? "").trim();
       organizationId = body.organizationId ?? null;
 
-      // Invitations en JSON :
       if (Array.isArray(body.invitedEmails)) {
         invitedEmails = body.invitedEmails
-          .map((e: string) => e.toLowerCase().trim())
+          .map((e: string) => String(e).toLowerCase().trim())
           .filter(Boolean);
       }
-
     }
 
     if (!name) {
       return NextResponse.json(
         { error: "Le nom du workspace est obligatoire" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Normalisation du slug : si non fourni, on repart du name
+    // 1) slug final unique AVANT upload
     const sourceForSlug = slug || name;
-
-    const slugBase = sourceForSlug
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
+    const slugBase = normalizeSlug(sourceForSlug);
     let finalSlug = slugBase || `workspace-${Date.now()}`;
 
-    let logo: string | null = null;
-
-    if (logoFile && logoFile.size > 0) {
-      const { publicUrl, path } = await uploadFileToSupabase({
-        file: logoFile,
-        category: "workspaceLogo",
-        baseName: slug || name,
-      });
-      logo = publicUrl;
-    }
-
-    // On s'assure que le slug est unique
     const existingWithSameSlug = await prisma.workspace.findUnique({
       where: { slug: finalSlug },
+      select: { id: true },
     });
 
     if (existingWithSameSlug) {
-      finalSlug = `${slugBase}-${Date.now()}`;
+      finalSlug = `${slugBase || "workspace"}-${Date.now()}`;
     }
 
-    // On mémorise les invitations pour envoyer les emails après la transaction
+    // 2) upload logo (si fourni) => on stocke le PATH dans workspace.logo
+    let logo: string | null = null;
+
+    if (logoFile && logoFile.size > 0) {
+      const maxMb = 5;
+      const maxBytes = maxMb * 1024 * 1024;
+
+      if (!logoFile.type.startsWith("image/")) {
+        return NextResponse.json(
+          { error: "Logo must be an image" },
+          { status: 400 },
+        );
+      }
+
+      if (logoFile.size > maxBytes) {
+        return NextResponse.json(
+          { error: `Logo too large (max ${maxMb}MB)` },
+          { status: 400 },
+        );
+      }
+
+      const uploaded = await uploadFileToSupabase({
+        file: logoFile,
+        category: "workspaceLogo",
+        baseName: finalSlug,
+      });
+
+      // IMPORTANT: on stocke le PATH et pas l'URL
+      logo = uploaded.path;
+      uploadedLogoPath = uploaded.path;
+    }
+
+    // Invitations pour email après transaction
     const invitationsForEmail: {
       email: string;
       token: string;
@@ -115,7 +133,7 @@ export async function POST(req: NextRequest) {
       workspaceName: string;
     }[] = [];
 
-    // Création du workspace + membership owner + invitations
+    // 3) transaction create workspace + owner + invitations
     const workspace = await prisma.$transaction(async (tx) => {
       const created = await tx.workspace.create({
         data: {
@@ -123,7 +141,8 @@ export async function POST(req: NextRequest) {
           slug: finalSlug,
           organizationId,
           ownerId: user.id,
-          logo,
+          logo, // <- path supabase (ou null)
+
           members: {
             create: {
               userId: user.id,
@@ -141,6 +160,7 @@ export async function POST(req: NextRequest) {
 
         const existingUser = await tx.user.findUnique({
           where: { email },
+          select: { id: true },
         });
 
         if (existingUser) {
@@ -150,6 +170,7 @@ export async function POST(req: NextRequest) {
               userId: existingUser.id,
               status: "active",
             },
+            select: { id: true },
           });
 
           if (!alreadyMember) {
@@ -180,19 +201,22 @@ export async function POST(req: NextRequest) {
             },
           });
 
-          console.log(
-            "[WORKSPACE_INVITE_DEV]",
+          invitationsForEmail.push({
             email,
-            "invited with token",
-            token
-          );
+            token,
+            expiresAt,
+            workspaceName: created.name,
+          });
         }
       }
 
       return created;
     });
 
-    // Envoi des emails d'invitation (hors transaction)
+    // upload OK + transaction OK => on ne cleanup plus
+    uploadedLogoPath = null;
+
+    // 4) emails hors transaction
     for (const invite of invitationsForEmail) {
       const inviteUrl = `${APP_URL}/fr/workspaces/invitations/accept?token=${invite.token}`;
 
@@ -210,101 +234,31 @@ export async function POST(req: NextRequest) {
           `,
         });
       } catch (error) {
-        console.error(
-          "Erreur lors de l'envoi de l'email d'invitation (create workspace):",
-          error,
-        );
+        console.error("[WORKSPACE_INVITE_EMAIL_ERROR]", error);
       }
     }
 
     return NextResponse.json(workspace, { status: 201 });
   } catch (error) {
     console.error("[CREATE_WORKSPACE_API_ERROR]", error);
+
+    // Cleanup du logo uploadé si la transaction a planté après upload
+    if (uploadedLogoPath) {
+      try {
+        await deleteFromSupabase({
+          category: "workspaceLogo",
+          path: uploadedLogoPath,
+        });
+      } catch (cleanupError) {
+        console.error("[CREATE_WORKSPACE_CLEANUP_ERROR]", cleanupError);
+      }
+    }
+
     return NextResponse.json(
       {
         error: "Erreur interne du serveur",
-        message:
-          error instanceof Error ? error.message : "Unknown server error",
+        message: error instanceof Error ? error.message : "Unknown server error",
       },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * DELETE /api/workspaces/[workspaceId]
- * Vérifie :
- *  - user connecté
- *  - user admin/owner via assertWorkspaceAdmin
- *  - body.confirmationName === workspace.name
- *  - puis supprime le workspace (et détache les missions)
- */
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { workspaceId: string } },
-) {
-  try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { workspaceId } = params;
-
-    // Vérif admin/owner
-    try {
-      await assertWorkspaceAdmin(workspaceId, user.id);
-    } catch {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    const workspace = await prisma.workspace.findUnique({
-      where: { id: workspaceId },
-    });
-
-    if (!workspace) {
-      return NextResponse.json(
-        { error: "Workspace introuvable" },
-        { status: 404 },
-      );
-    }
-
-    const body = await req.json().catch(() => ({}));
-    const confirmationName = (body?.confirmationName as string | undefined) ?? "";
-
-    if (confirmationName !== workspace.name) {
-      return NextResponse.json(
-        {
-          error:
-            "Le nom saisi ne correspond pas au nom du workspace. Suppression annulée.",
-        },
-        { status: 400 },
-      );
-    }
-
-    // STRATÉGIE DE DELETE :
-    // 1) détacher les missions (workspaceId -> null)
-    // 2) supprimer le workspace (members + invitations en cascade)
-
-    await prisma.$transaction(async (tx) => {
-      await tx.mission.updateMany({
-        where: { workspaceId },
-        data: { workspaceId: null },
-      });
-
-      await tx.workspace.delete({
-        where: { id: workspaceId },
-      });
-    });
-
-    return NextResponse.json(
-      { success: true, deletedWorkspaceId: workspaceId },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("[WORKSPACE_DELETE] error", error);
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
       { status: 500 },
     );
   }

@@ -79,7 +79,7 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
 
-  // 👉 2 modes clairs : "responses" = liste de verbatims, "cloud" = nuage de mots
+  // 👉 2 modes : "responses" = liste de verbatims, "cloud" = nuage de mots
   const [activeTab, setActiveTab] = useState<"responses" | "cloud">(
     "responses"
   );
@@ -145,11 +145,52 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
     "or",
   ]);
 
+  // 🔁 Transforme tout (string, {label,value}, objets de rating, etc.) en string
+  const normalizeTexts = (rawTexts: unknown[]): string[] => {
+    return (rawTexts ?? [])
+      .map((item) => {
+        // String simple
+        if (typeof item === "string") return item;
+
+        // Objet
+        if (item && typeof item === "object") {
+          const obj = item as any;
+
+          // Cas dropdown / checkbox: { label, value }
+          if ("label" in obj && "value" in obj) {
+            return `${obj.label} : ${obj.value}`;
+          }
+
+          // Cas rating table: { "3": 1, "4": 1, "5": 1, category: "Évaluation" }
+          if ("category" in obj) {
+            const { category, ...rest } = obj;
+            const parts = Object.entries(rest).map(
+              ([key, value]) => `${key} : ${value}`
+            );
+            return `${category} | ${parts.join(" | ")}`;
+          }
+
+          // Fallback générique
+          try {
+            return JSON.stringify(obj);
+          } catch {
+            return "";
+          }
+        }
+
+        return "";
+      })
+      .filter((t) => t && t.trim().length > 0);
+  };
+
   const processTexts = (textArray: string[]) => {
     const wordFreq: Record<string, number> = {};
     const allWords: string[] = [];
 
-    textArray.forEach((text) => {
+    textArray.forEach((raw) => {
+      const text = raw.trim();
+      if (!text) return;
+
       const words = text
         .toLowerCase()
         .replace(/[^\w\s'àâäçéèêëïîôöùûüÿ]/g, " ")
@@ -165,7 +206,13 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
     return { wordFreq, totalWords: allWords.length };
   };
 
-  const { wordFreq, totalWords } = useMemo(() => processTexts(texts), [texts]);
+  // ✅ On normalise une fois pour toutes
+  const normalizedTexts = useMemo(() => normalizeTexts(texts), [texts]);
+
+  const { wordFreq, totalWords } = useMemo(
+    () => processTexts(normalizedTexts),
+    [normalizedTexts]
+  );
 
   const verbatimData = useMemo(
     () =>
@@ -209,7 +256,7 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
                       Verbatims
                     </span>
                     <span className="text-xs text-gray-500">
-                      {texts.length} réponses ouvertes
+                      {normalizedTexts.length} réponses ouvertes
                     </span>
                   </div>
                   {/* Tabs : Verbatims / Nuage de mots */}
@@ -241,12 +288,12 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
               <div className="p-0 max-h-96 overflow-y-auto">
                 {/* Mode VERBATIMS : liste des réponses complètes */}
                 {activeTab === "responses" &&
-                  (texts.length === 0 ? (
+                  (normalizedTexts.length === 0 ? (
                     <div className="p-4 text-sm text-muted-foreground">
                       Aucun verbatim pour cette question.
                     </div>
                   ) : (
-                    texts.map((text, index) => (
+                    normalizedTexts.map((text, index) => (
                       <div
                         key={index}
                         className={`px-4 py-3 ${
@@ -254,7 +301,7 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
                             ? "bg-white dark:bg-slate-800"
                             : "bg-gray-50 dark:bg-slate-600"
                         } ${
-                          index < texts.length - 1
+                          index < normalizedTexts.length - 1
                             ? "border-b border-gray-200"
                             : ""
                         }`}

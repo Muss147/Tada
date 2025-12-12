@@ -9,19 +9,7 @@ import { Plus, Settings as SettingsIcon, ChevronDown } from "lucide-react";
 import { cn } from "@tada/ui/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
-
-const WORKSPACE_LOGO_BASE_URL =
-  process.env.NEXT_PUBLIC_WORKSPACE_LOGO_BASE_URL || "/uploads/workspaces";
-
-function buildWorkspaceLogoUrl(logo?: string | null) {
-  if (!logo) return null;
-
-  if (logo.startsWith("http://") || logo.startsWith("https://")) {
-    return logo;
-  }
-
-  return `${WORKSPACE_LOGO_BASE_URL}/${encodeURIComponent(logo)}`;
-}
+import { getPublicUrlForPath } from "@/lib/uploads.public";
 
 function WorkspaceAvatar({
   name,
@@ -33,7 +21,10 @@ function WorkspaceAvatar({
   className?: string;
 }) {
   const initial = name?.charAt(0)?.toUpperCase() || "?";
-  const src = buildWorkspaceLogoUrl(logo);
+  const src = getPublicUrlForPath({
+    category: "workspaceLogo",
+    pathOrUrl: logo,
+  });
 
   return (
     <div
@@ -43,7 +34,14 @@ function WorkspaceAvatar({
       )}
     >
       {src ? (
-        <img src={src} alt={name} className="h-full w-full object-cover" />
+        <img
+          src={src}
+          alt={name}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "";
+          }}
+        />
       ) : (
         <span>{initial}</span>
       )}
@@ -117,6 +115,11 @@ export function WorkspaceSwitcher() {
     setOpenList(false);
   };
 
+  console.log("Rendering WorkspaceSwitcher", {
+    workspaces,
+    currentWorkspace,
+    selectedId,
+  });
   return (
     <div className="px-4 mb-4">
       {/* En-tête : workspace actif + chevron pour ouvrir la liste */}

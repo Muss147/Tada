@@ -16,9 +16,17 @@ export default async function DashboardLayout({
     headers: await headers(),
   });
 
-  if (!session || !session.user) {
-    notFound();
-  }
+  // Authentication check disabled - allow access without login
+  // if (!session || !session.user) {
+  //   notFound();
+  // }
+
+  // Mock user for development (remove when authentication is re-enabled)
+  const user = session?.user || {
+    id: "dev-user",
+    name: "Dev User",
+    email: "dev@example.com",
+  };
 
   return (
     <WorkspaceProvider>

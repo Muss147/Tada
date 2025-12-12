@@ -1,6 +1,8 @@
 "use client";
 
-import { Bar, BarChart, LabelList, XAxis } from "recharts";
+import { FC, useRef, useState, useEffect, useMemo } from "react";
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
+import { DataKey } from "recharts/types/util/types";
 
 import {
   Card,
@@ -9,19 +11,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@tada/ui/components/card";
+
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
-import { FC, useRef } from "react";
-import { DataKey } from "recharts/types/util/types";
-import { BarChartCardProps } from "./type";
 import { CardHeaderChart } from "./ui/card-header";
-import {
-  useSetDocumentId,
-  VeltComments,
-  VeltCommentTool,
-} from "@veltdev/react";
+import { BarChartCardProps } from "./type";
+import { useSetDocumentId, VeltComments } from "@veltdev/react";
+import { StackedBarLegend } from "./stacked-bar-legend";
 
 export const BarChartStackedCard: FC<
-  Omit<BarChartCardProps, "primaryDataKey">
+  Omit<BarChartCardProps, "primaryDataKey"> & {
+    max?: number; // gardés pour compat mais non utilisés pour le domaine
+    min?: number;
+    subDashboardItemId: string;
+  }
 > = ({
   config,
   data,
@@ -30,101 +32,163 @@ export const BarChartStackedCard: FC<
   description,
   participationQuestions,
   primaryKeys,
+  label = "key",
+  // max = 100,
+  // min = 0,
+  onDelete,
+  isDeletable,
   subDashboardItemId,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
 
+  const typedData = useMemo(
+    () => (data ?? []) as Array<Record<string, any>>,
+    [data]
+  );
+
+  // 🔹 Si primaryKeys n’est pas fourni, on tente de les déduire du config
+  const derivedKeys = useMemo(() => {
+    if (primaryKeys && primaryKeys.length > 0) return primaryKeys;
+    if (!config) return [] as string[];
+
+    return Object.keys(config).filter((key) => {
+      if (key === "value") return false;
+      const cfg = (config as any)[key];
+      return cfg && typeof cfg === "object";
+    });
+  }, [primaryKeys, config]);
+
+  // Est-ce que nos données ont réellement ces clés (format “stacké”) ?
+  const hasStackShape =
+    derivedKeys.length > 0 &&
+    typedData.some((row) => derivedKeys.some((k) => k in row));
+
+  // ✅ clés actuellement visibles (pour la légende) – seulement si le format stacké est valide
+  const [activeKeys, setActiveKeys] = useState<string[]>(
+    hasStackShape ? derivedKeys : []
+  );
+
+  useEffect(() => {
+    if (hasStackShape) {
+      setActiveKeys(derivedKeys);
+    } else {
+      setActiveKeys([]);
+    }
+  }, [hasStackShape, derivedKeys.join(",")]);
+
+  const toggleKey = (key: string) => {
+    setActiveKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
+
   return (
     <div data-velt-id={`item-${subDashboardItemId}`}>
       <VeltComments />
-      <Card>
+      <Card className="border-none mx-auto w-full px-4" ref={chartRef}>
         <CardHeader>
           <CardHeaderChart
             participationQuestions={participationQuestions}
             title={title}
-            exportTargetId={`chart-${title}`}
-            chartRef={undefined}
+            onDelete={onDelete}
+            isDeletable={isDeletable}
+            chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
-            // handleExportCsv={() => exportAsCSV(data, title)}
           />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent>
+
+        <CardContent className="pt-0 pb-3">
+          {/* 🔹 Légende Appinio uniquement si format stacké valide */}
+          {hasStackShape && derivedKeys.length > 0 && (
+            <StackedBarLegend
+              items={derivedKeys.map((key) => ({
+                key,
+                label: (config as any)?.[key]?.label ?? key,
+                color: (config as any)?.[key]?.color,
+              }))}
+              activeKeys={activeKeys}
+              onToggle={toggleKey}
+            />
+          )}
+
           <ChartContainer
             className="mx-auto aspect-square w-full max-h-[350px]"
             config={config}
-            id={`chart-${title}`}
-            ref={chartRef}
           >
             <BarChart
               accessibilityLayer
-              data={data}
-              margin={{
-                top: 20,
-                right: 30,
-                left: 100,
-                bottom: 5,
-              }}
-              barCategoryGap={0} // Supprime l'espace entre les groupes de barres
-              barGap={0} // Supprime l'espace entre les barres empilées
-              maxBarSize={80} // Augmenté pour correspondre au barSize
+              data={typedData}
+              // layout horizontal = barres verticales
+              margin={{ top: 10, right: 30, left: 10, bottom: 30 }}
+              barCategoryGap={16}
+              maxBarSize={60}
             >
+              {/* X = catégories, Y = valeurs */}
               <XAxis
                 dataKey={categoryKey}
+                type="category"
                 tickLine={false}
-                tickMargin={2}
                 axisLine={false}
-                tickFormatter={(value) => value}
+                tickMargin={8}
               />
+              <YAxis type="number" domain={[0, "dataMax"]} />
+
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent hideLabel />}
+                content={<ChartTooltipContent indicator="line" />}
               />
-              {primaryKeys?.map((key, index) => (
-                <Bar
-                  dataKey={key as DataKey<any>}
-                  fill={`var(--color-${key})`}
-                  style={{ fill: `var(--color-${key}) !important` }}
-                  key={key}
-                  stackId="a"
-                  radius={
-                    index === 0
-                      ? [0, 0, 5, 5]
-                      : index === primaryKeys.length - 1
-                      ? [5, 5, 0, 0]
-                      : 0
-                  }
-                >
-                  <LabelList
-                    dataKey={key as DataKey<any>}
-                    position="insideLeft"
-                    offset={8}
-                    className="fill-[--color-label]"
-                    fontSize={12}
-                    content={(value) => {
-                      const { x, y, height } = value as {
-                        x: number;
-                        y: number;
-                        height: number;
-                      };
-                      return (
-                        <text
-                          x={x! + 8}
-                          y={y! + height! / 2}
-                          textAnchor="start"
-                          dominantBaseline="middle"
+
+              {/* 🟧 CAS 1 : données stackées (rating) -> plusieurs Bar stackées */}
+              {hasStackShape &&
+                derivedKeys.map((key, index) =>
+                  activeKeys.includes(key) ? (
+                    <Bar
+                      key={key}
+                      dataKey={key as DataKey<any>}
+                      fill={
+                        (config as any)?.[key]?.color ?? `var(--color-${key})`
+                      }
+                      stackId="a"
+                      radius={
+                        index === 0
+                          ? [5, 5, 0, 0]
+                          : index === derivedKeys.length - 1
+                            ? [0, 0, 5, 5]
+                            : 0
+                      }
+                    >
+                      {label === "value" ? (
+                        <LabelList
+                          dataKey={key as DataKey<any>}
+                          position="top"
                           className="fill-[--color-label]"
                           fontSize={12}
-                        >
-                          {config[key]?.label || key}
-                        </text>
-                      );
-                    }}
+                        />
+                      ) : null}
+                    </Bar>
+                  ) : null
+                )}
+
+              {/* 🟦 CAS 2 : pas de format stacké (checkbox, dropdown, etc.)
+                      -> fallback en barres simples sur `value` */}
+              {!hasStackShape && (
+                <Bar
+                  dataKey={"value" as DataKey<any>}
+                  fill={(config as any)?.value?.color ?? "hsl(var(--chart-1))"}
+                  maxBarSize={60}
+                  radius={[5, 5, 5, 5]}
+                >
+                  <LabelList
+                    dataKey={"value" as DataKey<any>}
+                    position="top"
+                    className="fill-[--color-label]"
+                    fontSize={12}
                   />
                 </Bar>
-              ))}
+              )}
             </BarChart>
           </ChartContainer>
         </CardContent>

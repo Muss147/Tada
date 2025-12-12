@@ -200,6 +200,8 @@ export interface QuestionData {
   insights?: any;
   insightsUpdatedAt?: Date | null;
   chartId?: string;
+
+  rawResponses?: any[];
 }
 
 interface ChartConfig {

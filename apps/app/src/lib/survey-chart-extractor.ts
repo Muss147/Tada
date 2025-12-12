@@ -31,7 +31,6 @@ export function extractAllQuestionsDataWithConfig(
       const questionType = questionData.type as QuestionType;
       const participantsCount = questionData.responses.length;
 
-      // 🎯 mapping centralisé pour chart_type & allowed_chart
       const { defaultChart, allowedCharts } =
         getVisualizationSettingsForQuestionType(questionType);
 
@@ -62,6 +61,7 @@ export function extractAllQuestionsDataWithConfig(
             participants_responded: participantsCount,
             data: chartData,
             config: generateChartConfig(chartData),
+            rawResponses: questionData.responses,
           });
           break;
         }
@@ -83,6 +83,7 @@ export function extractAllQuestionsDataWithConfig(
             participants_responded: participantsCount,
             data: textResponses,
             config: {},
+            rawResponses: questionData.responses,
           });
           break;
         }
@@ -115,6 +116,7 @@ export function extractAllQuestionsDataWithConfig(
             participants_responded: participantsCount,
             data: checkboxChartData,
             config: generateChartConfig(checkboxChartData),
+            rawResponses: questionData.responses,
           });
           break;
         }
@@ -142,6 +144,7 @@ export function extractAllQuestionsDataWithConfig(
             participants_responded: participantsCount,
             data: booleanChartData,
             config: generateBooleanChartConfig(booleanChartData),
+            rawResponses: questionData.responses,
           });
           break;
         }
@@ -163,6 +166,7 @@ export function extractAllQuestionsDataWithConfig(
               participants_responded: participantsCount,
               data: [],
               config: {},
+              rawResponses: questionData.responses,
             });
             break;
           }
@@ -212,6 +216,7 @@ export function extractAllQuestionsDataWithConfig(
             primaryKeys: ratingKeys,
             min: minRating,
             max: maxRating,
+            rawResponses: questionData.responses,
           });
           break;
         }
@@ -276,6 +281,7 @@ export function extractAllQuestionsDataWithConfig(
             participants_responded: participantsCount,
             data: textResponses,
             config: {},
+            rawResponses: questionData.responses,
           });
           break;
         }
