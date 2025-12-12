@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";
-import OpenAI from "openai";
 
-export const runtime = "nodejs"; // pour être sûr de pouvoir utiliser le SDK OpenAI côté serveur
+import { generateText } from "ai";
+import { openai } from "@ai-sdk/openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+export const runtime = "nodejs";
 
 type AiAnswerJson = {
   answer: string;
@@ -51,7 +49,6 @@ export async function POST(
       );
     }
 
-    // 1) Charger l’analyse + dataset + quelques infos de contexte
     const analysis = await prisma.aiAnalysis.findUnique({
       where: { id: analysisId },
       include: {
@@ -61,17 +58,10 @@ export async function POST(
     });
 
     if (!analysis) {
-      return NextResponse.json(
-        { error: "Analyse introuvable" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Analyse introuvable" }, { status: 404 });
     }
 
-    // Autorisation minimale : créateur de l’analyse ou owner du dataset
-    if (
-      analysis.createdById !== user.id &&
-      analysis.dataset.ownerId !== user.id
-    ) {
+    if (analysis.createdById !== user.id && analysis.dataset.ownerId !== user.id) {
       return NextResponse.json(
         { error: "Vous n'avez pas accès à cette analyse" },
         { status: 403 },
@@ -80,7 +70,6 @@ export async function POST(
 
     const dataset = analysis.dataset;
 
-    // 2) Construire le contexte envoyé au LLM
     const detectedSchema =
       typeof dataset.detectedSchema === "string"
         ? safeJsonParse(dataset.detectedSchema)
@@ -91,9 +80,7 @@ export async function POST(
         ? safeJsonParse(dataset.sampleData)
         : (dataset.sampleData as any);
 
-    const sampleData = Array.isArray(sampleDataRaw)
-      ? sampleDataRaw.slice(0, 50) // on limite pour ne pas exploser le token count
-      : [];
+    const sampleData = Array.isArray(sampleDataRaw) ? sampleDataRaw.slice(0, 50) : [];
 
     const contextPayload = {
       dataset: {
@@ -113,10 +100,9 @@ export async function POST(
         language: analysis.language,
       },
       sampleData,
-      question,
+      question: question.trim(),
     };
 
-    // 3) Appel LLM
     const systemPrompt = `
 Tu es un assistant de data analyst pour un dashboard d'insights.
 Tu reçois :
@@ -135,7 +121,7 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
       "subType": "grouped" | "stacked" | null,
       "title": "Titre du graphique",
       "description": "Optionnel : explication courte",
-      "data": { ... }, // labels/datasets OU structure adaptée pour un KPI
+      "data": { ... },
       "config": {
         "xField": "nom de la variable",
         "yField": "nom de la variable",
@@ -151,31 +137,20 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
 - Ne pas inclure de backticks, ni de commentaire, ni de texte hors JSON.
 `;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+    const result = await generateText({
+      model: openai("gpt-4.1-mini"),
       temperature: 0.2,
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: JSON.stringify(contextPayload),
-        },
-      ],
+      system: systemPrompt,
+      prompt: JSON.stringify(contextPayload),
     });
 
-    const content = completion.choices[0].message?.content ?? "{}";
+    const content = result.text ?? "{}";
 
     let parsed: AiAnswerJson;
     try {
       parsed = JSON.parse(content) as AiAnswerJson;
-    } catch (e) {
-      // fallback si le modèle a renvoyé du texte chelou
-      parsed = {
-        answer: content,
-      };
+    } catch {
+      parsed = { answer: content };
     }
 
     if (!parsed.answer) {
@@ -183,9 +158,11 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
     }
 
     const latencyMs = Date.now() - startedAt;
-    const modelUsed = completion.model;
 
-    // 4) Sauvegarder la query dans AiAnalysisQuery
+    // nom du modèle: côté AI SDK, result.response?.model peut varier selon version
+    const modelUsed =
+      (result as any)?.response?.model || "gpt-4.1-mini";
+
     const queryRecord = await prisma.aiAnalysisQuery.create({
       data: {
         analysisId: analysis.id,
@@ -198,19 +175,16 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
       },
     });
 
-    // 5) Optionnel : créer des charts à partir de answerJson.charts
     if (parsed.charts && parsed.charts.length > 0) {
       await prisma.$transaction(async (tx) => {
-        // Ici, choix simple : on ajoute les nouveaux charts à la suite
         const existingCount = await tx.aiAnalysisChart.count({
           where: { analysisId: analysis.id },
         });
 
         let order = existingCount;
 
-        for (const c of parsed.charts!) {
+        for (const c of parsed.charts) {
           order++;
-
           await tx.aiAnalysisChart.create({
             data: {
               analysisId: analysis.id,
@@ -228,7 +202,6 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
       });
     }
 
-    // 6) Retour API : question + réponse + éventuels charts créés
     return NextResponse.json(
       {
         success: true,
@@ -246,14 +219,10 @@ Ta réponse doit être un JSON **valide** (pas de texte autour), de la forme :
     );
   } catch (error) {
     console.error("[AI_ANALYSIS_QUERY_POST_ERROR]", error);
-    return NextResponse.json(
-      { error: "Erreur interne du serveur" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Erreur interne du serveur" }, { status: 500 });
   }
 }
 
-// Petit helper safe pour JSON.parse
 function safeJsonParse(input: unknown): any {
   if (typeof input !== "string") return input;
   try {
