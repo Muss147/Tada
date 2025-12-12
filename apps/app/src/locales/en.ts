@@ -75,6 +75,23 @@ export default {
     sending: "Sending...",
     send: "Send",
     openButton: "Open comments",
+    searchPlaceholder: "Search comments...",
+    filter:{
+      sortByDate: "Sort by date",
+      sortByUnread: "Sort by unread",
+      showResolved: "Show resolved",
+      onlyYours: "Only yours",
+      onlyCurrentPage: "Only current page",
+      all: "All",
+      resolved: "Resolved",
+      open: "Open",
+    },
+    buble:{
+      title: "Comments",
+      description: "View and add comments to this survey question.",
+      new: "New comment",
+      placeholder: "Write a comment...",
+    },
     status:{
       open: "Open",
       resolved: "Resolved",
@@ -90,12 +107,9 @@ export default {
       save: "Save",
       replyPlaceholder: "Write a reply...",
       sendReply: "Send reply",
+      markOpen: "Mark as open",
+      markResolved: "Mark as resolved",
     },
-    filter:{
-      all: "All",
-      resolved: "Resolved",
-      open: "Open",
-    }
   },
   billing: {
     success: {
