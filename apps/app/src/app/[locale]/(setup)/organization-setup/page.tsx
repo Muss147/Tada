@@ -17,6 +17,10 @@ export default function OrganizationSetup() {
   const [isLoading, setIsLoading] = useState(false);
   const [organizationName, setOrganizationName] = useState("");
 
+  const [workspaceName, setWorkspaceName] = useState(
+    t("workspace.defaultName") ?? "Mon premier workspace"
+  );
+
   const createNewOrganization = async () => {
     setIsLoading(true);
     try {
@@ -25,9 +29,8 @@ export default function OrganizationSetup() {
         .substring(2, 15)}`
         .toLowerCase()
         .replace(/ /g, "-");
-      let result = await organization.checkSlug({
-        slug,
-      });
+
+      let result = await organization.checkSlug({ slug });
 
       while (!result.data?.status) {
         slug = `${organizationName}-${Math.random()
@@ -35,15 +38,36 @@ export default function OrganizationSetup() {
           .substring(2, 15)}`
           .toLowerCase()
           .replace(/ /g, "-");
-        result = await organization.checkSlug({
-          slug,
-        });
+
+        result = await organization.checkSlug({ slug });
       }
 
-      await organization.create({
+      const res = await organization.create({
         name: organizationName,
         slug,
         logo: "",
+      });
+
+      if (res.error || !res.data) {
+        console.error("ORGANIZATION_CREATE_ERROR", res.error);
+        throw new Error(res.error?.message ?? "Organization creation failed");
+      }
+
+      const org = res.data;
+
+      // on prend la valeur du formulaire, avec fallback au cas où
+      const defaultWorkspaceName =
+        workspaceName || t("workspace.defaultName") || "Mon premier workspace";
+
+      await fetch("/api/workspaces", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: defaultWorkspaceName,
+          organizationId: org.id,
+        }),
       });
 
       toast({
@@ -53,6 +77,7 @@ export default function OrganizationSetup() {
 
       router.push("/");
     } catch (error) {
+      console.error("ORG_SETUP_ERROR", error);
       toast({
         title: t("organization.error.title"),
         description: t("organization.error.description"),
@@ -93,6 +118,19 @@ export default function OrganizationSetup() {
                 onChange={(e) => setOrganizationName(e.target.value)}
                 placeholder={t("organization.setup.create.namePlaceholder")}
               />
+
+              <Input
+                value={workspaceName}
+                onChange={(e) => setWorkspaceName(e.target.value)}
+                placeholder={
+                  t("workspace.defaultNamePlaceholder") ?? "Nom du workspace"
+                }
+              />
+              {/* éventuellement un petit helper text */}
+              <p className="text-xs text-muted-foreground">
+                {t("workspace.helper") ??
+                  "Ce sera votre premier espace de travail."}
+              </p>
               <Button
                 onClick={createNewOrganization}
                 disabled={isLoading || !organizationName}

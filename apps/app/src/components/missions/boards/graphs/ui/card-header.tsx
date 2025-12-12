@@ -325,9 +325,7 @@ export const CardHeaderChart = ({
       });
   };
 
-  // Fonction pour générer un token unique de survey (similaire à Appinio)
   const generateSurveyToken = () => {
-    // Génère un UUID v4 similaire au format d'Appinio
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
       const r = (Math.random() * 16) | 0;
       const v = c === "x" ? r : (r & 0x3) | 0x8;
@@ -340,14 +338,14 @@ export const CardHeaderChart = ({
       <div className="group relative non-exportable">
         <div className="flex justify-between items-center">
           <CardDescription>{participationQuestions}</CardDescription>
-          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex gap-2">
             {isDeletable ? (
               <Button variant="destructive" onClick={onDelete}>
                 {t("common.delete")}
               </Button>
             ) : (
               <Button variant="outline" onClick={() => setQuestionId(title)}>
-                {t("common.update")}
+                {t("common.edit")}
               </Button>
             )}
             <DropdownMenu>

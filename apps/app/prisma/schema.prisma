@@ -33,6 +33,25 @@ model User {
   missionAssignments MissionAssignment[]
   assignedBy         MissionAssignment[] @relation("AssignedBy")
 
+  // workspaces...
+  ownedWorkspaces                Workspace[]           @relation("WorkspaceOwner")
+  workspaceMemberships           WorkspaceMember[]
+  workspaceMemberInvitationsSent WorkspaceMember[]     @relation("WorkspaceMemberInvitedBy")
+  workspaceInvitationsSent       WorkspaceInvitation[] @relation("WorkspaceInvitationInvitedBy")
+
+  // Ai Analysis
+  aiDatasets        AiDataset[]       @relation("AiDatasetOwner")
+  aiAnalyses        AiAnalysis[]      @relation("AiAnalysisCreatedBy")
+  aiAnalysisQueries AiAnalysisQuery[]
+
+  // Audience suggestion
+  audienceAttributeSuggestions AudienceAttributeSuggestion[] @relation("AudienceSuggestionCreatedBy")
+
+  commentsAuthored Comment[]        @relation("CommentsCreatedBy")
+  commentsResolved Comment[]        @relation("ResolvedComments")
+  commentMentions  CommentMention[]
+  commentEvents    CommentEvent[]
+
   @@map("user")
 }
 
@@ -55,42 +74,64 @@ model Organization {
   consultedSuperAdminMissions Mission[]          @relation("ConsultedSuperAdminMissions")
   ConsultedMission            ConsultedMission[]
   billingInfo                 BillingInfo?
+  workspaces                  Workspace[]
+
+  //Ai Analysis relations
+  aiDatasets                   AiDataset[]
+  audienceAttributeSuggestions AudienceAttributeSuggestion[]
 
   @@map("organization")
 }
 
 model Mission {
-  id                  String              @id @default(uuid())
+  id                  String        @id @default(uuid())
   name                String
   problemSummary      String?
   objectives          String?
   assumptions         String?
   audiences           Json?
   organizationId      String?
-  organization        Organization?       @relation(fields: [organizationId], references: [id])
+  organization        Organization? @relation(fields: [organizationId], references: [id])
   status              String?
   updatedType         String?
   type                String?
-  internal            Boolean?            @default(false)
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime?           @updatedAt
-  isPublic            Boolean             @default(true)
-  isSuperAdminMission Boolean             @default(false)
-  
+  internal            Boolean?      @default(false)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime?     @updatedAt
+  isPublic            Boolean       @default(true)
+  isSuperAdminMission Boolean       @default(false)
+
+  // NEW : workspace
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  //mode 
+  mode  String  @default("manual")
+  //image
+  image String? // chemin de fichier ou URL
+
+  // 🆕 Champs de brief enrichi
+  sampleSummary              String? @db.Text
+  targetSampleSize           Int?
+  preliminaryRecommendations String? @db.Text
+  studyStructure             String? @db.Text
+
   // Executive Summary - généré quand mission = "completed"
   executiveSummary          String?   @db.Text // Résumé exécutif généré par l'IA
   executiveSummaryUpdatedAt DateTime? // Dernière génération du résumé
-  
-  survey              Survey[]
-  Project             Project[]
-  subDashboard        SubDashboard[]
-  missionPermissions  MissionPermission[]
-  tempMission         TempMission?
-  missionCharts       MissionChart[]
 
-  consultingOrganizations Organization[]      @relation("ConsultedSuperAdminMissions")
-  ConsultedMission        ConsultedMission[]
-  contributors            MissionAssignment[]
+  survey             Survey[]
+  Project            Project[]
+  subDashboard       SubDashboard[]
+  missionPermissions MissionPermission[]
+  tempMission        TempMission?
+  missionCharts      MissionChart[]
+
+  consultingOrganizations      Organization[]                @relation("ConsultedSuperAdminMissions")
+  ConsultedMission             ConsultedMission[]
+  contributors                 MissionAssignment[]
+  audienceAttributeSuggestions AudienceAttributeSuggestion[]
+  comments                     Comment[]
 
   @@map("mission")
 }
@@ -135,14 +176,15 @@ model Survey {
   updatedAt     DateTime?        @updatedAt
   response      SurveyResponse[]
   missionCharts MissionChart[]
+  comments      Comment[]
 
   @@map("survey")
 }
 
 model SurveyResponse {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   surveyId    String
-  survey      Survey   @relation(fields: [surveyId], references: [id])
+  survey      Survey    @relation(fields: [surveyId], references: [id])
   responses   Json
   age         Int
   gender      String
@@ -150,10 +192,11 @@ model SurveyResponse {
   // Métadonnées de soumission
   ipAddress   String?
   userAgent   String?
-  submittedAt DateTime @default(now())
-  status      String   @default("pending")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  submittedAt DateTime  @default(now())
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
 
   @@map("survey_response")
 }
@@ -612,4 +655,305 @@ model MissionChart {
   updatedAt DateTime @updatedAt
 
   @@map("mission_chart")
+}
+
+model Workspace {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String?
+  logo        String?
+
+  // L'organisation cliente qui "possède" ce workspace (facultatif si tu veux aussi du solo)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  // Propriétaire du workspace
+  ownerId String
+  owner   User   @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+
+  // Relations
+  missions    Mission[]
+  members     WorkspaceMember[]
+  invitations WorkspaceInvitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Ai Analysis relations
+  aiDatasets AiDataset[]
+  aiAnalyses AiAnalysis[]
+
+  @@map("workspace")
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // owner, admin, editor, viewer...
+  role String @default("member")
+
+  // pending, active, removed...
+  status String @default("active")
+
+  invitedById String?
+  invitedBy   User?   @relation("WorkspaceMemberInvitedBy", fields: [invitedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_member")
+}
+
+model WorkspaceInvitation {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  email String
+  role  String @default("member")
+
+  token     String    @unique
+  status    String    @default("pending") // pending, accepted, expired, cancelled
+  expiresAt DateTime?
+
+  invitedById String
+  invitedBy   User   @relation("WorkspaceInvitationInvitedBy", fields: [invitedById], references: [id])
+
+  createdAt  DateTime  @default(now())
+  acceptedAt DateTime?
+
+  @@unique([workspaceId, email])
+  @@map("workspace_invitation")
+}
+
+model AiDataset {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+
+  // Rattachement "business"
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  // Propriétaire du dataset (qui a uploadé)
+  ownerId String
+  owner   User   @relation("AiDatasetOwner", fields: [ownerId], references: [id])
+
+  // Infos sur la source
+  sourceType       String  @default("upload") // upload, api, copy, etc.
+  originalFilename String
+  fileType         String // "csv", "xlsx", "pdf", "docx", ...
+  fileSize         BigInt? // en octets
+  storagePath      String // chemin local ou URL (S3, Supabase, ...)
+
+  // Infos structurelles (pour générer le dashboard)
+  rowCount       Int?
+  columnCount    Int?
+  detectedSchema Json? // ex: { columns: [{ name, type, role }, ...] }
+  sampleData     Json? // quelques lignes pour le preview
+
+  // Lifecycle du dataset
+  status       String  @default("uploaded") // uploaded, processing, ready, failed
+  errorMessage String?
+
+  analyses AiAnalysis[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_dataset")
+}
+
+model AiAnalysis {
+  id String @id @default(uuid()) @db.Uuid
+
+  datasetId String    @db.Uuid
+  dataset   AiDataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  title       String
+  type        String  @default("exploratory")
+  description String? @db.Text
+
+  filters  Json?
+  settings Json?
+
+  aiSummary          String?   @db.Text
+  aiSummaryUpdatedAt DateTime?
+
+  createdById String
+  createdBy   User   @relation("AiAnalysisCreatedBy", fields: [createdById], references: [id])
+
+  charts  AiAnalysisChart[]
+  queries AiAnalysisQuery[]
+
+  status   String @default("published")
+  language String @default("fr")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_analysis")
+}
+
+model AiAnalysisChart {
+  id String @id @default(uuid())
+
+  analysisId String
+  analysis   AiAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  // Type de viz
+  type    String // bar, line, pie, table, kpi, boxplot, ...
+  subType String? // stacked_bar, grouped_bar, etc.
+
+  title       String?
+  description String? @db.Text
+
+  // Data prête à être affichée côté front
+  chartData Json // ex: { labels: [...], datasets: [...] }
+  config    Json? // ex: { xField, yField, aggregation, ... }
+
+  // Layout sur le dashboard
+  layout Json? // ex: { x, y, w, h, breakpointLayout... }
+  order  Int? // ordre d’affichage
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_analysis_chart")
+}
+
+model AiAnalysisQuery {
+  id String @id @default(uuid()) @db.Uuid
+
+  analysisId String     @db.Uuid
+  analysis   AiAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  question   String  @db.Text
+  answer     String? @db.Text
+  answerJson Json?
+
+  model     String?
+  latencyMs Int?
+
+  createdAt DateTime @default(now())
+
+  @@map("ai_analysis_query")
+}
+
+//Model AudienceAttributeSuggestion
+
+model AudienceAttributeSuggestion {
+  id String @id @default(uuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  missionId String?
+  mission   Mission? @relation(fields: [missionId], references: [id])
+
+  groupId     String?
+  filterId    String?
+  label       String
+  description String?
+
+  status String @default("pending")
+
+  createdById String?
+  createdBy   User?   @relation("AudienceSuggestionCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime  @default(now())
+  decidedAt DateTime?
+
+  @@map("audience_attribute_suggestion")
+}
+
+//comment 
+model Comment {
+  id String @id @default(uuid())
+
+  missionId String?  @map("mission_id")
+  mission   Mission? @relation(fields: [missionId], references: [id])
+
+  surveyId String? @map("survey_id")
+  survey   Survey? @relation(fields: [surveyId], references: [id])
+
+  surveyResponseId String?         @map("survey_response_id")
+  surveyResponse   SurveyResponse? @relation(fields: [surveyResponseId], references: [id])
+
+  questionKey String? @map("question_key")
+
+  parentId String?   @map("parent_id")
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  content String @db.Text
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation("CommentsCreatedBy", fields: [createdById], references: [id])
+
+  status String @default("open")
+
+  resolvedById String?   @map("resolved_by_id")
+  resolvedBy   User?     @relation("ResolvedComments", fields: [resolvedById], references: [id])
+  resolvedAt   DateTime? @map("resolved_at")
+
+  editedAt  DateTime? @map("edited_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  mentions      CommentMention[]
+  commentEvents CommentEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comment")
+}
+
+model CommentMention {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  seenAt    DateTime? @map("seen_at")
+
+  @@unique([commentId, userId])
+  @@map("comment_mention")
+}
+
+model CommentEvent {
+  id String @id @default(uuid())
+
+  commentId String  @map("comment_id")
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  type    String
+  payload Json?
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("comment_event")
 }

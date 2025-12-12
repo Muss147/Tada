@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@tada/ui/components/dialog";
 import { useEffect, useState } from "react";
+import { AudienceSuggestionSection } from "./audience-suggestion-section";
 
 interface ExpandedGroupsState {
   [groupId: string]: boolean;
@@ -21,9 +22,18 @@ interface ExpandedGroupsState {
 type Props = {
   onOpenChange: (isOpen: boolean) => void;
   isOpen: boolean;
+  orgId: string;
+  missionId: string;
+  currentUserId?: string | null;
 };
 
-export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
+export function AudiencesFilterModal({
+  onOpenChange,
+  isOpen,
+  orgId,
+  missionId,
+  currentUserId,
+}: Props) {
   const [expandedGroups, setExpandedGroups] = useState<ExpandedGroupsState>({});
   const {
     activeFiltersCount,
@@ -36,7 +46,7 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
   const isOptionSelected = (
     groupId: string,
     filterId: string,
-    value: string,
+    value: string
   ) => {
     return selectedFilters[groupId]?.[filterId]?.includes(value) || false;
   };
@@ -48,7 +58,6 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
   const toggleGroup = (groupId: string) => {
     setExpandedGroups((prevState) => {
       const newState: ExpandedGroupsState = {};
-      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.keys(prevState).forEach((key) => {
         newState[key] = false;
       });
@@ -57,67 +66,64 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
     });
   };
 
-  const renderMultiSelectFilter = (groupId: string, filter: Filter) => {
-    return (
-      <div className="h-full">
-        <h4 className="text-sm font-medium text-gray-800 mb-2">
-          {filter.label}
-        </h4>
-        <div className="space-y-1 max-h-48 overflow-y-auto pr-2 thin-scrollbar">
-          {filter.options?.map((option) => (
-            <div key={option.value} className="flex items-center">
-              <input
-                type="checkbox"
-                id={`${groupId}-${filter.id}-${option.value}`}
-                checked={isOptionSelected(groupId, filter.id, option.value)}
-                onChange={(e) =>
-                  handleOptionSelect(
-                    groupId,
-                    filter.id,
-                    option.value,
-                    e.target.checked,
-                  )
-                }
-                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-              />
-              <label
-                htmlFor={`${groupId}-${filter.id}-${option.value}`}
-                className="ml-2 text-sm text-gray-600 font-normal"
-              >
-                {option.label}
-              </label>
-            </div>
-          ))}
-        </div>
+  const renderMultiSelectFilter = (groupId: string, filter: Filter) => (
+    <div className="h-full">
+      <h4 className="text-sm font-medium text-gray-800 mb-2">{filter.label}</h4>
+      <div className="space-y-1 max-h-48 overflow-y-auto pr-2 thin-scrollbar">
+        {filter.options?.map((option) => (
+          <div key={option.value} className="flex items-center">
+            <input
+              type="checkbox"
+              id={`${groupId}-${filter.id}-${option.value}`}
+              checked={isOptionSelected(groupId, filter.id, option.value)}
+              onChange={(e) =>
+                handleOptionSelect(
+                  groupId,
+                  filter.id,
+                  option.value,
+                  e.target.checked
+                )
+              }
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+            />
+            <label
+              htmlFor={`${groupId}-${filter.id}-${option.value}`}
+              className="ml-2 text-sm text-gray-600 font-normal"
+            >
+              {option.label}
+            </label>
+          </div>
+        ))}
       </div>
-    );
-  };
+    </div>
+  );
 
-  const renderFreeTextFilter = (groupId: string, filter: Filter) => {
-    return (
-      <div className="h-full">
-        <h4 className="text-sm font-medium text-gray-800 mb-2">
-          {filter.label}
-        </h4>
-        <input
-          type="text"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          placeholder={`Entrez ${filter.label.toLowerCase()}`}
-        />
-      </div>
-    );
-  };
+  const renderFreeTextFilter = (groupId: string, filter: Filter) => (
+    <div className="h-full">
+      <h4 className="text-sm font-medium text-gray-800 mb-2">{filter.label}</h4>
+      <input
+        type="text"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        placeholder={`Entrez ${filter.label.toLowerCase()}`}
+      />
+    </div>
+  );
 
   useEffect(() => {
     if (filterGroups.length > 0 && Object.keys(expandedGroups).length === 0) {
       toggleGroup(filterGroups[0]!.id);
     }
-  }, []);
+  }, [filterGroups, expandedGroups]);
+
+  const currentExpandedGroupId = Object.keys(expandedGroups).find(
+    (id) => expandedGroups[id]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl mx-auto">
-        <div className="p-4">
+      {/* 👉 Ici on laisse ENTIEREMENT DialogContent gérer le scroll */}
+      <DialogContent className="max-w-7xl max-h-[80vh] mx-auto overflow-y-auto">
+        <div className="p-4 space-y-6">
           <DialogHeader>
             <DialogTitle>
               Filtrer les audiences{" "}
@@ -128,8 +134,11 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
               )}
             </DialogTitle>
           </DialogHeader>
-          <div className=" py-5  overflow-y-auto">
+
+          {/* Bloc filtres */}
+          <div className="py-3">
             <div className="flex flex-nowrap">
+              {/* Colonne catégories */}
               <div className="w-64 min-w-[16rem] border-r border-gray-200 px-4">
                 <h4 className="text-xs uppercase font-semibold text-gray-500 mb-4 tracking-wider">
                   Catégories
@@ -157,6 +166,8 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
                   ))}
                 </nav>
               </div>
+
+              {/* Colonne filtres */}
               <div className="flex-1 px-6">
                 {filterGroups.map((group) => (
                   <div
@@ -190,7 +201,17 @@ export function AudiencesFilterModal({ onOpenChange, isOpen }: Props) {
               </div>
             </div>
           </div>
-          <div className="mt-6 mb-6">
+
+          {/* Bloc suggestion d’audience DANS le scroll */}
+          <AudienceSuggestionSection
+            orgId={orgId}
+            missionId={missionId}
+            currentUserId={currentUserId}
+            initialGroupId={currentExpandedGroupId}
+          />
+
+          {/* Footer – visible en bas, on scrolle pour y arriver */}
+          <div className="border-t pt-4">
             <DialogFooter>
               <div className="space-x-4">
                 <Button type="button" variant="outline" onClick={resetFilters}>

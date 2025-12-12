@@ -30,33 +30,45 @@ export const RadarChartCard: FC<BarChartCardProps> = ({
   title,
   description,
   participationQuestions,
+  onDelete,
+  isDeletable,
   subDashboardItemId,
 }) => {
+  const id = "radar-interactive";
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
+
+  const typedData = (data ?? []) as Array<Record<string, any>>;
 
   return (
     <>
       <VeltComments />
-      <Card ref={chartRef} className="mx-auto w-full px-4">
-        <CardHeader className="flex flex-row justify-between items-start gap-4">
-          <div className="space-y-1">
-            <CardHeaderChart
-              participationQuestions={participationQuestions}
-              title=""
-              chartRef={chartRef}
-              subDashboardItemId={subDashboardItemId}
-            />
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </div>
+      <Card
+        ref={chartRef}
+        data-chart={id}
+        className="flex flex-col border-none mx-auto w-full px-4"
+      >
+        <CardHeader>
+          <CardHeaderChart
+            participationQuestions={participationQuestions}
+            title={title}
+            onDelete={onDelete}
+            isDeletable={isDeletable}
+            exportTargetId={`chart-${id}`}
+            chartRef={chartRef}
+            subDashboardItemId={subDashboardItemId}
+          />
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent className="pt-0">
+
+        <CardContent className="flex flex-1 justify-center pb-3 pt-0">
           <ChartContainer
             config={config}
-            className="mx-auto aspect-square max-h-[350px]"
+            id={`chart-${id}`}
+            className="mx-auto aspect-square w-full max-w-[350px] max-h-[350px]"
           >
-            <RadarChart data={data}>
+            <RadarChart data={typedData}>
               <ChartTooltip
                 cursor={false}
                 content={

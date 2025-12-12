@@ -1,4 +1,4 @@
-import { MissionsCompleted } from "@/components/contributors/missions-completed";
+import { MissionsSection as MissionsCompleted } from "@/components/contributors/missions-completed";
 import ProfileCard from "@/components/organizations/profile-card";
 import TeamMembersPreview from "@/components/organizations/team-members";
 import { prisma } from "@/lib/prisma";
@@ -48,6 +48,36 @@ export default async function OrganizationPage({
 
   const metadata = JSON.parse(organization.metadata || "{}");
 
+  // 🔥 Récupérer les missions assignées à cette organisation
+  const assignedMissions = await prisma.missionAssignment.findMany({
+    where: {
+      mission: { organizationId: params.id },
+      status: { in: ["assigned", "accepted", "in_progress"] },
+    },
+    include: {
+      mission: {
+        include: { organization: true },
+      },
+      assignedByUser: true,
+    },
+    orderBy: { assignedAt: "desc" },
+  });
+
+  // 🔥 Récupérer les missions complétées
+  const completedMissions = await prisma.missionAssignment.findMany({
+    where: {
+      mission: { organizationId: params.id },
+      status: "completed",
+    },
+    include: {
+      mission: {
+        include: { organization: true },
+      },
+      assignedByUser: true,
+    },
+    orderBy: { completedAt: "desc" },
+  });
+
   return (
     <div className="p-5 text-gray-800">
       <div className="flex flex-col sm:flex-row mb-4 gap-4">
@@ -67,7 +97,13 @@ export default async function OrganizationPage({
             ],
           }}
         />
-        <MissionsCompleted contributors={[]} />
+
+        {/* 🔥 ENFIN on envoie correctement les props */}
+        <MissionsCompleted
+          assignedMissions={assignedMissions}
+          completedMissions={completedMissions}
+          params={params}
+        />
       </div>
       <TeamMembersPreview
         membersInitial={organization.members.map((member) => {

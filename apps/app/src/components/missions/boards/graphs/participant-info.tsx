@@ -48,8 +48,10 @@ export const ParticipantInfo: FC<
               {title}
             </h1>
             <div className=" flex flex-wrap gap-2">
-              {locations.map((location) => (
-                <Badge variant="outline">{location}</Badge>
+              {locations.map((location, index) => (
+                <Badge key={`${location}-${index}`} variant="outline">
+                  {location}
+                </Badge>
               ))}
             </div>
           </div>
@@ -117,8 +119,8 @@ export const ParticipantInfo: FC<
                   index === 0
                     ? [5, 0, 0, 5]
                     : index === primaryKeys.length - 1
-                    ? [0, 5, 5, 0]
-                    : 0
+                      ? [0, 5, 5, 0]
+                      : 0
                 }
               >
                 {label === "value" ? (

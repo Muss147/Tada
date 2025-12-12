@@ -2,6 +2,18 @@
 
 import { createContext, useContext, useState } from "react";
 
+export type MediaType = "photo" | "video" | "audio";
+export type GpsMode = "pin" | "navigate" | "checkin";
+export type MediaQuestionMode = "upload" | "stimulus" | "upload_and_stimulus";
+
+export type ImageChoice = {
+  id: string; // interne, stable (pour drag & drop, tracking)
+  value: string; // ce qui sera renvoyé dans la réponse ("concept_a")
+  label: string; // ex : "Concept A – fond bleu"
+  imageUrl: string; // URL finale (S3 / Supabase / etc.)
+  description?: string; // optionnel, pour des infos supplémentaires
+};
+
 interface SurveysBuilderContextType {
   surveys: Survey;
   setSurveys: React.Dispatch<React.SetStateAction<Survey>>;
@@ -12,11 +24,38 @@ export const SurveysBuilderContext = createContext<
 >(undefined);
 
 export interface SurveyQuestion {
-  type: string;
+  type: string; // "radiogroup", "checkbox", "rating", "file", "matrix", "text", ...
   name: string;
   title: string;
+  description?: string;
   isRequired?: boolean;
+  imageChoices?: ImageChoice[];
+
+  // catégorie logique
+  category?:
+    | "single_choice"
+    | "multiple_choice"
+    | "likert"
+    | "numeric_scale"
+    | "slider"
+    | "matrix"
+    | "open"
+    | "rating"
+    | "image_ranking"
+    | "media"
+    | "gps"
+    | "section"
+    | "image_ranking"
+    | "ranking";
+
+  // choix
   choices?: string[];
+  allowMultiple?: boolean;
+  randomizeChoices?: boolean;
+  hasOther?: boolean;
+  otherText?: string;
+
+  // rating / échelles
   rateMin?: number;
   rateMax?: number;
   rateStep?: number;
@@ -24,12 +63,53 @@ export interface SurveyQuestion {
   maxRateDescription?: string;
   displayRateDescriptionsAsExtremes?: boolean;
   displayMode?: "auto" | "buttons" | "dropdown";
-  hasOther?: boolean;
-  otherText?: string;
+
+  // input / numérique
   inputType?: string;
   min?: number;
   max?: number;
   step?: number;
+  placeholder?: string;
+  maxLength?: number;
+
+  // matrice / classement
+  rows?: string[];
+  columns?: string[];
+  allowRowReorder?: boolean;
+
+  // 📸 média
+  mediaTypes?: MediaType[];
+  maxDurationSeconds?: number;
+  maxSizeMb?: number;
+  maxFiles?: number;
+  captureRequired?: boolean;
+
+  mediaMode?: MediaQuestionMode; // "upload", "stimulus", "upload_and_stimulus"
+  stimulusSource?: "upload" | "url";
+  stimulusMediaUrl?: string;
+  stimulusMediaType?: MediaType;
+
+  // 📍 GPS
+  gpsMode?: GpsMode;
+  targetLocation?: {
+    lat: number;
+    lng: number;
+    label?: string;
+  };
+  maxDistanceMeters?: number;
+  minTimeOnSiteSeconds?: number;
+  requiresPathTracking?: boolean;
+  gpsToleranceMeters?: number;
+
+  // logique
+  visibleIf?: string;
+  enableIf?: string;
+  requiredIf?: string;
+
+  // sections
+  isSectionTitle?: boolean;
+  sectionId?: string;
+  sectionTitle?: string;
 }
 
 interface SurveyPage {
@@ -62,7 +142,10 @@ export interface Survey {
 export function SurveysBuilderProvider({
   children,
   defaultSurvey,
-}: { children: React.ReactNode; defaultSurvey?: Survey }) {
+}: {
+  children: React.ReactNode;
+  defaultSurvey?: Survey;
+}) {
   const [surveys, setSurveys] = useState<Survey>(
     defaultSurvey && Object.keys(defaultSurvey).length > 0
       ? defaultSurvey
@@ -75,7 +158,7 @@ export function SurveysBuilderProvider({
               elements: [],
             },
           ],
-        },
+        }
   );
   return (
     <SurveysBuilderContext.Provider value={{ surveys, setSurveys }}>
@@ -88,7 +171,7 @@ export function useSurveysBuilder() {
   const context = useContext(SurveysBuilderContext);
   if (!context) {
     throw new Error(
-      "useSurveysBuilder must be used within a SurveysBuilderProvider",
+      "useSurveysBuilder must be used within a SurveysBuilderProvider"
     );
   }
   return context;

@@ -10,11 +10,7 @@ import {
 import { ArrayChartCardProps } from "./type";
 import { FC, useMemo, useRef, useState } from "react";
 import { CardHeaderChart } from "./ui/card-header";
-import {
-  useSetDocumentId,
-  VeltComments,
-  VeltCommentTool,
-} from "@veltdev/react";
+import { useSetDocumentId, VeltComments } from "@veltdev/react";
 
 const WordCloud = ({
   words,
@@ -24,6 +20,16 @@ const WordCloud = ({
   const maxCount = Math.max(...words.map((w) => w.count));
   const minSize = 14;
   const maxSize = 48;
+
+  if (!words.length || maxCount === 0) {
+    return (
+      <div className="flex items-center justify-center w-full h-full rounded-lg border bg-gray-50">
+        <span className="text-xs text-gray-500 text-center px-4">
+          Pas assez de verbatims pour générer un nuage de mots.
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-6 overflow-hidden">
@@ -73,8 +79,9 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
 
-  const [activeTab, setActiveTab] = useState<"verbatim" | "responses">(
-    "verbatim"
+  // 👉 2 modes : "responses" = liste de verbatims, "cloud" = nuage de mots
+  const [activeTab, setActiveTab] = useState<"responses" | "cloud">(
+    "responses"
   );
 
   const stopWords = new Set([
@@ -138,11 +145,52 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
     "or",
   ]);
 
+  // 🔁 Transforme tout (string, {label,value}, objets de rating, etc.) en string
+  const normalizeTexts = (rawTexts: unknown[]): string[] => {
+    return (rawTexts ?? [])
+      .map((item) => {
+        // String simple
+        if (typeof item === "string") return item;
+
+        // Objet
+        if (item && typeof item === "object") {
+          const obj = item as any;
+
+          // Cas dropdown / checkbox: { label, value }
+          if ("label" in obj && "value" in obj) {
+            return `${obj.label} : ${obj.value}`;
+          }
+
+          // Cas rating table: { "3": 1, "4": 1, "5": 1, category: "Évaluation" }
+          if ("category" in obj) {
+            const { category, ...rest } = obj;
+            const parts = Object.entries(rest).map(
+              ([key, value]) => `${key} : ${value}`
+            );
+            return `${category} | ${parts.join(" | ")}`;
+          }
+
+          // Fallback générique
+          try {
+            return JSON.stringify(obj);
+          } catch {
+            return "";
+          }
+        }
+
+        return "";
+      })
+      .filter((t) => t && t.trim().length > 0);
+  };
+
   const processTexts = (textArray: string[]) => {
     const wordFreq: Record<string, number> = {};
-    const allWords = [];
+    const allWords: string[] = [];
 
-    textArray.forEach((text) => {
+    textArray.forEach((raw) => {
+      const text = raw.trim();
+      if (!text) return;
+
       const words = text
         .toLowerCase()
         .replace(/[^\w\s'àâäçéèêëïîôöùûüÿ]/g, " ")
@@ -158,34 +206,27 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
     return { wordFreq, totalWords: allWords.length };
   };
 
-  const { wordFreq, totalWords } = useMemo(() => processTexts(texts), [texts]);
-  const verbatimData = useMemo(() => {
-    return Object.entries(wordFreq)
-      .map(([word, count]) => ({
-        word,
-        count: count as number,
-        percentage: (((count as number) / totalWords) * 100).toFixed(1),
-      }))
-      .sort((a, b) => (b.count as number) - (a.count as number));
-  }, [wordFreq, totalWords]);
+  // ✅ On normalise une fois pour toutes
+  const normalizedTexts = useMemo(() => normalizeTexts(texts), [texts]);
 
-  const exportToCSV = (
-    data: { word: string; count: number; percentage: string }[],
-    title: string
-  ) => {
-    const csvHeader = "Mot,Occurrences,Pourcentage\n";
-    const csvRows = data
-      .map((item) => `${item.word},${item.count},${item.percentage}`)
-      .join("\n");
+  const { wordFreq, totalWords } = useMemo(
+    () => processTexts(normalizedTexts),
+    [normalizedTexts]
+  );
 
-    const csvContent = csvHeader + csvRows;
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${title}-wordcloud.csv`;
-    link.click();
-  };
+  const verbatimData = useMemo(
+    () =>
+      Object.entries(wordFreq)
+        .map(([word, count]) => ({
+          word,
+          count: count as number,
+          percentage: totalWords
+            ? (((count as number) / totalWords) * 100).toFixed(1)
+            : "0.0",
+        }))
+        .sort((a, b) => (b.count as number) - (a.count as number)),
+    [wordFreq, totalWords]
+  );
 
   return (
     <>
@@ -206,26 +247,20 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
         </CardHeader>
         <CardContent className="p-3 overflow-hidden h-full" id={`id-${title}`}>
           <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
-            <div className=" rounded-lg shadow-sm border">
+            {/* Colonne gauche */}
+            <div className="rounded-lg shadow-sm border">
               <div className="p-4 border-b bg-gray-50">
                 <div className="flex justify-between items-center">
-                  <div className="flex gap-4">
-                    <span className="font-medium  dark:text-black">
-                      Verbatim
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium dark:text-black">
+                      Verbatims
                     </span>
-                    <span className="font-medium dark:text-black">Tous</span>
+                    <span className="text-xs text-gray-500">
+                      {normalizedTexts.length} réponses ouvertes
+                    </span>
                   </div>
+                  {/* Tabs : Verbatims / Nuage de mots */}
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => setActiveTab("verbatim")}
-                      className={`px-4 py-1 text-sm rounded-full transition-colors ${
-                        activeTab === "verbatim"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      }`}
-                    >
-                      Nuage de mots
-                    </button>
                     <button
                       onClick={() => setActiveTab("responses")}
                       className={`px-4 py-1 text-sm rounded-full transition-colors ${
@@ -234,14 +269,62 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
                     >
-                      Tous les verbatims sélectionnés
+                      Verbatims
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("cloud")}
+                      className={`px-4 py-1 text-sm rounded-full transition-colors ${
+                        activeTab === "cloud"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      }`}
+                    >
+                      Nuage de mots
                     </button>
                   </div>
                 </div>
               </div>
+
               <div className="p-0 max-h-96 overflow-y-auto">
-                {activeTab === "verbatim"
-                  ? // Affichage du verbatim
+                {/* Mode VERBATIMS : liste des réponses complètes */}
+                {activeTab === "responses" &&
+                  (normalizedTexts.length === 0 ? (
+                    <div className="p-4 text-sm text-muted-foreground">
+                      Aucun verbatim pour cette question.
+                    </div>
+                  ) : (
+                    normalizedTexts.map((text, index) => (
+                      <div
+                        key={index}
+                        className={`px-4 py-3 ${
+                          index % 2 === 0
+                            ? "bg-white dark:bg-slate-800"
+                            : "bg-gray-50 dark:bg-slate-600"
+                        } ${
+                          index < normalizedTexts.length - 1
+                            ? "border-b border-gray-200"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="text-gray-400 text-sm font-medium min-w-8">
+                            {index + 1}.
+                          </span>
+                          <span className="text-gray-700 text-sm leading-relaxed">
+                            {text}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ))}
+
+                {/* Mode NUAGE DE MOTS : tableau Mot / % */}
+                {activeTab === "cloud" &&
+                  (verbatimData.length === 0 ? (
+                    <div className="p-4 text-sm text-muted-foreground">
+                      Pas assez de verbatims pour calculer un nuage de mots.
+                    </div>
+                  ) : (
                     verbatimData.map((item, index) => (
                       <div
                         key={item.word}
@@ -263,33 +346,22 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
                         </span>
                       </div>
                     ))
-                  : texts.map((text, index) => (
-                      <div
-                        key={index}
-                        className={`px-4 py-3 ${
-                          index % 2 === 0
-                            ? "bg-white dark:bg-slate-800"
-                            : "bg-gray-50 dark:bg-slate-600"
-                        } ${
-                          index < texts.length - 1
-                            ? "border-b border-gray-200"
-                            : ""
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <span className="text-gray-400 text-sm font-medium min-w-8">
-                            {index + 1}.
-                          </span>
-                          <span className="text-gray-700 text-sm leading-relaxed">
-                            {text}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                  ))}
               </div>
             </div>
+
+            {/* Colonne droite : Word Cloud seulement en mode "Nuage de mots" */}
             <div ref={chartRef}>
-              <WordCloud words={verbatimData} />
+              {activeTab === "cloud" ? (
+                <WordCloud words={verbatimData} />
+              ) : (
+                <div className="flex items-center justify-center h-full rounded-lg border bg-gray-50">
+                  <span className="text-xs text-gray-500 text-center px-4">
+                    Cliquez sur &quot;Nuage de mots&quot; pour visualiser les
+                    mots les plus fréquents.
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>

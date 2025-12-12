@@ -45,6 +45,7 @@ import {
   Filter,
   MoreHorizontal,
   Eye,
+  Edit,
   Mail,
   Ban,
   CheckCircle,
@@ -88,7 +89,7 @@ const ContributorCell = React.memo(
         )}
       </div>
       <div>
-        <div className="font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+        <div className="font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-600 transition-colors">
           {contributor.name}
         </div>
         <div className="text-sm text-gray-500">{contributor.email}</div>
@@ -227,6 +228,19 @@ const ActionsCell = React.memo(
           >
             <Eye className="h-4 w-4 text-blue-600" />
             Voir le profil
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          asChild
+          className="hover:bg-blue-50 transition-colors"
+        >
+          <Link
+            href={`/contributors/edit/${contributor.id}`}
+            className="flex items-center gap-2"
+          >
+            <Edit className="h-4 w-4 text-blue-600" />
+            Modifier
           </Link>
         </DropdownMenuItem>
 

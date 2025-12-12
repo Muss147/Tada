@@ -47,6 +47,8 @@ import {
   HelpCircle,
   Sun,
   Layers,
+  Globe,
+  Bell,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -69,8 +71,8 @@ interface HeaderProps {
 }
 
 const languages = [
-  { code: "fr", name: "Français", flag: "/flags/fr.svg" },
-  { code: "en", name: "English", flag: "/flags/en.svg" },
+  { code: "fr", name: "Français" },
+  { code: "en", name: "English" },
 ] as const;
 
 type LanguageCode = (typeof languages)[number]["code"];
@@ -174,7 +176,6 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        console.error("[BILLING_FETCH_ERROR]", error);
         /*  toast({
           title: commonT("error.somethingWentWrong"),
           variant: "destructive",
@@ -183,7 +184,7 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
     };
 
     fetchBillingInfo();
-  }, [orgId]);
+  }, [orgId, setField, setAllFields]);
 
   const isFormValid = street && zip && city && country && company;
 
@@ -321,39 +322,31 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
             </DialogContent>
           </Dialog>
 
-          <Select
-            value={currentLanguage.code}
-            onValueChange={(value: LanguageCode) => changeLocale(value)}
-          >
-            <SelectTrigger className="w-auto border-0 bg-transparent hover:bg-gray-100">
-              <div className="flex items-center">
-                <Image
-                  src={currentLanguage.flag || "/placeholder.svg"}
-                  alt={`${currentLanguage.name} flag`}
-                  width={20}
-                  height={15}
-                  className="mr-2"
-                />
-                <span>{currentLanguage.name}</span>
-              </div>
-            </SelectTrigger>
-            <SelectContent>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3 rounded-md text-blue-700 hover:bg-blue-100 flex items-center space-x-2"
+              >
+                <Globe className="h-4 w-4" />
+                <span className="text-xs font-semibold uppercase">
+                  {currentLanguage.code}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
               {languages.map((lang) => (
-                <SelectItem key={lang.code} value={lang.code}>
-                  <div className="flex items-center">
-                    <Image
-                      src={lang.flag || "/placeholder.svg"}
-                      alt={`${lang.name} flag`}
-                      width={20}
-                      height={15}
-                      className="mr-2"
-                    />
-                    <span>{lang.name}</span>
-                  </div>
-                </SelectItem>
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => changeLocale(lang.code as LanguageCode)}
+                  className="text-sm"
+                >
+                  {lang.name}
+                </DropdownMenuItem>
               ))}
-            </SelectContent>
-          </Select>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -429,10 +422,30 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* <Inbox
+            applicationIdentifier="rkwq3JiGAl2y"
+            subscriber={"685ed8ca56253bc5d63e4329"}
+            appearance={appearance}
+          /> */}
+
           <Inbox
             applicationIdentifier="rkwq3JiGAl2y"
             subscriber={"685ed8ca56253bc5d63e4329"}
             appearance={appearance}
+            renderBell={(bellProps) => (
+              <button
+                // {...bellProps}
+                className="relative flex h-8 w-8 items-center justify-center rounded-full hover:bg-blue-100"
+              >
+                <Bell className="h-4 w-4 text-blue-600" />
+
+                {/* {bellProps.unreadCount > 0 && (
+        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-[3px] text-[10px] font-semibold text-white">
+          {bellProps.unreadCount}
+        </span>
+      )} */}
+              </button>
+            )}
           />
 
           <DropdownMenu>
