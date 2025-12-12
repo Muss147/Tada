@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";
 
 import { generateText } from "ai";
+
+//correct import path for openai SDK
 import { openai } from "@ai-sdk/openai";
 
 export const runtime = "nodejs";
