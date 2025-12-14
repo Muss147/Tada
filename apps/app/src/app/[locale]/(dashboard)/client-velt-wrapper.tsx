@@ -30,11 +30,11 @@ export const ClientVeltWrapper = ({
     >
       {children}
 
-      {isVeltReady && (
+      {/* {isVeltReady && (
         <div className="fixed bottom-24 flex items-center justify-center h-12 w-12 rounded-full bg-primary right-4 z-50">
           <VeltCommentTool />
         </div>
-      )}
+      )} */}
     </VeltProvider>
   );
 };

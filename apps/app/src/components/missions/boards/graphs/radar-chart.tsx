@@ -22,7 +22,13 @@ import { BarChartCardProps } from "./type";
 import { CardHeaderChart } from "./ui/card-header";
 import { useSetDocumentId, VeltComments } from "@veltdev/react";
 
-export const RadarChartCard: FC<BarChartCardProps> = ({
+export const RadarChartCard: FC<
+  BarChartCardProps & {
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
+  }
+> = ({
   config,
   data,
   categoryKey = "month",
@@ -33,6 +39,9 @@ export const RadarChartCard: FC<BarChartCardProps> = ({
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const id = "radar-interactive";
   const chartRef = useRef<HTMLDivElement>(null);
@@ -57,6 +66,9 @@ export const RadarChartCard: FC<BarChartCardProps> = ({
             exportTargetId={`chart-${id}`}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

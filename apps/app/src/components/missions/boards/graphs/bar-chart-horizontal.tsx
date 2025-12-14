@@ -18,7 +18,18 @@ import {
   VeltCommentTool,
 } from "@veltdev/react";
 
-export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
+const formatPct = (v?: number) => {
+  if (v == null || Number.isNaN(v)) return "";
+  return `${v.toFixed(0)}`;
+};
+
+export const BarChartHorizontalCard: FC<
+  BarChartCardProps & {
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
+  }
+> = ({
   config,
   data,
   categoryKey = "month",
@@ -29,9 +40,36 @@ export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
+  const YAxisTick = ({
+    x,
+    y,
+    payload,
+  }: {
+    x: number;
+    y: number;
+    payload: { value: string };
+  }) => {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text
+          x={0}
+          y={0}
+          dy={4}
+          textAnchor="end"
+          className="fill-slate-900"
+          fontSize={12}
+        >
+          {payload.value}
+        </text>
+      </g>
+    );
+  };
 
   return (
     <div data-velt-id={`item-${subDashboardItemId}`}>
@@ -45,6 +83,9 @@ export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
             onDelete={onDelete}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
 
           <CardTitle>{title}</CardTitle>
@@ -53,17 +94,14 @@ export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
 
         <CardContent className="pt-0 pb-3">
           <ChartContainer
-            className="mx-auto aspect-square w-full max-h-[350px]"
+            className="mx-auto w-full h-[350px]"
             config={config}
             ref={chartRef}
           >
             <BarChart
-              accessibilityLayer
               data={data}
               layout="vertical"
-              margin={{
-                left: 0,
-              }}
+              margin={{ left: 80, right: 24 }}
             >
               <YAxis
                 dataKey={categoryKey}
@@ -71,7 +109,8 @@ export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
                 tickLine={false}
                 tickMargin={2}
                 axisLine={false}
-                tickFormatter={(value) => value}
+                width={150}
+                tick={(props) => <YAxisTick {...props} />}
               />
               <XAxis dataKey={primaryDataKey} type="number" hide />
               <ChartTooltip
@@ -87,10 +126,11 @@ export const BarChartHorizontalCard: FC<BarChartCardProps> = ({
               >
                 <LabelList
                   dataKey={primaryDataKey}
-                  position="right"
-                  offset={8}
-                  className="fill-foreground"
+                  position="insideLeft"
+                  offset={12}
+                  className="fill-white"
                   fontSize={12}
+                  formatter={(v: any) => formatPct(Number(v))}
                 />
               </Bar>
             </BarChart>

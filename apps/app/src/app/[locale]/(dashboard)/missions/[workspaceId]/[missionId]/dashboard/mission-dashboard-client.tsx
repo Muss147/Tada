@@ -27,6 +27,8 @@ import { QuestionCommentsBubble } from "@/components/missions/comments/question-
 import { CommentPin } from "@/components/missions/comments/comment-pin";
 import { DashboardActionsRail } from "@/components/missions/boards/dashboard-actions-rail";
 import { ExportOptionsDialog } from "@/components/missions/boards/modals/export-options-dialog";
+import { questionToCsvRows } from "@/lib/question-to-csv";
+import { downloadCsv } from "@/lib/export-csv";
 
 interface MissionDashboardClientProps {
   missionId: string;
@@ -138,6 +140,23 @@ export default function MissionDashboardClient({
     []
   );
 
+  const exportQuestionCsv = (q: QuestionWithView) => {
+    const rows = questionToCsvRows(q as any);
+    const safeName = (q.question || "question")
+      .slice(0, 80)
+      .replace(/[^\w\- ]+/g, "")
+      .trim()
+      .replace(/\s+/g, "_");
+    downloadCsv(`mission-${missionId}-${safeName}.csv`, rows);
+  };
+
+  const exportAllCsv = (delimiter: ";" | ",") => {
+    const allRows = questions.flatMap((q) => questionToCsvRows(q as any));
+    downloadCsv(`mission-${missionId}-all-questions.csv`, allRows, {
+      delimiter,
+    });
+  };
+
   useEffect(() => {
     const handler = (e: Event) => {
       const custom = e as CustomEvent<{ questionKey: string }>;
@@ -185,6 +204,25 @@ export default function MissionDashboardClient({
     };
   }, []);
 
+  useEffect(() => {
+    const scroller = document.getElementById("dashboard-scroll");
+    if (!scroller) {
+      console.warn("[MissionDashboard] #dashboard-scroll introuvable");
+      return;
+    }
+
+    const handleScroll = () => {
+      const y = scroller.scrollTop;
+      setShowRail(y > 200);
+    };
+
+    // init
+    handleScroll();
+
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scroller.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       {questions
@@ -224,6 +262,9 @@ export default function MissionDashboardClient({
               key={question.chartId ?? index}
               id={domId}
               data-question-key={questionKey}
+              data-export-question="true"
+              data-export-id={question.chartId ?? `q-${index + 1}`}
+              data-export-title={question.question}
               className="relative mb-8 space-y-3"
             >
               {commentCount > 0 && (
@@ -243,7 +284,7 @@ export default function MissionDashboardClient({
                 />
               )}
 
-              {question.type !== "text" && question.type !== "comment" && (
+              {/* {question.type !== "text" && question.type !== "comment" && (
                 <div className="flex justify-end gap-2">
                   <Button
                     size="sm"
@@ -268,7 +309,7 @@ export default function MissionDashboardClient({
                     )}
                   </Button>
                 </div>
-              )}
+              )} */}
 
               {/* BAR / COLUMN */}
               {type === "bar" && (
@@ -287,6 +328,9 @@ export default function MissionDashboardClient({
                   title={question.question}
                   description=""
                   participationQuestions={participationLabel}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -306,6 +350,9 @@ export default function MissionDashboardClient({
                   title={question.question}
                   description=""
                   participationQuestions={participationLabel}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -325,6 +372,9 @@ export default function MissionDashboardClient({
                   primaryKeys={question.primaryKeys}
                   min={question.min || 0}
                   max={question.max || 100}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -344,6 +394,9 @@ export default function MissionDashboardClient({
                   primaryKeys={question.primaryKeys}
                   min={question.min || 0}
                   max={question.max || 100}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -364,6 +417,9 @@ export default function MissionDashboardClient({
                   description=""
                   participationQuestions={participationLabel}
                   participantCount={question.participants_responded}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -375,6 +431,9 @@ export default function MissionDashboardClient({
                   title={question.question}
                   description=""
                   participationQuestions={participationLabel}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -391,6 +450,9 @@ export default function MissionDashboardClient({
                   title={question.question}
                   description=""
                   participationQuestions={participationLabel}
+                  handleExportCsv={() => exportQuestionCsv(question)}
+                  onCommentsClick={() => openCommentsForQuestion(question)}
+                  commentCount={commentCount}
                 />
               )}
 
@@ -415,13 +477,17 @@ export default function MissionDashboardClient({
 
       <DashboardActionsRail
         onExportClick={() => setIsExportDialogOpen(true)}
-        visible={true}
+        visible={showRail}
+        //visible={true}
       />
 
       {/* Modal d’export */}
       <ExportOptionsDialog
         open={isExportDialogOpen}
         onOpenChange={setIsExportDialogOpen}
+        missionId={missionId}
+        questions={questions}
+        totalResponses={totalResponses}
       />
     </>
   );

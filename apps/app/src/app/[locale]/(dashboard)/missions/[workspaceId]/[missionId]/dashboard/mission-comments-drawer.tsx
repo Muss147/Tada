@@ -477,14 +477,14 @@ export function MissionCommentsDrawer({
       <Button
         type="button"
         size="sm"
-        className="fixed bottom-4 right-4 z-40 shadow-lg rounded-full px-4"
+        className="fixed bottom-24 flex items-center justify-center h-12 w-12 rounded-full bg-primary right-4 z-50"
         onClick={() => {
           setMode("global");
           setOpen(true);
         }}
       >
-        <MessageCircle className="mr-2 h-4 w-4" />
-        {t("comments.openButton") || "Voir les commentaires"}
+        <MessageCircle className=" h-8 w-8" />
+        {/* {t("comments.openButton") || "Voir les commentaires"} */}
       </Button>
 
       {/* Drawer / panneau latéral */}

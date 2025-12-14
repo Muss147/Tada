@@ -51,6 +51,9 @@ export const CardHeaderChart = ({
   chartRef,
   handleExportCsv,
   subDashboardItemId, // Nouveau prop pour l'ID de l'item
+
+  onCommentsClick,
+  commentCount = 0,
 }: {
   participationQuestions: string;
   title: string;
@@ -60,6 +63,9 @@ export const CardHeaderChart = ({
   exportTargetId?: string;
   chartRef?: RefObject<HTMLDivElement>;
   subDashboardItemId: string; // Nouveau prop
+
+  onCommentsClick?: () => void;
+  commentCount?: number;
 }) => {
   const t = useI18n();
   const { data: session } = useSession();
@@ -339,6 +345,24 @@ export const CardHeaderChart = ({
         <div className="flex justify-between items-center">
           <CardDescription>{participationQuestions}</CardDescription>
           <div className="flex gap-2">
+            {/** Bouton commentaires */}
+            {onCommentsClick && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={onCommentsClick}
+                className="relative"
+                title={title}
+              >
+                Commentaires
+                {commentCount > 0 && (
+                  <span className="ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary/10 text-primary text-[11px] px-1">
+                    {commentCount}
+                  </span>
+                )}
+              </Button>
+            )}
+
             {isDeletable ? (
               <Button variant="destructive" onClick={onDelete}>
                 {t("common.delete")}

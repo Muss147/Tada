@@ -23,6 +23,9 @@ export const BarChartStackedCard: FC<
     max?: number; // gardés pour compat mais non utilisés pour le domaine
     min?: number;
     subDashboardItemId: string;
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
   }
 > = ({
   config,
@@ -38,6 +41,9 @@ export const BarChartStackedCard: FC<
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
@@ -95,6 +101,9 @@ export const BarChartStackedCard: FC<
             isDeletable={isDeletable}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

@@ -3,7 +3,8 @@ export type UploadCategory =
   | "userAvatar"
   | "organizationLogo"
   | "surveyImage"
-  | "missionThumbnail";
+  | "missionThumbnail"
+  | "stimulusMedia";
 
 export type UploadCfg = { bucket: string; folder: string };
 
@@ -13,6 +14,7 @@ export const UPLOAD_CONFIG: Record<UploadCategory, UploadCfg> = {
   organizationLogo: { bucket: "tada", folder: "organization-logos" },
   surveyImage: { bucket: "tada", folder: "surveys" },
   missionThumbnail: { bucket: "tada", folder: "mission-thumbnails" },
+  stimulusMedia: { bucket: "tada", folder: "stimulus-media" },
 };
 
 export function isHttpUrl(value: string) {

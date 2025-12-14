@@ -26,13 +26,18 @@ export function ListMissions({
   pageSize: number;
   orgId: string;
   workspaceId: string;
-  loadMore: (value: { from: number; to: number }) => Promise<MissionFull[]>;
+  loadMore: (value: { page: number }) => Promise<{
+    missions: MissionFull[];
+    hasNextPage: boolean;
+  }>;
 }) {
   const t = useI18n();
   const { ref, inView } = useInView();
   const [from, setFrom] = useState(pageSize);
+  const [page, setPage] = useState(1);
   const [missions, setMissions] = useState(initialData);
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
     setMissions(initialData);
@@ -41,23 +46,24 @@ export function ListMissions({
   }, [initialData, initialHasNextPage, pageSize]);
 
   const loadMoreData = async () => {
-    const formattedFrom = from;
-    const to = formattedFrom + pageSize * 2;
+    if (!hasNextPage || loadingMore) return;
+    setLoadingMore(true);
 
     try {
-      if (!loadMore) return;
-      const missionsPaginated = await loadMore({
-        from: formattedFrom,
-        to,
-      });
-
-      setMissions((prev) => [...prev, ...missionsPaginated]);
-      setFrom(to);
-      setHasNextPage(missionsPaginated.length > to);
+      const res = await loadMore({ page });
+      setMissions((prev) => [...prev, ...res.missions]);
+      setHasNextPage(res.hasNextPage);
+      setPage((p) => p + 1);
     } catch {
       setHasNextPage(false);
+    } finally {
+      setLoadingMore(false);
     }
   };
+
+  useEffect(() => {
+    if (inView) loadMoreData();
+  }, [inView]);
 
   useEffect(() => {
     if (inView) {

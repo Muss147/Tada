@@ -1,9 +1,8 @@
 "use client";
 
-import { FC, useRef, useState, useEffect, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import { DataKey } from "recharts/types/util/types";
-
 import {
   Card,
   CardContent,
@@ -11,18 +10,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@tada/ui/components/card";
-
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 import { CardHeaderChart } from "./ui/card-header";
 import { BarChartCardProps } from "./type";
 import { useSetDocumentId, VeltComments } from "@veltdev/react";
-import { StackedBarLegend } from "./stacked-bar-legend";
+
+const formatPct = (v?: number) => {
+  if (v == null || Number.isNaN(v)) return "";
+  return `${Number(v).toFixed(1)}%`;
+};
 
 export const BarChartHorizontalStackedCard: FC<
   Omit<BarChartCardProps, "primaryDataKey"> & {
-    max?: number; // gardés pour compat, mais non utilisés
-    min?: number;
     subDashboardItemId: string;
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
   }
 > = ({
   config,
@@ -32,12 +35,12 @@ export const BarChartHorizontalStackedCard: FC<
   description,
   participationQuestions,
   primaryKeys,
-  label = "key",
-  // max = 100,
-  // min = 0,
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
@@ -47,25 +50,19 @@ export const BarChartHorizontalStackedCard: FC<
     [data]
   );
 
-  // 🔹 Si primaryKeys n'est pas fourni, on les déduit du config
   const derivedKeys = useMemo(() => {
-    if (primaryKeys && primaryKeys.length > 0) return primaryKeys;
-
+    if (primaryKeys?.length) return primaryKeys;
     if (!config) return [] as string[];
-
-    return Object.keys(config).filter((key) => {
-      if (key === "value") return false; // clé spéciale souvent utilisée
-      const cfg = (config as any)[key];
-      return cfg && typeof cfg === "object";
-    });
+    return Object.keys(config).filter(
+      (key) => key !== "value" && !!(config as any)[key]
+    );
   }, [primaryKeys, config]);
 
-  // ✅ clés actuellement visibles
   const [activeKeys, setActiveKeys] = useState<string[]>(derivedKeys);
 
-  // si primaryKeys/config change (autre question / autre mission), on reset
   useEffect(() => {
     setActiveKeys(derivedKeys);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [derivedKeys.join(",")]);
 
   const toggleKey = (key: string) => {
@@ -74,11 +71,50 @@ export const BarChartHorizontalStackedCard: FC<
     );
   };
 
+  // ✅ Normalisation Appinio: chaque ligne devient une distribution en %
+  // - on garde les bruts pour tooltip (optionnel)
+  const normalized = useMemo(() => {
+    const rows = typedData.map((row) => {
+      const rawTotal = activeKeys.reduce(
+        (acc, k) => acc + (Number(row?.[k]) || 0),
+        0
+      );
+
+      const next: Record<string, any> = { ...row };
+
+      // store raw totals (utile tooltip)
+      next.__rawTotal = rawTotal;
+
+      // percent per key
+      activeKeys.forEach((k) => {
+        const raw = Number(row?.[k]) || 0;
+        next[`__raw_${k}`] = raw; // optionnel tooltip
+        next[k] = rawTotal > 0 ? (raw / rawTotal) * 100 : 0;
+      });
+
+      // total affiché à droite
+      next.__total = rawTotal > 0 ? 100 : 0;
+
+      return next;
+    });
+
+    return rows;
+  }, [typedData, activeKeys]);
+
+  const legendItems = useMemo(() => {
+    return derivedKeys.map((key) => ({
+      key,
+      label: (config as any)?.[key]?.label ?? key,
+      color: (config as any)?.[key]?.color ?? `var(--color-${key})`,
+    }));
+  }, [derivedKeys, config]);
+
   return (
     <div data-velt-id={`item-${subDashboardItemId}`}>
       <VeltComments />
-      <Card className="border-none mx-auto w-full px-4" ref={chartRef}>
-        <CardHeader>
+
+      <Card className="border-none w-full" ref={chartRef}>
+        <CardHeader className="px-4 pt-4 pb-2">
           <CardHeaderChart
             participationQuestions={participationQuestions}
             title={title}
@@ -86,45 +122,63 @@ export const BarChartHorizontalStackedCard: FC<
             isDeletable={isDeletable}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle className="text-base">{title}</CardTitle>
+          {description ? (
+            <CardDescription className="text-sm">{description}</CardDescription>
+          ) : null}
         </CardHeader>
 
-        <CardContent className="pt-0 pb-3">
-          {/* 🔹 Légende type Appinio */}
-          {derivedKeys.length > 0 && (
-            <StackedBarLegend
-              items={derivedKeys.map((key) => ({
-                key,
-                label: (config as any)?.[key]?.label ?? key,
-                color: (config as any)?.[key]?.color,
-              }))}
-              activeKeys={activeKeys}
-              onToggle={toggleKey}
-            />
+        <CardContent className="px-4 pb-4 pt-2 space-y-3">
+          {/* Legend chips */}
+          {legendItems.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto pb-1 thin-scrollbar">
+              {legendItems.map((it) => {
+                const active = activeKeys.includes(it.key);
+                return (
+                  <button
+                    key={it.key}
+                    type="button"
+                    onClick={() => toggleKey(it.key)}
+                    className={[
+                      "shrink-0 rounded-full border px-3 py-1 text-xs transition",
+                      active
+                        ? "border-slate-300 bg-white text-slate-900"
+                        : "border-slate-200 bg-slate-50 text-slate-500 opacity-70",
+                    ].join(" ")}
+                  >
+                    <span
+                      className="inline-block h-2 w-2 rounded-full align-middle mr-2"
+                      style={{ background: it.color }}
+                    />
+                    {it.label}
+                  </button>
+                );
+              })}
+            </div>
           )}
 
-          <ChartContainer
-            className="mx-auto aspect-square w-full max-h-[350px]"
-            config={config}
-          >
+          <ChartContainer className="w-full h-[340px]" config={config}>
             <BarChart
               accessibilityLayer
-              data={typedData}
+              data={normalized}
               layout="vertical"
-              margin={{ top: 10, right: 30, left: 100, bottom: 5 }}
-              barCategoryGap={0}
-              maxBarSize={60}
+              margin={{ top: 8, right: 28, left: 16, bottom: 8 }}
+              barCategoryGap={10}
+              maxBarSize={44}
             >
-              {/* ✅ Domaine basé sur les données, plus sur min/max */}
-              <XAxis type="number" hide domain={[0, "dataMax"]} />
+              {/* ✅ distribution en % */}
+              <XAxis type="number" hide domain={[0, 100]} />
               <YAxis
                 dataKey={categoryKey}
                 type="category"
+                width={120}
                 tickLine={false}
-                tickMargin={2}
                 axisLine={false}
+                tickMargin={6}
               />
 
               <ChartTooltip
@@ -132,65 +186,48 @@ export const BarChartHorizontalStackedCard: FC<
                 content={<ChartTooltipContent indicator="line" />}
               />
 
-              {/* 🔹 On ne rend que les Bar dont la clé est active */}
-              {derivedKeys.map((key, index) =>
+              {/* Stacks (en %) */}
+              {derivedKeys.map((key, idx) =>
                 activeKeys.includes(key) ? (
                   <Bar
                     key={key}
-                    dataKey={key as DataKey<any>}
-                    layout="vertical"
-                    fill={
-                      (config as any)?.[key]?.color ?? `var(--color-${key})`
-                    }
+                    dataKey={key}
                     stackId="a"
-                    barSize={80}
+                    fill={(config as any)?.[key]?.color}
                     radius={
-                      index === 0
-                        ? [5, 0, 0, 5]
-                        : index === derivedKeys.length - 1
-                          ? [0, 5, 5, 0]
+                      idx === 0
+                        ? [8, 0, 0, 8]
+                        : idx === derivedKeys.length - 1
+                          ? [0, 8, 8, 0]
                           : 0
                     }
                   >
-                    {label === "value" ? (
-                      <LabelList
-                        dataKey={key as DataKey<any>}
-                        position="insideLeft"
-                        offset={8}
-                        className="fill-[--color-label]"
-                        fontSize={12}
-                      />
-                    ) : (
-                      <LabelList
-                        dataKey={key as DataKey<any>}
-                        position="insideLeft"
-                        offset={8}
-                        className="fill-[--color-label]"
-                        fontSize={12}
-                        content={(value) => {
-                          const { x, y, height } = value as {
-                            x: number;
-                            y: number;
-                            height: number;
-                          };
-                          return (
-                            <text
-                              x={x + 8}
-                              y={y + height / 2}
-                              textAnchor="start"
-                              dominantBaseline="middle"
-                              className="fill-[--color-label]"
-                              fontSize={12}
-                            >
-                              {(config as any)?.[key]?.label || key}
-                            </text>
-                          );
-                        }}
-                      />
-                    )}
+                    <LabelList
+                      dataKey={key}
+                      position="center"
+                      className="fill-white"
+                      fontSize={12}
+                      formatter={(v: any) => (v > 5 ? `${v.toFixed(0)}%` : "")}
+                    />
                   </Bar>
                 ) : null
               )}
+
+              {/* Total à droite (100%) */}
+              <Bar
+                dataKey="__total"
+                stackId="__total-hidden"
+                fill="transparent"
+              >
+                <LabelList
+                  dataKey="__total"
+                  position="right"
+                  offset={10}
+                  className="fill-slate-600"
+                  fontSize={12}
+                  formatter={(v: any) => formatPct(Number(v))}
+                />
+              </Bar>
             </BarChart>
           </ChartContainer>
         </CardContent>

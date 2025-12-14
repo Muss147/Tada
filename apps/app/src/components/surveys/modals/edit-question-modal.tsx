@@ -6,6 +6,7 @@ import {
   useSurveysBuilder,
   type MediaType,
   type GpsMode,
+  type HeatmapConfig,
 } from "@/context/surveys-builder-context";
 import { useI18n } from "@/locales/client";
 import { Button } from "@tada/ui/components/button";
@@ -23,6 +24,7 @@ import { ImageRankingConfigurator } from "../_partials/ImageRankingConfigurator"
 import { MediaQuestionSettings } from "../_partials/MediaQuestionSettings";
 import { MatrixQuestionSettings } from "../_partials/MatrixQuestionSettings";
 import { DragDropRankingSettings } from "../_partials/DragDropRankingSettings";
+import { HeatmapQuestionSettings } from "../_partials/HeatmapQuestionSettings";
 import {
   QuestionSectionSelector,
   type SectionOption,
@@ -48,6 +50,7 @@ type QuestionKind =
   | "image_ranking"
   | "drag_drop_ranking"
   | "media"
+  | "heatmap"
   | "gps"
   | "section"
   | "boolean";
@@ -119,6 +122,15 @@ export function EditQuestionModal({
   const [isRequired, setIsRequired] = useState(false);
   const [hasOther, setHasOther] = useState(false);
 
+  const [heatmapConfig, setHeatmapConfig] = useState<HeatmapConfig>({
+    stimulusSource: "url",
+    stimulusImageUrl: "",
+    stimulusImage: undefined,
+    allowMultipleClicks: false,
+    maxClicks: 3,
+    collectReason: false,
+  });
+
   const [imageChoices, setImageChoices] = useState<ImageChoice[]>([
     {
       id: crypto.randomUUID(),
@@ -137,6 +149,15 @@ export function EditQuestionModal({
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
     null
   );
+
+  const [mediaMode, setMediaMode] = useState<"upload" | "stimulus">("upload");
+  const [stimulusSource, setStimulusSource] = useState<"upload" | "url">("url");
+  const [stimulusMediaUrl, setStimulusMediaUrl] = useState<string>("");
+  const [stimulusMediaType, setStimulusMediaType] =
+    useState<MediaType>("photo");
+  const [stimulusFileName, setStimulusFileName] = useState<
+    string | undefined
+  >();
 
   // ---------- OPTIONS DE SECTION ----------
   const sectionOptions: SectionOption[] = useMemo(() => {
@@ -200,7 +221,20 @@ export function EditQuestionModal({
         imageUrl: "",
       },
     ]);
+    setHeatmapConfig({
+      stimulusSource: "url",
+      stimulusImageUrl: "",
+      stimulusImage: undefined,
+      allowMultipleClicks: false,
+      maxClicks: 3,
+      collectReason: false,
+    });
     setSelectedSectionId(null);
+    setMediaMode("upload");
+    setStimulusSource("url");
+    setStimulusMediaUrl("");
+    setStimulusMediaType("photo");
+    setStimulusFileName(undefined);
   };
 
   // ---------- DÉTERMINER LE "KIND" À PARTIR DE LA QUESTION ----------
@@ -222,6 +256,7 @@ export function EditQuestionModal({
     if (q.category === "gps") return "gps";
     if (q.category === "section" || q.type === "section") return "section";
     if (q.type === "boolean") return "boolean";
+    if (q.category === "heatmap" || q.type === "heatmap") return "heatmap";
 
     // fallback
     return "open";
@@ -312,11 +347,38 @@ export function EditQuestionModal({
     // Media
     if (kind === "media") {
       const qAny = question as any;
+
+      setMediaMode(qAny.mediaMode ?? "upload");
+
       setMediaTypes(qAny.mediaTypes ?? ["photo"]);
       setMaxFiles(qAny.maxFiles ?? 1);
       setMaxSizeMb(qAny.maxSizeMb ?? 10);
       setMaxDurationSeconds(qAny.maxDurationSeconds ?? 60);
       setCaptureRequired(!!qAny.captureRequired);
+
+      // stimulus only
+      setStimulusSource(qAny.stimulusSource ?? "url");
+      setStimulusMediaUrl(qAny.stimulusMediaUrl ?? "");
+      setStimulusMediaType(qAny.stimulusMediaType ?? "photo");
+
+      // optionnel: si tu stockes un nom de fichier stimulus
+      setStimulusFileName(qAny.stimulusFileName ?? undefined);
+    }
+
+    //heatmap
+    if (kind === "heatmap") {
+      const qAny = question as any;
+      const cfg = qAny.heatmap as HeatmapConfig | undefined;
+
+      setHeatmapConfig({
+        stimulusSource: cfg?.stimulusSource ?? "url",
+        stimulusImageUrl: cfg?.stimulusImageUrl ?? "",
+        stimulusImage: cfg?.stimulusImage,
+        allowMultipleClicks: !!cfg?.allowMultipleClicks,
+        maxClicks: cfg?.maxClicks ?? 3,
+        collectReason: !!cfg?.collectReason,
+        targets: cfg?.targets,
+      });
     }
 
     // GPS
@@ -484,16 +546,64 @@ export function EditQuestionModal({
           allowRowReorder: true,
         } as any;
 
-      case "media":
-        return {
+      case "media": {
+        const next: any = {
           ...base,
           type: "media",
           category: "media",
+
+          mediaMode,
           mediaTypes,
           maxFiles,
           maxSizeMb,
           captureRequired,
           maxDurationSeconds,
+        };
+
+        // Nettoyage par défaut
+        delete next.stimulusSource;
+        delete next.stimulusMediaUrl;
+        delete next.stimulusMediaType;
+        delete next.stimulusFileName;
+
+        // Si stimulus: on persiste la config stimulus
+        if (mediaMode === "stimulus") {
+          next.stimulusSource = stimulusSource;
+          next.stimulusMediaType = stimulusMediaType;
+
+          if (stimulusSource === "url") {
+            next.stimulusMediaUrl = stimulusMediaUrl?.trim() || undefined;
+          }
+
+          // si tu gères un upload stimulus via ton API, tu peux stocker:
+          // next.stimulusFileName = stimulusFileName;
+        }
+
+        return next as SurveyQuestion;
+      }
+
+      case "heatmap":
+        return {
+          ...base,
+          type: "heatmap",
+          category: "heatmap",
+          heatmap: {
+            stimulusSource: heatmapConfig.stimulusSource,
+            stimulusImageUrl:
+              heatmapConfig.stimulusSource === "url"
+                ? heatmapConfig.stimulusImageUrl?.trim() || undefined
+                : undefined,
+            stimulusImage:
+              heatmapConfig.stimulusSource === "upload"
+                ? heatmapConfig.stimulusImage
+                : undefined,
+            allowMultipleClicks: !!heatmapConfig.allowMultipleClicks,
+            maxClicks: heatmapConfig.allowMultipleClicks
+              ? Math.max(1, heatmapConfig.maxClicks ?? 3)
+              : 1,
+            collectReason: !!heatmapConfig.collectReason,
+            targets: heatmapConfig.targets,
+          },
         } as any;
 
       case "gps": {
@@ -564,375 +674,404 @@ export function EditQuestionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl mx-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {t("missions.surveys.addNewQuestion.editTitle")}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl mx-auto p-0 overflow-hidden">
+        <div className="flex max-h-[85vh] flex-col">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>
+              {t("missions.surveys.addNewQuestion.editTitle")}
+            </DialogTitle>
+          </DialogHeader>
 
-        <div className="p-6 space-y-6">
-          {/* Type (affiché en lecture seule, mais clair) */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("missions.surveys.addNewQuestion.questionType")}
-            </label>
-            <div className="text-sm text-gray-800">
-              {questionKind ?? question.category ?? question.type}
-            </div>
-          </div>
-
-          {/* Titre */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("missions.surveys.addNewQuestion.questionText")}{" "}
-              {isRequired && <span className="text-red-500">*</span>}
-            </label>
-            <input
-              type="text"
-              value={questionTitle}
-              onChange={(e) => setQuestionTitle(e.target.value)}
-              placeholder={t(
-                "missions.surveys.addNewQuestion.questionPlaceholder"
-              )}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("missions.surveys.addNewQuestion.questionDescription")}
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-              rows={2}
-            />
-          </div>
-
-          {/* Single / multiple choice */}
-          {(questionKind === "single_choice" ||
-            questionKind === "multiple_choice") && (
+          <div className="flex-1 overflow-y-auto px-6 pb-6 thin-scrollbar">
+            {/* Type (affiché en lecture seule, mais clair) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("missions.surveys.addNewQuestion.options")}
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("missions.surveys.addNewQuestion.questionType")}
               </label>
-              <div className="space-y-2 max-h-80 overflow-y-auto thin-scrollbar">
-                {options.map((option, index) => (
-                  <div className="flex items-center" key={index}>
-                    <Input
-                      name={`option-${index}`}
-                      value={option}
-                      placeholder={`Option ${index + 1}`}
-                      onChange={(e) =>
-                        setOptions(
-                          options.map((o, i) =>
-                            i === index ? e.target.value : o
-                          )
-                        )
-                      }
-                    />
-                    {options.length > 1 && (
-                      <button
-                        type="button"
-                        className="ml-2 text-gray-400 hover:text-gray-600"
-                        onClick={() =>
-                          setOptions(options.filter((_, i) => i !== index))
-                        }
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                ))}
-
-                <button
-                  type="button"
-                  className="text-sm text-teal-500 hover:text-teal-700 flex items-center"
-                  onClick={() =>
-                    setOptions([...options, `Option ${options.length + 1}`])
-                  }
-                >
-                  + {t("missions.surveys.addNewQuestion.addOption")}
-                </button>
-              </div>
-
-              <div className="mt-3 flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  id="hasOther"
-                  checked={hasOther}
-                  onChange={() => setHasOther((v) => !v)}
-                />
-                <label htmlFor="hasOther">
-                  {t("missions.surveys.addNewQuestion.hasOtherOption")}
-                </label>
+              <div className="text-sm text-gray-800">
+                {questionKind ?? question.category ?? question.type}
               </div>
             </div>
-          )}
 
-          {/* Drag & drop ranking texte */}
-          {questionKind === "drag_drop_ranking" && (
-            <DragDropRankingSettings
-              options={rankingOptions}
-              onOptionsChange={setRankingOptions}
-            />
-          )}
-
-          {/* Image ranking */}
-          {questionKind === "image_ranking" && (
-            <ImageRankingConfigurator
-              imageChoices={imageChoices}
-              onChange={setImageChoices}
-            />
-          )}
-
-          {/* Échelles */}
-          {(questionKind === "likert" ||
-            questionKind === "numeric_scale" ||
-            questionKind === "slider" ||
-            questionKind === "rating") && (
+            {/* Titre */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("missions.surveys.addNewQuestion.scaleSettings")}
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("missions.surveys.addNewQuestion.questionText")}{" "}
+                {isRequired && <span className="text-red-500">*</span>}
               </label>
-              <div className="grid grid-cols-2 gap-4 mb-3">
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.minValue")}
-                  </label>
-                  <input
-                    type="number"
-                    value={scaleMin}
-                    onChange={(e) =>
-                      setScaleMin(parseInt(e.target.value || "0", 10))
-                    }
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.maxValue")}
-                  </label>
-                  <input
-                    type="number"
-                    value={scaleMax}
-                    onChange={(e) =>
-                      setScaleMax(parseInt(e.target.value || "0", 10))
-                    }
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                </div>
-              </div>
-
-              {(questionKind === "likert" || questionKind === "rating") && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm mb-1">
-                      {t("missions.surveys.addNewQuestion.minLabel")}
-                    </label>
-                    <input
-                      type="text"
-                      value={minLabel}
-                      onChange={(e) => setMinLabel(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">
-                      {t("missions.surveys.addNewQuestion.maxLabel")}
-                    </label>
-                    <input
-                      type="text"
-                      value={maxLabel}
-                      onChange={(e) => setMaxLabel(e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                    />
-                  </div>
-                </div>
-              )}
+              <input
+                type="text"
+                value={questionTitle}
+                onChange={(e) => setQuestionTitle(e.target.value)}
+                placeholder={t(
+                  "missions.surveys.addNewQuestion.questionPlaceholder"
+                )}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
             </div>
-          )}
 
-          {/* Matrix */}
-          {questionKind === "matrix" && (
-            <MatrixQuestionSettings
-              rows={rows}
-              onRowsChange={setRows}
-              columns={columns}
-              onColumnsChange={setColumns}
-            />
-          )}
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("missions.surveys.addNewQuestion.questionDescription")}
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                rows={2}
+              />
+            </div>
 
-          {/* Media */}
-          {questionKind === "media" && (
-            <MediaQuestionSettings
-              mediaTypes={mediaTypes}
-              onMediaTypesChange={setMediaTypes}
-              maxFiles={maxFiles}
-              onMaxFilesChange={setMaxFiles}
-              maxSizeMb={maxSizeMb}
-              onMaxSizeMbChange={setMaxSizeMb}
-              maxDurationSeconds={maxDurationSeconds}
-              onMaxDurationSecondsChange={setMaxDurationSeconds}
-              captureRequired={captureRequired}
-              onCaptureRequiredChange={setCaptureRequired}
-            />
-          )}
-
-          {/* GPS */}
-          {questionKind === "gps" && (
-            <div className="space-y-4">
+            {/* Single / multiple choice */}
+            {(questionKind === "single_choice" ||
+              questionKind === "multiple_choice") && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t("missions.surveys.addNewQuestion.gpsMode")}
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("missions.surveys.addNewQuestion.options")}
                 </label>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  value={gpsMode}
-                  onChange={(e) => setGpsMode(e.target.value as GpsMode)}
-                >
-                  <option value="pin">pin</option>
-                  <option value="navigate">navigate</option>
-                  <option value="checkin">checkin</option>
-                </select>
-              </div>
+                <div className="space-y-2 max-h-80 overflow-y-auto thin-scrollbar">
+                  {options.map((option, index) => (
+                    <div className="flex items-center" key={index}>
+                      <Input
+                        name={`option-${index}`}
+                        value={option}
+                        placeholder={`Option ${index + 1}`}
+                        onChange={(e) =>
+                          setOptions(
+                            options.map((o, i) =>
+                              i === index ? e.target.value : o
+                            )
+                          )
+                        }
+                      />
+                      {options.length > 1 && (
+                        <button
+                          type="button"
+                          className="ml-2 text-gray-400 hover:text-gray-600"
+                          onClick={() =>
+                            setOptions(options.filter((_, i) => i !== index))
+                          }
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
 
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm mb-1">Lat</label>
-                  <input
-                    type="number"
-                    value={targetLat}
-                    onChange={(e) => setTargetLat(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
+                  <button
+                    type="button"
+                    className="text-sm text-teal-500 hover:text-teal-700 flex items-center"
+                    onClick={() =>
+                      setOptions([...options, `Option ${options.length + 1}`])
+                    }
+                  >
+                    + {t("missions.surveys.addNewQuestion.addOption")}
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm mb-1">Lng</label>
+
+                <div className="mt-3 flex items-center gap-2 text-sm">
                   <input
-                    type="number"
-                    value={targetLng}
-                    onChange={(e) => setTargetLng(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    type="checkbox"
+                    id="hasOther"
+                    checked={hasOther}
+                    onChange={() => setHasOther((v) => !v)}
                   />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.locationLabel")}
+                  <label htmlFor="hasOther">
+                    {t("missions.surveys.addNewQuestion.hasOtherOption")}
                   </label>
-                  <input
-                    type="text"
-                    value={targetLabel}
-                    onChange={(e) => setTargetLabel(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
                 </div>
               </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.maxDistanceMeters")}
-                  </label>
-                  <input
-                    type="number"
-                    value={maxDistanceMeters}
-                    onChange={(e) => setMaxDistanceMeters(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.minTimeOnSiteSeconds")}
-                  </label>
-                  <input
-                    type="number"
-                    value={minTimeOnSiteSeconds}
-                    onChange={(e) => setMinTimeOnSiteSeconds(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm mb-1">
-                    {t("missions.surveys.addNewQuestion.gpsTolerance")}
-                  </label>
-                  <input
-                    type="number"
-                    value={gpsToleranceMeters}
-                    onChange={(e) => setGpsToleranceMeters(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  id="requiresPathTracking"
-                  checked={requiresPathTracking}
-                  onChange={() =>
-                    setRequiresPathTracking((current) => !current)
-                  }
-                />
-                <label htmlFor="requiresPathTracking">
-                  {t("missions.surveys.addNewQuestion.requiresPathTracking")}
-                </label>
-              </div>
-            </div>
-          )}
-
-          {/* Section selector (si ce n’est pas une section) */}
-          {questionKind !== "section" && sectionOptions.length > 0 && (
-            <QuestionSectionSelector
-              sections={sectionOptions}
-              selectedSectionId={selectedSectionId}
-              onChange={setSelectedSectionId}
-            />
-          )}
-
-          {/* Required */}
-          {questionKind !== "section" && (
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="isRequired"
-                  className="mr-2"
-                  checked={isRequired}
-                  onChange={() => setIsRequired(!isRequired)}
-                />
-                <label htmlFor="isRequired" className="text-sm">
-                  {t("missions.surveys.addNewQuestion.required")}
-                </label>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => {
-              resetForm();
-              onOpenChange(false);
-            }}
-          >
-            {t("missions.surveys.addNewQuestion.cancel")}
-          </Button>
-          <Button
-            onClick={handleUpdateQuestion}
-            disabled={isLoadingUpdate || !questionTitle.trim()}
-          >
-            {isLoadingUpdate ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              t("missions.surveys.addNewQuestion.update")
             )}
-          </Button>
-        </DialogFooter>
+
+            {/* Drag & drop ranking texte */}
+            {questionKind === "drag_drop_ranking" && (
+              <DragDropRankingSettings
+                options={rankingOptions}
+                onOptionsChange={setRankingOptions}
+              />
+            )}
+
+            {/* Image ranking */}
+            {questionKind === "image_ranking" && (
+              <ImageRankingConfigurator
+                imageChoices={imageChoices}
+                onChange={setImageChoices}
+              />
+            )}
+
+            {/* Échelles */}
+            {(questionKind === "likert" ||
+              questionKind === "numeric_scale" ||
+              questionKind === "slider" ||
+              questionKind === "rating") && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("missions.surveys.addNewQuestion.scaleSettings")}
+                </label>
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t("missions.surveys.addNewQuestion.minValue")}
+                    </label>
+                    <input
+                      type="number"
+                      value={scaleMin}
+                      onChange={(e) =>
+                        setScaleMin(parseInt(e.target.value || "0", 10))
+                      }
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t("missions.surveys.addNewQuestion.maxValue")}
+                    </label>
+                    <input
+                      type="number"
+                      value={scaleMax}
+                      onChange={(e) =>
+                        setScaleMax(parseInt(e.target.value || "0", 10))
+                      }
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+
+                {(questionKind === "likert" || questionKind === "rating") && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm mb-1">
+                        {t("missions.surveys.addNewQuestion.minLabel")}
+                      </label>
+                      <input
+                        type="text"
+                        value={minLabel}
+                        onChange={(e) => setMinLabel(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">
+                        {t("missions.surveys.addNewQuestion.maxLabel")}
+                      </label>
+                      <input
+                        type="text"
+                        value={maxLabel}
+                        onChange={(e) => setMaxLabel(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Matrix */}
+            {questionKind === "matrix" && (
+              <MatrixQuestionSettings
+                rows={rows}
+                onRowsChange={setRows}
+                columns={columns}
+                onColumnsChange={setColumns}
+              />
+            )}
+
+            {/* Media */}
+            {questionKind === "media" && (
+              <MediaQuestionSettings
+                mediaMode={mediaMode}
+                onMediaModeChange={setMediaMode}
+                stimulusSource={stimulusSource}
+                onStimulusSourceChange={setStimulusSource}
+                stimulusMediaUrl={stimulusMediaUrl}
+                onStimulusMediaUrlChange={setStimulusMediaUrl}
+                stimulusMediaType={stimulusMediaType}
+                onStimulusMediaTypeChange={setStimulusMediaType}
+                stimulusFileName={stimulusFileName}
+                onStimulusFileChange={(file) => {
+                  setStimulusFileName(file?.name);
+
+                  // IMPORTANT:
+                  // si tu veux "stimulusSource=upload", il faut ici appeler ton endpoint
+                  // (comme ImageRankingConfigurator) pour uploader le fichier et récupérer l’URL,
+                  // puis setStimulusMediaUrl(url) et setStimulusSource("upload")
+                }}
+                mediaTypes={mediaTypes}
+                onMediaTypesChange={setMediaTypes}
+                maxFiles={maxFiles}
+                onMaxFilesChange={setMaxFiles}
+                maxSizeMb={maxSizeMb}
+                onMaxSizeMbChange={setMaxSizeMb}
+                maxDurationSeconds={maxDurationSeconds}
+                onMaxDurationSecondsChange={setMaxDurationSeconds}
+                captureRequired={captureRequired}
+                onCaptureRequiredChange={setCaptureRequired}
+              />
+            )}
+
+            {/* Heatmap */}
+            {questionKind === "heatmap" && (
+              <HeatmapQuestionSettings
+                value={heatmapConfig}
+                onChange={setHeatmapConfig}
+              />
+            )}
+
+            {/* GPS */}
+            {questionKind === "gps" && (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t("missions.surveys.addNewQuestion.gpsMode")}
+                  </label>
+                  <select
+                    className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    value={gpsMode}
+                    onChange={(e) => setGpsMode(e.target.value as GpsMode)}
+                  >
+                    <option value="pin">pin</option>
+                    <option value="navigate">navigate</option>
+                    <option value="checkin">checkin</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm mb-1">Lat</label>
+                    <input
+                      type="number"
+                      value={targetLat}
+                      onChange={(e) => setTargetLat(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Lng</label>
+                    <input
+                      type="number"
+                      value={targetLng}
+                      onChange={(e) => setTargetLng(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t("missions.surveys.addNewQuestion.locationLabel")}
+                    </label>
+                    <input
+                      type="text"
+                      value={targetLabel}
+                      onChange={(e) => setTargetLabel(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t("missions.surveys.addNewQuestion.maxDistanceMeters")}
+                    </label>
+                    <input
+                      type="number"
+                      value={maxDistanceMeters}
+                      onChange={(e) => setMaxDistanceMeters(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t(
+                        "missions.surveys.addNewQuestion.minTimeOnSiteSeconds"
+                      )}
+                    </label>
+                    <input
+                      type="number"
+                      value={minTimeOnSiteSeconds}
+                      onChange={(e) => setMinTimeOnSiteSeconds(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">
+                      {t("missions.surveys.addNewQuestion.gpsTolerance")}
+                    </label>
+                    <input
+                      type="number"
+                      value={gpsToleranceMeters}
+                      onChange={(e) => setGpsToleranceMeters(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    id="requiresPathTracking"
+                    checked={requiresPathTracking}
+                    onChange={() =>
+                      setRequiresPathTracking((current) => !current)
+                    }
+                  />
+                  <label htmlFor="requiresPathTracking">
+                    {t("missions.surveys.addNewQuestion.requiresPathTracking")}
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {/* Section selector (si ce n’est pas une section) */}
+            {questionKind !== "section" && sectionOptions.length > 0 && (
+              <QuestionSectionSelector
+                sections={sectionOptions}
+                selectedSectionId={selectedSectionId}
+                onChange={setSelectedSectionId}
+              />
+            )}
+
+            {/* Required */}
+            {questionKind !== "section" && (
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="isRequired"
+                    className="mr-2"
+                    checked={isRequired}
+                    onChange={() => setIsRequired(!isRequired)}
+                  />
+                  <label htmlFor="isRequired" className="text-sm">
+                    {t("missions.surveys.addNewQuestion.required")}
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="border-t px-6 py-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                resetForm();
+                onOpenChange(false);
+              }}
+            >
+              {t("missions.surveys.addNewQuestion.cancel")}
+            </Button>
+            <Button
+              onClick={handleUpdateQuestion}
+              disabled={isLoadingUpdate || !questionTitle.trim()}
+            >
+              {isLoadingUpdate ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                t("missions.surveys.addNewQuestion.update")
+              )}
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

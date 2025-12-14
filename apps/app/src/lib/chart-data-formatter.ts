@@ -54,96 +54,111 @@ export function extractResponsesForQuestion(
 
 // Reformate les données d'une question pour l'affichage en graphique
 export function formatChartDataFromResponses(
-  questionResponses: Array<{ answer: any; age: number; gender: string; location: any; responseId: string }>,
+  questionResponses: Array<{
+    answer: any;
+    age: number;
+    gender: string;
+    location: any;
+    responseId: string;
+  }>,
   questionType: string
 ): any[] {
   if (!questionResponses || questionResponses.length === 0) {
     return [];
   }
 
+  // Base Appinio: % calculé sur le nombre de répondants à la question
+  const baseRespondents = questionResponses.length;
+
+  const safePct = (count: number, base: number) =>
+    base > 0 ? (count / base) * 100 : 0;
+
   switch (questionType) {
-    case "dropdown":
-      const dropdownCounts: Record<string, number> = {};
-      questionResponses.forEach((response) => {
-        const answer = String(response.answer);
-        dropdownCounts[answer] = (dropdownCounts[answer] || 0) + 1;
+    case "dropdown": {
+      const counts: Record<string, number> = {};
+      questionResponses.forEach((r) => {
+        const a = String(r.answer ?? "").trim();
+        if (!a) return;
+        counts[a] = (counts[a] || 0) + 1;
       });
 
-      return Object.entries(dropdownCounts).map(([label, value]) => ({
+      return Object.entries(counts).map(([label, value]) => ({
         label,
         value,
+        percent: safePct(value, baseRespondents),
+        base: baseRespondents,
       }));
+    }
 
-    case "checkbox":
-      const checkboxCounts: Record<string, number> = {};
-      questionResponses.forEach((response) => {
-        const answers = Array.isArray(response.answer)
-          ? response.answer
-          : [response.answer];
-
-        answers.forEach((answer: string) => {
-          if (answer) { // Éviter les réponses vides
-            checkboxCounts[answer] = (checkboxCounts[answer] || 0) + 1;
-          }
+    case "checkbox": {
+      const counts: Record<string, number> = {};
+      questionResponses.forEach((r) => {
+        (Array.isArray(r.answer) ? r.answer : [r.answer]).forEach((a) => {
+          const key = String(a ?? "").trim();
+          if (!key) return;
+          counts[key] = (counts[key] || 0) + 1;
         });
       });
 
-      return Object.entries(checkboxCounts).map(([label, value]) => ({
+      return Object.entries(counts).map(([label, value]) => ({
         label,
         value,
+        percent: safePct(value, baseRespondents),
+        base: baseRespondents,
       }));
+    }
 
-    case "boolean":
-      const booleanCounts: Record<string, number> = {};
-      questionResponses.forEach((response) => {
-        const answer = response.answer ? "Oui" : "Non";
-        booleanCounts[answer] = (booleanCounts[answer] || 0) + 1;
+
+    case "boolean": {
+      const counts: Record<"Oui" | "Non", number> = { Oui: 0, Non: 0 };
+      questionResponses.forEach((r) => {
+        counts[r.answer ? "Oui" : "Non"]++;
       });
 
-      return Object.entries(booleanCounts).map(([label, value]) => ({
-        label,
-        value,
-        fill: `var(--color-${label.toLowerCase()})`,
-      }));
+      return (Object.entries(counts) as Array<[string, number]>).map(
+        ([label, value]) => ({
+          label,
+          value,
+          percent: safePct(value, baseRespondents),
+          base: baseRespondents,
+          fill: `var(--color-${label.toLowerCase()})`,
+        })
+      );
+  }
 
-        case "rating": {
-      // 1. On récupère toutes les notes en nombre
+    case "rating": {
       const ratings = questionResponses
-        .map((response) => parseInt(String(response.answer), 10))
-        .filter((rating) => !isNaN(rating));
+        .map((r) => parseInt(String(r.answer), 10))
+        .filter((n) => !Number.isNaN(n));
 
-      if (ratings.length === 0) return [];
+      if (!ratings.length) return [];
 
-      // 2. On compte combien de fois chaque note apparaît
       const counts: Record<number, number> = {};
-      ratings.forEach((rating) => {
-        counts[rating] = (counts[rating] || 0) + 1;
-      });
+      ratings.forEach((n) => (counts[n] = (counts[n] || 0) + 1));
+      const base = ratings.length;
 
-      const total = ratings.length;
-
-      // 3. On renvoie un tableau [{ label, value, percentage, rating }]
       return Object.entries(counts)
-        .sort(([a], [b]) => Number(a) - Number(b)) // 1,2,3,4,5...
-        .map(([rating, count]) => ({
+        .sort(([a], [b]) => Number(a) - Number(b))
+        .map(([rating, value]) => ({
           label: `${rating} étoile${Number(rating) > 1 ? "s" : ""}`,
-          value: count as number,
-          percentage: (Number(count) / total) * 100,
+          value,
+          percent: safePct(value, base),
+          base,
           rating: Number(rating),
         }));
     }
-
 
     case "text":
     case "comment":
       return questionResponses
         .map((response) => String(response.answer))
-        .filter(answer => answer && answer.trim().length > 0); // Éviter les réponses vides
+        .filter((answer) => answer && answer.trim().length > 0);
 
     default:
       return [];
   }
 }
+
 
 // Génère la config des couleurs pour un graphique
 export function generateChartConfigFromData(

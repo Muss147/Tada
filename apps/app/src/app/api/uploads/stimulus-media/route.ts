@@ -1,11 +1,18 @@
 import { uploadFileToSupabase } from "@/lib/uploads.server";
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs"; // important (File.arrayBuffer + Buffer)
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_SIZE_MB = 8;
-const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const MAX_SIZE_MB = 250; // vidéo possible
+const ALLOWED_PREFIXES = ["image/", "video/", "audio/"];
+
+function inferMediaType(mime: string): "photo" | "video" | "audio" | null {
+  if (mime.startsWith("image/")) return "photo";
+  if (mime.startsWith("video/")) return "video";
+  if (mime.startsWith("audio/")) return "audio";
+  return null;
+}
 
 export async function POST(req: Request) {
   try {
@@ -16,7 +23,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing file" }, { status: 400 });
     }
 
-    if (!ALLOWED.has(file.type)) {
+    const okType = ALLOWED_PREFIXES.some((p) => file.type.startsWith(p));
+    if (!okType) {
       return NextResponse.json(
         { error: `Unsupported file type: ${file.type}` },
         { status: 400 }
@@ -31,21 +39,31 @@ export async function POST(req: Request) {
       );
     }
 
-    // Tu peux utiliser "surveyImage" tel que ton config le définit
+    const mediaType = inferMediaType(file.type);
+    if (!mediaType) {
+      return NextResponse.json(
+        { error: "Could not infer media type" },
+        { status: 400 }
+      );
+    }
+
     const uploaded = await uploadFileToSupabase({
       file,
-      category: "surveyImage",
+      category: "stimulusMedia",
       baseName: file.name.replace(/\.[^/.]+$/, ""),
     });
 
-    // Important: renvoie aussi bucket+path pour pouvoir supprimer et persister proprement
     return NextResponse.json({
       url: uploaded.publicUrl,
       bucket: uploaded.bucket,
       path: uploaded.path,
+      mediaType,
+      mimeType: file.type,
+      fileName: file.name,
+      size: file.size,
     });
   } catch (e: any) {
-    console.error("[UPLOAD_QUESTION_IMAGE]", e);
+    console.error("[UPLOAD_STIMULUS_MEDIA]", e);
     return NextResponse.json(
       { error: e?.message ?? "Upload failed" },
       { status: 500 }
