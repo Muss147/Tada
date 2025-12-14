@@ -294,7 +294,7 @@ export function UsersTable({ users }: { users: User[] }) {
                   className={user.banned ? "text-green-600" : "text-orange-600"}
                 >
                   <Ban className="mr-2 h-4 w-4" />
-                  {user.banned ? "Débannir" : "Bannir"}
+                  {user.banned ? "Réactiver" : "Bannir"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {

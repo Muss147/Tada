@@ -1665,6 +1665,11 @@ export default {
     detail: {
       title: "Contributeur | Tada",
       notFound: "Contributeur non trouvé",
+      infos: {
+        job: "Métier",
+        location: "Localisation",
+        kyc_status: "Status KYC",
+      },
       stats: {
         totalMissions: "Nombre total de missions",
         points: "Points enregistrés",
@@ -1672,6 +1677,7 @@ export default {
         completed: "Missions terminées",
       },
       actions: {
+        edit: "Modifier le mapper",
         suspend: "Suspendre le mapper",
         unsuspend: "Réactiver le mapper",
         loading: {

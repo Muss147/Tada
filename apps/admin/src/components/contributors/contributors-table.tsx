@@ -30,6 +30,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@tada/ui/components/dropdown-menu";
 import {
@@ -56,6 +57,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Contributor {
   id: string;
@@ -78,6 +80,7 @@ interface Contributor {
 }
 
 // Composants mémorisés avec design amélioré
+
 const ContributorCell = React.memo(
   ({ contributor }: { contributor: Contributor }) => (
     <div className="flex items-center gap-4">
@@ -203,8 +206,18 @@ const EarningsCell = React.memo(
 
 EarningsCell.displayName = "EarningsCell";
 
+// ======================================================
+// ✅ COMPOSANT ACTIONSCELL CORRIGÉ :
+// Reçoit maintenant 'onToggleBan' via les props.
+// ======================================================
 const ActionsCell = React.memo(
-  ({ contributor }: { contributor: Contributor }) => (
+  ({
+    contributor,
+    onToggleBan,
+  }: {
+    contributor: Contributor;
+    onToggleBan: (contributor: Contributor) => void;
+  }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
@@ -244,9 +257,14 @@ const ActionsCell = React.memo(
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex items-center gap-2 text-red-600 hover:bg-red-50 transition-colors">
-          <Ban className="h-4 w-4" />
-          {contributor.banned ? "Débannir" : "Bannir"}
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem
+          onClick={() => onToggleBan(contributor)} // 👈 Appel de la fonction via les props
+          className={contributor.banned ? "text-green-600" : "text-orange-600"}
+        >
+          <Ban className="mr-2 h-4 w-4" />
+          {contributor.banned ? "Réactiver" : "Bannir"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -255,11 +273,35 @@ const ActionsCell = React.memo(
 
 ActionsCell.displayName = "ActionsCell";
 
+// ======================================================
+// ✅ COMPOSANT CONTIBUTORSTABLE CORRIGÉ
+// ======================================================
 export const ContributorsTable = React.memo(
   ({ contributors }: { contributors: Contributor[] }) => {
     const t = useI18n();
+    const router = useRouter();
     const [globalFilter, setGlobalFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
+
+    // 🆕 DÉFINITION DE LA FONCTION DE BAN AVEC useCallBack
+    const handleToggleBan = useCallback(
+      async (contributor: Contributor) => {
+        try {
+          const response = await fetch(`/api/users/${contributor.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ banned: !contributor.banned }),
+          });
+
+          if (response.ok) {
+            router.refresh(); // Rafraîchit les données après la modification
+          }
+        } catch (error) {
+          console.error("Error toggling ban:", error);
+        }
+      },
+      [router]
+    ); // Dépendance à 'router'
 
     // Mémoriser les colonnes pour éviter les re-créations
     const columns = useMemo(
@@ -282,13 +324,7 @@ export const ContributorsTable = React.memo(
             <ContributorCell contributor={row.original} />
           ),
         },
-        // {
-        //   accessorKey: "job",
-        //   header: "Profession",
-        //   cell: ({ row }: any) => (
-        //     <JobCell job={row.original.job} location={row.original.location} />
-        //   ),
-        // },
+        // { ... colonne job/location ... },
         {
           accessorKey: "kyc_status",
           header: "Statut KYC",
@@ -306,13 +342,7 @@ export const ContributorsTable = React.memo(
             <MissionsCell assignments={row.original.missionAssignments} />
           ),
         },
-        // {
-        //   accessorKey: "earnings",
-        //   header: "Gains",
-        //   cell: ({ row }: any) => (
-        //     <EarningsCell assignments={row.original.missionAssignments} />
-        //   ),
-        // },
+        // { ... colonne earnings ... },
         {
           accessorKey: "createdAt",
           header: "Inscription",
@@ -325,10 +355,16 @@ export const ContributorsTable = React.memo(
         {
           id: "actions",
           header: "",
-          cell: ({ row }: any) => <ActionsCell contributor={row.original} />,
+          cell: ({ row }: any) => (
+            // 👈 PASSAGE DE LA FONCTION EN PROP À ActionsCell
+            <ActionsCell
+              contributor={row.original}
+              onToggleBan={handleToggleBan}
+            />
+          ),
         },
       ],
-      []
+      [handleToggleBan] // 👈 Ajout de handleToggleBan aux dépendances
     );
 
     // Mémoriser les données filtrées
@@ -375,6 +411,8 @@ export const ContributorsTable = React.memo(
         },
       },
     });
+    
+    // ⚠️ ANCIEN EMPLACEMENT DE handleToggleBan SUPPRIMÉ
 
     return (
       <Card className="backdrop-blur-sm rounded-none duration-300">
@@ -386,6 +424,17 @@ export const ContributorsTable = React.memo(
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="Filtrer par statut" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tous les statuts</SelectItem>
+                  <SelectItem value="active">Actifs</SelectItem>
+                  <SelectItem value="verified">Vérifiés</SelectItem>
+                  <SelectItem value="banned">Bannis</SelectItem>
+                </SelectContent>
+              </Select>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
@@ -395,18 +444,7 @@ export const ContributorsTable = React.memo(
                   className="w-64 border-0 bg-gray-50 placeholder:text-sm backdrop-blur-sm focus:bg-white/80 transition-colors"
                 />
               </div>
-              {/* <Select value={statusFilter} onValueChange={handleStatusChange}>
-                <SelectTrigger className="w-40 border-0 bg-gray-50/80 backdrop-blur-sm focus:bg-white/80 transition-colors">
-                  <Filter className="h-4 w-4 mr-2 text-gray-500" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
-                  <SelectItem value="all">Tous</SelectItem>
-                  <SelectItem value="verified">Vérifiés</SelectItem>
-                  <SelectItem value="unverified">Non vérifiés</SelectItem>
-                  <SelectItem value="banned">Bannis</SelectItem>
-                </SelectContent>
-              </Select> */}
+              {/* Le Select est commenté, mais la logique de filtrage est prête */}
             </div>
           </CardTitle>
         </CardHeader>
