@@ -183,16 +183,27 @@ export function WorkspaceSwitcher() {
                   </div>
 
                   {/* Bouton paramètres visible seulement au survol */}
-                  <button
-                    type="button"
+                  <div
+                    role="button"
+                    tabIndex={0}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleWorkspaceSettings(ws.id);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleWorkspaceSettings(ws.id);
+                      }
+                    }}
                     className="opacity-0 group-hover:opacity-100 ml-2 rounded-full p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity"
+                    aria-label={
+                      t("navigation.workspaceSettings") ?? "Workspace settings"
+                    }
                   >
                     <SettingsIcon className="h-4 w-4" />
-                  </button>
+                  </div>
                 </button>
               ))}
 

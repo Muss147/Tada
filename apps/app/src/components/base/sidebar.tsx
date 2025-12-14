@@ -66,7 +66,9 @@ export function Sidebar() {
   const t = useI18n();
   const pathname = usePathname();
   const router = useRouter();
-  const { currencies, selectedCurrency, setSelectedCurrency } = useCurrency();
+  //const { currencies, selectedCurrency, setSelectedCurrency } = useCurrency();
+  const { currencies, selectedCurrency, setSelectedCurrency, hydrated } =
+    useCurrency();
   const { data: session } = useSession();
   const { data: organizations } = authClient.useListOrganizations();
   const currentLocale = useCurrentLocale();
@@ -216,6 +218,7 @@ export function Sidebar() {
               const currency = currencies.find((c) => c.code === value);
               if (currency) setSelectedCurrency(currency);
             }}
+            disabled={!hydrated}
           >
             <SelectTrigger className="w-full">
               <SelectValue>
