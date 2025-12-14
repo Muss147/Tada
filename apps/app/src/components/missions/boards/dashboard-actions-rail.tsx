@@ -16,10 +16,16 @@ export function DashboardActionsRail({
   onShareClick,
   visible = true,
 }: DashboardActionsRailProps) {
-  if (!visible) return null;
-
+  console.log("DashboardActionsRail visible:", visible);
   return (
-    <div className="fixed right-6 top-1/3 z-10 -translate-y-1/2">
+    <div
+      className={cn(
+        "fixed right-2 top-1/3 z-10 -translate-y-1/2 transition-all duration-200",
+        visible
+          ? "opacity-100 translate-x-0 pointer-events-auto"
+          : "opacity-0 translate-x-2 pointer-events-none"
+      )}
+    >
       <div className="flex flex-col gap-2 rounded-3xl bg-white shadow-md border border-slate-200 p-1">
         <IconButton
           tooltip="Filter"

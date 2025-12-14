@@ -14,6 +14,24 @@ export type ImageChoice = {
   description?: string; // optionnel, pour des infos supplémentaires
 };
 
+export type HeatmapTarget =
+  | { kind: "rect"; rect: { x: number; y: number; w: number; h: number } }
+  | { kind: "polygon"; points: { x: number; y: number }[] };
+
+export type HeatmapConfig = {
+  stimulusSource: "upload" | "url";
+  stimulusImageUrl?: string; // si url
+  stimulusImage?: {
+    bucket: string;
+    path: string;
+    publicUrl: string;
+  }; // si upload (optionnel)
+  allowMultipleClicks?: boolean; // 1 click ou plusieurs
+  maxClicks?: number; // si multiple
+  collectReason?: boolean; // champ texte après clic
+  targets?: HeatmapTarget[]; // optionnel si tu veux des zones définies
+};
+
 interface SurveysBuilderContextType {
   surveys: Survey;
   setSurveys: React.Dispatch<React.SetStateAction<Survey>>;
@@ -46,7 +64,8 @@ export interface SurveyQuestion {
     | "gps"
     | "section"
     | "image_ranking"
-    | "ranking";
+    | "ranking"
+    | "heatmap";
 
   // choix
   choices?: string[];
@@ -88,6 +107,9 @@ export interface SurveyQuestion {
   stimulusSource?: "upload" | "url";
   stimulusMediaUrl?: string;
   stimulusMediaType?: MediaType;
+
+  // 🎯 heatmap
+  heatmap?: HeatmapConfig;
 
   // 📍 GPS
   gpsMode?: GpsMode;

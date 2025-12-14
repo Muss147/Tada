@@ -20,7 +20,13 @@ import {
   VeltCommentTool,
 } from "@veltdev/react";
 
-export const BarChartCard: FC<BarChartCardProps> = ({
+export const BarChartCard: FC<
+  BarChartCardProps & {
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
+  }
+> = ({
   config,
   data,
   categoryKey = "month",
@@ -30,6 +36,9 @@ export const BarChartCard: FC<BarChartCardProps> = ({
   participationQuestions,
   primaryKeys,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
@@ -44,6 +53,9 @@ export const BarChartCard: FC<BarChartCardProps> = ({
             title={title}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

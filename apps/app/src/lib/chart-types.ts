@@ -1,14 +1,11 @@
-// src/lib/chart-types.ts
-
 export const ALL_VISUALIZATIONS = [
-  { id: "bar",            label: "Barres horizontales" },
-  { id: "column",         label: "Barres verticales" },
-  { id: "stacked_bar",    label: "Barres empilées (horizontal)" },
-  { id: "stacked_column", label: "Barres empilées (vertical)" },
-  { id: "pie",            label: "Camembert" },
-  { id: "table",          label: "Tableau" },
-  { id: "turf",           label: "Radar / Turf" },
-  //{ id: "chart",          label: "Courbe / Chart" },
+  { id: "bar",            labelKey: "visualizations.bar" },
+  { id: "column",         labelKey: "visualizations.column" },
+  { id: "stacked_bar",    labelKey: "visualizations.stacked_bar" },
+  { id: "stacked_column", labelKey: "visualizations.stacked_column" },
+  { id: "pie",            labelKey: "visualizations.pie" },
+  { id: "table",          labelKey: "visualizations.table" },
+  { id: "turf",           labelKey: "visualizations.turf" },
 ] as const;
 
 export type VisualizationId = (typeof ALL_VISUALIZATIONS)[number]["id"];

@@ -191,13 +191,15 @@ export default async function Page({
 
   const totalResponses = responseDb.metadata.total_responses;
 
-  console.log(
-    "Questions rawResponses:",
-    questionsData.map((q) => ({
-      question: q.question,
-      rawCount: q.rawResponses?.length,
-    }))
-  );
+  console.log(extractAllQuestionsDataWithConfig(responseDb));
+  // console.log(
+  //   "Questions rawResponses:",
+  //   questionsData.map((q) => ({
+  //     question: q.question,
+  //     rawCount: q.rawResponses?.length,
+  //     data: Array.isArray(q.data) ? q.data.length : null,
+  //   }))
+  // );
   return (
     <div>
       <MissionCommentsDrawer

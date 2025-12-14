@@ -165,14 +165,14 @@ export function MissionCard({
         {/* Permissions */}
         {/* <MissionPermissionsModal orgId={orgId} mission={pureMission as any} /> */}
 
-        {/* Delete avec Dialog 
+        {/* Delete avec Dialog */}
         <DeleteMissionDialog
           missionId={mission.id}
           missionName={mission.name}
           workspaceId={workspaceId}
           canDelete={canDelete}
           onDeleted={onMissionDeleted}
-        />*/}
+        />
       </div>
     </div>
   );

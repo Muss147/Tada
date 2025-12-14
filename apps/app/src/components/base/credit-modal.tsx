@@ -100,7 +100,7 @@ export function CreditsModal({
 
         if ("plan" in data && data.plan) {
           setPlan(data.plan);
-          setField("unitPrice", data.plan.addOn ?? 13);
+          setField("unitPrice", data.plan?.addOn ?? 13);
           setNotFound(false);
         } else {
           setPlan(null);

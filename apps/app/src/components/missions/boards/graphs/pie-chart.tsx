@@ -23,7 +23,13 @@ import { BarChartCardProps } from "./type";
 import { CardHeaderChart } from "./ui/card-header";
 import { useSetDocumentId, VeltComments } from "@veltdev/react";
 
-export const PieChartCard: FC<BarChartCardProps> = ({
+export const PieChartCard: FC<
+  BarChartCardProps & {
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
+  }
+> = ({
   config,
   data,
   categoryKey = "month",
@@ -35,6 +41,9 @@ export const PieChartCard: FC<BarChartCardProps> = ({
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const id = "pie-interactive";
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -76,6 +85,9 @@ export const PieChartCard: FC<BarChartCardProps> = ({
             exportTargetId={`chart-${id}`}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
 
           <CardTitle>{title}</CardTitle>

@@ -1,6 +1,7 @@
+// src/components/missions/boards/modals/export-options-dialog.tsx
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,41 +13,124 @@ import {
 import { Button } from "@tada/ui/components/button";
 import { cn } from "@tada/ui/lib/utils";
 import { X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
-type ExportFormat = "ppt" | "excel" | "csv" | "spss";
+import type { QuestionWithView } from "@/lib/chart-filtering";
+import {
+  exportDatasetCsv,
+  exportDatasetExcel,
+} from "@/lib/exports/dataset-export";
+import {
+  exportFullSurveyPdf,
+  exportFullSurveyPpt,
+} from "@/lib/exports/full-survey-export";
+
+type ExportFormat = "ppt" | "excel" | "csv" | "pdf";
 
 interface ExportOptionsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+
+  missionId: string;
+  questions: QuestionWithView[];
+  totalResponses: number;
 }
 
 export function ExportOptionsDialog({
   open,
   onOpenChange,
+  missionId,
+  questions,
+  totalResponses,
 }: ExportOptionsDialogProps) {
   const [activeFormat, setActiveFormat] = useState<ExportFormat>("ppt");
   const [csvDelimiter, setCsvDelimiter] = useState<";" | ",">(";");
+  const [loading, setLoading] = useState(false);
 
-  const handleDownload = () => {
-    // TODO: brancher ici ton API / génération de fichier
-    // en fonction de activeFormat (+ csvDelimiter éventuellement)
-    console.log("Download", { activeFormat, csvDelimiter });
-  };
-
-  const label = (() => {
+  const label = useMemo(() => {
     switch (activeFormat) {
       case "ppt":
-        return "Download standard PPT";
+        return "Download PowerPoint";
       case "excel":
         return "Download Excel";
       case "csv":
         return "Download CSV";
-      case "spss":
-        return "Download SPSS";
+      case "pdf":
+        return "Download PDF";
       default:
         return "Download";
     }
-  })();
+  }, [activeFormat]);
+
+  const handleDownload = async () => {
+    try {
+      setLoading(true);
+
+      if (!missionId) throw new Error("missionId manquant");
+      if (!questions?.length) throw new Error("Aucune donnée à exporter");
+
+      if (activeFormat === "csv") {
+        exportDatasetCsv(missionId, questions, totalResponses, {
+          delimiter: csvDelimiter,
+          mode: "aggregated",
+        });
+
+        toast({
+          title: "Export CSV prêt",
+          description: "Codebook + responses ont été téléchargés.",
+        });
+
+        return;
+      }
+
+      if (activeFormat === "excel") {
+        await exportDatasetExcel(
+          missionId,
+          questions,
+          totalResponses,
+          "aggregated"
+        );
+
+        toast({
+          title: "Export Excel prêt",
+          description: "Dataset (codebook + responses) téléchargé.",
+        });
+
+        return;
+      }
+
+      if (activeFormat === "pdf") {
+        await exportFullSurveyPdf(`mission-${missionId}-questionnaire.pdf`);
+
+        toast({
+          title: "Export PDF prêt",
+          description: "Questionnaire complet téléchargé.",
+        });
+
+        return;
+      }
+
+      if (activeFormat === "ppt") {
+        await exportFullSurveyPpt(`mission-${missionId}-questionnaire.pptx`);
+
+        toast({
+          title: "Export PPT prêt",
+          description: "Questionnaire complet téléchargé.",
+        });
+
+        return;
+      }
+    } catch (e) {
+      console.error("[ExportOptionsDialog] export failed:", e);
+      toast({
+        title: "Export impossible",
+        description: e instanceof Error ? e.message : "Erreur inconnue",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,11 +167,11 @@ export function ExportOptionsDialog({
                 onClick={() => setActiveFormat("csv")}
               />
               <FormatNavItem
-                label="SPSS"
-                format="spss"
-                icon="spss"
-                active={activeFormat === "spss"}
-                onClick={() => setActiveFormat("spss")}
+                label="PDF"
+                format="pdf"
+                icon="pdf"
+                active={activeFormat === "pdf"}
+                onClick={() => setActiveFormat("pdf")}
               />
             </nav>
           </div>
@@ -105,7 +189,10 @@ export function ExportOptionsDialog({
               </DialogHeader>
 
               <DialogClose asChild>
-                <button className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100">
+                <button
+                  type="button"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full hover:bg-slate-100"
+                >
                   <X className="h-4 w-4 text-slate-500" />
                 </button>
               </DialogClose>
@@ -117,6 +204,7 @@ export function ExportOptionsDialog({
                   <p className="text-sm font-medium text-slate-900">
                     Delimiter format
                   </p>
+
                   <div className="space-y-2 text-sm text-slate-700">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -128,6 +216,7 @@ export function ExportOptionsDialog({
                       />
                       <span>Use EU delimiter format (;)</span>
                     </label>
+
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
@@ -141,43 +230,47 @@ export function ExportOptionsDialog({
                   </div>
 
                   <p className="mt-2 text-xs text-slate-500">
-                    Including filters &amp; splits
+                    Exports a clean dataset (codebook + responses).
                   </p>
                 </div>
               )}
 
-              {/* Placeholder pour d’autres options éventuelles */}
               {activeFormat === "ppt" && (
                 <p className="text-sm text-slate-500">
                   Download the entire survey with all questions in their current
-                  views. This includes applied filters and splits.
+                  views. One slide per question.
                 </p>
               )}
 
               {activeFormat === "excel" && (
                 <p className="text-sm text-slate-500">
-                  Export all survey data as an Excel workbook, structured by
-                  questions and responses.
+                  Export a clean Excel dataset with 2 sheets: “codebook” and
+                  “responses”.
                 </p>
               )}
 
-              {activeFormat === "spss" && (
+              {activeFormat === "pdf" && (
                 <p className="text-sm text-slate-500">
-                  Export a dataset compatible with SPSS for advanced statistical
-                  analysis.
+                  Download a PDF report of the full questionnaire. One page per
+                  question.
                 </p>
               )}
 
               <div className="mt-auto flex justify-end gap-3 pt-4">
-                {activeFormat === "csv" && (
-                  <Button variant="outline" size="sm">
-                    Download codebook
-                  </Button>
-                )}
-                <Button size="sm" onClick={handleDownload}>
-                  {label}
+                <Button
+                  size="sm"
+                  onClick={handleDownload}
+                  disabled={loading || !questions?.length}
+                >
+                  {loading ? "Generating…" : label}
                 </Button>
               </div>
+
+              {!questions?.length && (
+                <p className="text-xs text-slate-500">
+                  No data available for export.
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -189,7 +282,7 @@ export function ExportOptionsDialog({
 interface FormatNavItemProps {
   label: string;
   format: ExportFormat;
-  icon: "ppt" | "excel" | "csv" | "spss";
+  icon: "ppt" | "excel" | "csv" | "pdf";
   active: boolean;
   onClick: () => void;
 }
@@ -207,7 +300,7 @@ function FormatNavItem({ label, active, onClick }: FormatNavItemProps) {
           : "text-slate-600 hover:bg-slate-100"
       )}
     >
-      {/* Tu peux mettre de vraies icônes de fichier ici si tu veux */}
+      {/* Icône simple */}
       <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-[10px] font-semibold text-slate-700">
         {label[0]}
       </span>
@@ -219,25 +312,25 @@ function FormatNavItem({ label, active, onClick }: FormatNavItemProps) {
 function getRightTitle(format: ExportFormat) {
   switch (format) {
     case "ppt":
-      return "Standard PPT";
+      return "PowerPoint export";
     case "excel":
       return "Excel export";
     case "csv":
       return "CSV export";
-    case "spss":
-      return "SPSS export";
+    case "pdf":
+      return "PDF export";
   }
 }
 
 function getRightDescription(format: ExportFormat) {
   switch (format) {
     case "ppt":
-      return "Download the entire survey with all questions in their current views.";
+      return "Exports the full questionnaire as a deck (1 slide per question).";
     case "excel":
-      return "Export the dataset as an Excel file, ready for analysis.";
+      return "Exports a clean dataset with a codebook sheet and a responses sheet.";
     case "csv":
-      return "Exports the raw survey data as a CSV file.";
-    case "spss":
-      return "Exports the survey data as an SPSS-compatible file.";
+      return "Exports a clean dataset (codebook + responses) as CSV files.";
+    case "pdf":
+      return "Exports the full questionnaire as a multi-page PDF (1 page per question).";
   }
 }

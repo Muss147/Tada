@@ -34,7 +34,7 @@ export default async function DashboardLayout({
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header user={user as any} />
-          <main className="flex-1 overflow-y-auto p-4">
+          <main id="dashboard-scroll" className="flex-1 overflow-y-auto p-4">
             <div className="px-2 h-full">{children}</div>
           </main>
         </div>

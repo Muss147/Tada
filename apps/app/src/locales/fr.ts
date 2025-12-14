@@ -50,6 +50,15 @@ export default {
       clearFilters: "Annuler les filtres",
     },
   },
+  visualizations:{
+      bar: "Diagramme à barres",
+      column: "Diagramme à colonnes",
+      stacked_bar: "Diagramme à barres empilées",
+      stacked_column: "Diagramme à colonnes empilées",
+      pie: "Diagramme circulaire",
+      table: "Tableau",
+      turf: "Diagramme radar / turf",
+  },
   comments:{
     title: "Commentaires",
     titleQuestion : "Commentaires sur la question",
@@ -65,6 +74,7 @@ export default {
     send: "Envoyer",
     openButton: "Ouvrir les commentaires",
     searchPlaceholder: "Rechercher des commentaires...",
+    button: "Commentaires",
     filter:{
       sortByDate: "Trier par date",
       sortByUnread: "Trier par non lus",
@@ -75,7 +85,7 @@ export default {
       resolved: "Résolus",
       open: "Ouverts",
     },
-    buble:{
+    bubble:{
       title: "Commentaires",
       description: "Voir et ajouter des commentaires à cette question du sondage.",
       new: "Nouveau commentaire",
@@ -1284,11 +1294,30 @@ export default {
         sectionSelectLabel: "Sélectionner une section",
         noSection: "Aucune section",
         option: "Option {number}",
+        editTitle: "Modifier la question",
+        heatmap:{
+                  title: "Paramètres de la carte de chaleur",
+                  description: "Configurer les paramètres de la question carte de chaleur",
+                  desc: "Les répondants peuvent cliquer sur l'image pour indiquer les zones d'intérêt.",
+                  source: "Source de l'image",
+                  sourceUpload: "Télécharger l'image",
+                  sourceUrl: "URL de l'image",
+                  noPreview: "Aucun aperçu disponible",
+                  maxClicks: "Nombre maximum de clics",
+                  uploadBtn: "Cliquez pour télécharger",
+                  multiple: "Autoriser plusieurs clics",
+                  reason: "Pouvez-vous donnez la raison de votre sélection ?",
+                  advancedZones: "Zones avancées",
+                  advancedZonesDescription:
+                    "Définissez des zones spécifiques sur l'image pour une analyse plus détaillée.",
+                },
         imageRanking: {
-          imageLabel: "Image Label",
-          addImage: "Add Image",
-          imagePlaceholder: "Upload an image",
-          uploadButton: "Click to upload",
+          imageLabel: "Étiquette de l'image",
+          imagesLabel: "Étiquettes des images",
+          imageUrlPlaceholder: "URL de l'image",
+          addImage: "Ajouter une image",
+          imagePlaceholder: "Télécharger une image",
+          uploadButton: "Cliquez pour télécharger",
         },
         mediaMode:{
           title: "Type de Média",
@@ -1299,10 +1328,15 @@ export default {
         mediaPresets: {
             title: "Préréglages Média",
           },
-        stimulus:{
+        stimulus: {
           title: "Type de Stimulus",
-
-        }
+          sourceLabel: "Étiquette de la source",
+          sourceUrl: "URL de la source",
+          urlLabel: "Étiquette de l'URL",
+          typeLabel: "Étiquette du type",
+          sourceUpload: "Téléchargement de la source",
+          uploadLabel: "Étiquette de téléchargement",
+        },
       },
       questionCategories: {
         common: "Communes",
@@ -1323,6 +1357,14 @@ export default {
         checkbox: {
           title: "Cases à cocher",
           description: "Question à choix multiples avec cases à cocher",
+        },
+        heatmap:{
+          title: "Carte de chaleur",
+          description: "Configurer les paramètres de la question carte de chaleur",
+          desc: "Les répondants peuvent cliquer sur l'image pour indiquer les zones d'intérêt.",
+          source: "Source de l'image",
+          sourceUpload: "Télécharger l'image",
+          sourceUrl: "URL de l'image",
         },
         radiogroup: {
           title: "Boutons radio",
@@ -1517,6 +1559,21 @@ export default {
           xs: "Téléphone",
         },
       },
+      modals:{
+        filterChangeChartType: {
+          title: "Changer le type de graphique",
+          description:
+            "Changer le type de graphique réinitialisera tous les filtres appliqués. Voulez-vous continuer ?",
+          filter: "Changer les filtres",
+          standard: "Standard",
+          age: "Âge",
+          gender: "Genre",
+          visualization: "Visualisation",
+          sortResponses: "Trier par réponses",
+          sortResponsesDescription:
+            "Trier les réponses dans l'ordre croissant ou décroissant",
+        },
+      }
     },
     permissions: {
       title: "Permissions de la mission",

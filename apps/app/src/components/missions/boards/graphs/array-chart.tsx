@@ -67,7 +67,13 @@ const WordCloud = ({
   );
 };
 
-export const ArrayChartCard: FC<ArrayChartCardProps> = ({
+export const ArrayChartCard: FC<
+  ArrayChartCardProps & {
+    handleExportCsv?: () => void;
+    onCommentsClick?: () => void;
+    commentCount?: number;
+  }
+> = ({
   title,
   description,
   participationQuestions,
@@ -75,6 +81,9 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
   onDelete,
   isDeletable,
   subDashboardItemId,
+  handleExportCsv,
+  onCommentsClick,
+  commentCount = 0,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   useSetDocumentId(subDashboardItemId);
@@ -241,6 +250,9 @@ export const ArrayChartCard: FC<ArrayChartCardProps> = ({
             exportTargetId={`id-${title}`}
             chartRef={chartRef}
             subDashboardItemId={subDashboardItemId}
+            handleExportCsv={handleExportCsv}
+            onCommentsClick={onCommentsClick}
+            commentCount={commentCount}
           />
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

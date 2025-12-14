@@ -7,6 +7,7 @@ import type {
   MediaQuestionMode,
   MediaType,
 } from "@/context/surveys-builder-context";
+import { useState } from "react";
 
 interface MediaQuestionSettingsProps {
   mediaMode: "upload" | "stimulus";
@@ -64,6 +65,7 @@ export function MediaQuestionSettings({
   onCaptureRequiredChange,
 }: MediaQuestionSettingsProps) {
   const t = useI18n();
+  const [uploading, setUploading] = useState(false);
 
   const toggleMediaType = (type: MediaType) => {
     onMediaTypesChange(
@@ -109,6 +111,33 @@ export function MediaQuestionSettings({
         break;
     }
   };
+
+  async function uploadStimulus(file: File) {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      const res = await fetch("/api/uploads/stimulus-media", {
+        method: "POST",
+        body: fd,
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) throw new Error(json.error || "Upload failed");
+
+      // ✅ on hydrate toutes les infos
+      onStimulusMediaUrlChange(json.url);
+      onStimulusMediaTypeChange(json.mediaType);
+      onStimulusSourceChange("upload");
+
+      // pour afficher le nom
+      onStimulusFileChange?.(file);
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
     <div className="mb-6 space-y-4">
@@ -276,11 +305,18 @@ export function MediaQuestionSettings({
               <input
                 type="file"
                 accept="image/*,video/*,audio/*"
+                disabled={uploading}
                 onChange={(e) => {
-                  const file = e.target.files?.[0] ?? null;
-                  onStimulusFileChange?.(file || null);
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  void uploadStimulus(file);
                 }}
               />
+
+              {uploading && (
+                <p className="text-xs text-gray-500">Upload en cours…</p>
+              )}
+
               {stimulusFileName && (
                 <p className="text-xs text-gray-500">
                   {t(

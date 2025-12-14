@@ -7,6 +7,7 @@ import {
   type MediaType,
   type GpsMode,
   type MediaQuestionMode,
+  type HeatmapConfig,
 } from "@/context/surveys-builder-context";
 import { stripSpecialCharacters } from "@/lib/utils";
 import { useI18n } from "@/locales/client";
@@ -48,6 +49,7 @@ import {
   QuestionSectionSelector,
   type SectionOption,
 } from "../_partials/QuestionSectionSelector";
+import { HeatmapQuestionSettings } from "../_partials/HeatmapQuestionSettings";
 
 const PAGE_SIZE = 10;
 
@@ -136,6 +138,14 @@ export function AddNewQuestionModal({
   const [captureRequired, setCaptureRequired] = useState<boolean>(false);
 
   const [mediaMode, setMediaMode] = useState<"upload" | "stimulus">("upload");
+  const [heatmapConfig, setHeatmapConfig] = useState<HeatmapConfig>({
+    stimulusSource: "url" as const,
+    stimulusImageUrl: "",
+    stimulusImage: undefined as any,
+    allowMultipleClicks: false,
+    maxClicks: 3,
+    collectReason: false,
+  });
   const [stimulusSource, setStimulusSource] = useState<"upload" | "url">("url");
   const [stimulusMediaUrl, setStimulusMediaUrl] = useState<string>("");
   const [stimulusMediaType, setStimulusMediaType] =
@@ -292,6 +302,12 @@ export function AddNewQuestionModal({
           description: t("missions.surveys.questionTypes.media.description"),
         },
         {
+          id: "heatmap",
+          icon: <MapPin size={20} />,
+          title: t("missions.surveys.questionTypes.heatmap.title"),
+          description: t("missions.surveys.questionTypes.heatmap.description"),
+        },
+        {
           id: "gps",
           icon: <MapPin size={20} />,
           title: t("missions.surveys.questionTypes.gps.title"),
@@ -360,6 +376,14 @@ export function AddNewQuestionModal({
       },
     ]);
     setSelectedSectionId(null);
+    setHeatmapConfig({
+      stimulusSource: "url" as "url" | "upload",
+      stimulusImageUrl: "",
+      stimulusImage: undefined,
+      allowMultipleClicks: false,
+      maxClicks: 3,
+      collectReason: false,
+    });
   };
 
   const getFilteredQuestionTypes = () => {
@@ -517,6 +541,29 @@ export function AddNewQuestionModal({
             mediaMode === "stimulus" ? stimulusMediaType : undefined,
         };
 
+      case "heatmap":
+        return {
+          ...base,
+          type: "heatmap",
+          category: "heatmap",
+          heatmap: {
+            stimulusSource: heatmapConfig.stimulusSource,
+            stimulusImageUrl:
+              heatmapConfig.stimulusSource === "url"
+                ? heatmapConfig.stimulusImageUrl || undefined
+                : undefined,
+            stimulusImage:
+              heatmapConfig.stimulusSource === "upload"
+                ? heatmapConfig.stimulusImage
+                : undefined,
+            allowMultipleClicks: !!heatmapConfig.allowMultipleClicks,
+            maxClicks: heatmapConfig.allowMultipleClicks
+              ? Math.max(1, heatmapConfig.maxClicks ?? 3)
+              : 1,
+            collectReason: !!heatmapConfig.collectReason,
+          },
+        } as any;
+
       case "gps": {
         const lat = parseFloat(targetLat);
         const lng = parseFloat(targetLng);
@@ -626,7 +673,7 @@ export function AddNewQuestionModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="p-6">
+        <div className="px-6 pb-6 overflow-y-auto max-h-[calc(85vh-140px)]">
           {/* 1. Sélection du type de question */}
           {!selectedQuestionType ? (
             <>
@@ -1004,6 +1051,13 @@ export function AddNewQuestionModal({
                   onMaxDurationSecondsChange={setMaxDurationSeconds}
                   captureRequired={captureRequired}
                   onCaptureRequiredChange={setCaptureRequired}
+                />
+              )}
+
+              {selectedQuestionType === "heatmap" && (
+                <HeatmapQuestionSettings
+                  value={heatmapConfig}
+                  onChange={setHeatmapConfig}
                 />
               )}
 
