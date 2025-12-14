@@ -61,6 +61,15 @@ export default {
       clearFilters: "Clear filters",
     },
   },
+  visualizations:{
+    bar: "Bar Chart",
+    column: "Column Chart",
+    stacked_bar: "Stacked Bar Chart",
+    stacked_column: "Stacked Column Chart",
+    pie: "Pie Chart",
+    table: "Table",
+    turf: "Radar / Turf Chart",
+  },
   comments:{
     title: "Comments",
     titleQuestion : "Comments on question",
@@ -76,6 +85,7 @@ export default {
     send: "Send",
     openButton: "Open comments",
     searchPlaceholder: "Search comments...",
+    button: "Comments",
     filter:{
       sortByDate: "Sort by date",
       sortByUnread: "Sort by unread",
@@ -1467,6 +1477,21 @@ export default {
           xs: "Mobile",
         },
       },
+      modals:{
+        filterChangeChartType: {
+          title: "Change Chart Type",
+          description:
+            "Changing the chart type will reset any applied filters. Do you want to proceed?",
+          filter: "Change filters",
+          standard: "Standard",
+          age: "Age",
+          gender: "Gender",
+          visualization: "Visualization",
+          sortResponses: "Sort by responses",
+          sortResponsesDescription:
+            "Choose how to sort the responses in the chart.",
+        },
+      }
     },
     subDashboard: {},
     permissions: {

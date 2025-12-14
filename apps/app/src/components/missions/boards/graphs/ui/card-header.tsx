@@ -354,7 +354,7 @@ export const CardHeaderChart = ({
                 className="relative"
                 title={title}
               >
-                Commentaires
+                {t("comments.button")}
                 {commentCount > 0 && (
                   <span className="ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary/10 text-primary text-[11px] px-1">
                     {commentCount}

@@ -101,12 +101,13 @@ export default function MissionDashboardClient({
       const q = questions.find(
         (q) => q.chartId === questionId || q.question === questionId
       );
-
       if (!q) return undefined;
 
       return {
         allowed_chart: q.allowed_chart,
         currentChartType: q.chart_type,
+        currentFilter: q.activeFilter,
+        currentSorted: q.isSorted,
       };
     },
     [questions]

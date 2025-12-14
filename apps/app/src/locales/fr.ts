@@ -50,6 +50,15 @@ export default {
       clearFilters: "Annuler les filtres",
     },
   },
+  visualizations:{
+      bar: "Diagramme à barres",
+      column: "Diagramme à colonnes",
+      stacked_bar: "Diagramme à barres empilées",
+      stacked_column: "Diagramme à colonnes empilées",
+      pie: "Diagramme circulaire",
+      table: "Tableau",
+      turf: "Diagramme radar / turf",
+  },
   comments:{
     title: "Commentaires",
     titleQuestion : "Commentaires sur la question",
@@ -65,6 +74,7 @@ export default {
     send: "Envoyer",
     openButton: "Ouvrir les commentaires",
     searchPlaceholder: "Rechercher des commentaires...",
+    button: "Commentaires",
     filter:{
       sortByDate: "Trier par date",
       sortByUnread: "Trier par non lus",
@@ -1549,6 +1559,21 @@ export default {
           xs: "Téléphone",
         },
       },
+      modals:{
+        filterChangeChartType: {
+          title: "Changer le type de graphique",
+          description:
+            "Changer le type de graphique réinitialisera tous les filtres appliqués. Voulez-vous continuer ?",
+          filter: "Changer les filtres",
+          standard: "Standard",
+          age: "Âge",
+          gender: "Genre",
+          visualization: "Visualisation",
+          sortResponses: "Trier par réponses",
+          sortResponsesDescription:
+            "Trier les réponses dans l'ordre croissant ou décroissant",
+        },
+      }
     },
     permissions: {
       title: "Permissions de la mission",
