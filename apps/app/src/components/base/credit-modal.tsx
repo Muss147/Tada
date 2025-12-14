@@ -90,21 +90,18 @@ export function CreditsModal({
 
     let isMounted = true;
     setLoadingPlan(true);
+    setNotFound(false);
 
     fetch(`/api/organizations/${organizationId}/subscription`)
       .then(async (res) => {
-        if (res.status === 404) {
-          if (!isMounted) return;
-          setNotFound(true);
-          setPlan(null);
-          return;
-        }
+        if (!isMounted) return;
+
         const data: SubscriptionResponse = await res.json();
 
-        if (!isMounted) return;
         if ("plan" in data && data.plan) {
           setPlan(data.plan);
-          setField("unitPrice", plan?.addOn || 13);
+          setField("unitPrice", data.plan.addOn ?? 13);
+          setNotFound(false);
         } else {
           setPlan(null);
           setNotFound(true);
@@ -123,7 +120,7 @@ export function CreditsModal({
     return () => {
       isMounted = false;
     };
-  }, [organizationId]);
+  }, [organizationId, setField]);
 
   // Handler pour la mise à jour des crédits
   const handleCreditsChange = (value: string) => {

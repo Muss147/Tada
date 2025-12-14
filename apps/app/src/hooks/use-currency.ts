@@ -103,16 +103,35 @@ function getStoredCurrency(): Currency {
 }
 
 export function useCurrency() {
-  const [selectedCurrency, setSelectedCurrency] =
-    useState<Currency>(getStoredCurrency);
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
+    getDefaultCurrency()
+  );
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        const found = currencies.find((c) => c.code === parsed.code);
+        if (found) setSelectedCurrency(found);
+      } catch {
+        // ignore
+      }
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedCurrency));
-  }, [selectedCurrency]);
+  }, [selectedCurrency, hydrated]);
 
   return {
     currencies,
     selectedCurrency,
     setSelectedCurrency,
+    hydrated,
   };
 }
+

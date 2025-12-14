@@ -84,9 +84,14 @@ export async function GET(req: NextRequest) {
       where.organizationId = organizationId;
     }
 
+    // const datasets = await prisma.aiDataset.findMany({
+    //   where,
+    //   orderBy: { createdAt: "desc" },
+    // });
     const datasets = await prisma.aiDataset.findMany({
       where,
       orderBy: { createdAt: "desc" },
+      select: { id: true, createdAt: true },
     });
 
     return NextResponse.json(datasets.map(serializeAiDataset), { status: 200 });

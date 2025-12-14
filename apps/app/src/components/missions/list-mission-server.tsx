@@ -4,7 +4,6 @@ import { ListMissions } from "./list-missions";
 import { MissionFilter } from "./mission-filter";
 
 const pageSize = 10;
-const maxItems = 100000;
 
 interface FetchMissionsParams {
   orgId: string;
@@ -12,52 +11,47 @@ interface FetchMissionsParams {
   query?: string;
   status?: string;
   date?: string;
-  from: number; // Starting page number
-  to: number; // Ending page number
+  page: number; // 0-based
   pageSize: number;
   sort?: string[];
 }
 
 function fetchMissions({
-  orgId,
+  orgId, // kept for signature consistency (not used in whereClause right now)
   workspaceId,
   query,
   status,
   date,
-  from,
-  to,
+  page,
   pageSize,
-  sort = [],
+  sort = ["createdAt"],
 }: FetchMissionsParams) {
   const whereClause = {
-    workspaceId: workspaceId,
-    ...(query && { name: { contains: query } }),
-    ...(status && status !== "all" && { status }),
-    ...(date && { createdAt: { gte: new Date(date) } }),
+    workspaceId,
+    ...(query?.trim()
+      ? { name: { contains: query.trim(), mode: "insensitive" as const } }
+      : {}),
+    ...(status && status !== "all" ? { status } : {}),
+    ...(date?.trim() ? { createdAt: { gte: new Date(date) } } : {}),
   };
 
-  const orderByClause = sort.map((s) => ({ [s]: "desc" }));
-
-  const skip = from * pageSize;
-  const take = (to - from + 1) * pageSize;
+  const orderByClause = (sort.length ? sort : ["createdAt"]).map((s) => ({
+    [s]: "desc" as const,
+  }));
 
   return prisma.mission.findMany({
     where: whereClause,
     orderBy: orderByClause,
-    skip,
-    take,
+    skip: page * pageSize,
+    take: pageSize + 1,
     include: {
       missionPermissions: {
-        include: {
-          user: true,
-        },
+        include: { user: true },
       },
       survey: {
         include: {
           response: {
-            where: {
-              status: "completed",
-            },
+            where: { status: "completed" },
           },
         },
       },
@@ -78,44 +72,55 @@ export async function ListMissionServer({
   orgId: string;
   query?: string;
   sort?: string[];
-  page: number;
+  page: number; // 0-based
   status?: string;
   date?: string;
 }) {
-  const hasFilters = Object.values({ query, status, date }).some(
-    (value) => value !== null
-  );
-  const missions = await fetchMissions({
+  // ✅ Correct filter detection (no more undefined !== null bug)
+  const hasFilters =
+    (query?.trim()?.length ?? 0) > 0 ||
+    (date?.trim()?.length ?? 0) > 0 ||
+    (status ?? "all") !== "all";
+
+  // ✅ Always do proper pagination (no maxItems, no huge take)
+  const raw = await fetchMissions({
     orgId,
     workspaceId,
     query,
     status,
     date,
-    from: 0,
-    to: hasFilters ? maxItems : page > 0 ? pageSize : pageSize - 1,
+    page,
     pageSize,
     sort,
   });
 
-  async function loadMore({ from, to }: { from: number; to: number }) {
+  const hasNextPage = raw.length > pageSize;
+  const missions = hasNextPage ? raw.slice(0, pageSize) : raw;
+
+  async function loadMore({ page: nextPage }: { page: number }) {
     "use server";
 
-    return fetchMissions({
+    const rawNext = await fetchMissions({
       workspaceId,
       orgId,
       query,
       status,
       date,
-      from: from + 1,
-      to,
+      page: nextPage,
       pageSize,
       sort,
     });
+
+    const hasNext = rawNext.length > pageSize;
+    const items = hasNext ? rawNext.slice(0, pageSize) : rawNext;
+
+    // ✅ return shape you can adapt in ListMissions if needed
+    return { missions: items, hasNextPage: hasNext };
   }
 
-  const hasNextPage = Boolean(
-    missions.length && missions.length / (page + 1) > pageSize
-  );
+  // Note: hasFilters is still useful if you want to change UI behaviour,
+  // but it no longer changes how much you fetch (stability)
+  void hasFilters;
 
   return (
     <div className="space-x-4 ">
@@ -126,7 +131,7 @@ export async function ListMissionServer({
             ...mission,
             submissions:
               mission.survey.length > 0
-                ? mission.survey![0]?.response.length
+                ? (mission.survey?.[0]?.response.length ?? 0)
                 : 0,
           }))}
           hasNextPage={hasNextPage}
