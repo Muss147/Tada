@@ -23,7 +23,7 @@ export const USER_ROLES = {
 async function getUsersWithStats() {
   const users = await prisma.user.findMany({
     where: {
-      role: "system_admin", // <-- FILTRE ICI
+      role: "superAdmin", // <-- FILTRE ICI
     },
     select: {
       id: true,

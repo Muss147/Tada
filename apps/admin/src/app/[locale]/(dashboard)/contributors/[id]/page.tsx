@@ -144,6 +144,18 @@ export default async function ContributorPage({
             ...contributor,
             stats: [
               {
+                label: "Email",
+                value: contributor.email,
+              },
+              {
+                label: t("contributors.detail.infos.job"),
+                value: contributor.job,
+              },
+              {
+                label: t("contributors.detail.infos.location"),
+                value: contributor.location,
+              },
+              {
                 label: t("contributors.detail.stats.totalMissions"),
                 value: totalMissions.toString(),
               },

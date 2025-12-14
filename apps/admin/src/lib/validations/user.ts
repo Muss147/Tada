@@ -165,13 +165,13 @@ export function validateUpdateUser(data: any): {
   }
   
   // Validation du rôle si fourni
-  if (data.role !== undefined) {
-    if (!isValidRole(data.role)) {
-      errors.push(`Invalid role. Must be one of: ${Object.values(USER_ROLES).join(", ")}`);
-    } else {
-      updateData.role = data.role;
-    }
-  }
+  // if (data.role !== undefined) {
+  //   if (!isValidRole(data.role)) {
+  //     errors.push(`Invalid role. Must be one of: ${Object.values(USER_ROLES).join(", ")}`);
+  //   } else {
+  //     updateData.role = data.role;
+  //   }
+  // }
   
   if (data.adminSubRole !== undefined) {
     updateData.adminSubRole = data.adminSubRole || null;

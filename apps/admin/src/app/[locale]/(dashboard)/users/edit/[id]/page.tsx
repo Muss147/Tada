@@ -37,7 +37,7 @@ export default async function EditUserPage({ params }: { params: { id: string } 
         </CardHeader>
 
         <CardContent className="p-6">
-          <UserForm mode="edit" initialData={user} />
+          <UserForm mode="edit" model="superAdmin" initialData={user} />
         </CardContent>
       </Card>
     </div>

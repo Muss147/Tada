@@ -5,7 +5,7 @@ interface ContributorQuestion {
   key: string;
   question: string;
   type?: string;
-  values: string[];
+  values?: string[];
 }
 
 interface ContributorMissionData {
