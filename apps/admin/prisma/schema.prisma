@@ -124,7 +124,10 @@ model Mission {
   isSuperAdminMission Boolean       @default(false)
 
   // Ajout dash admin (Muss)
-  contributorData ContributorData[]
+  contributorData            ContributorData[]
+  isPublish                  Boolean                    @default(false)
+  publishAt                  DateTime?                  @db.Timestamptz(6)
+  mission_config_contributor MissionConfigContributor[]
 
   // NEW : workspace
   workspaceId String?
@@ -146,7 +149,7 @@ model Mission {
   executiveSummaryUpdatedAt DateTime? // Dernière génération du résumé
 
   survey             Survey[]
-  Project            Project[]
+  project            Project[]
   subDashboard       SubDashboard[]
   missionPermissions MissionPermission[]
   tempMission        TempMission?
@@ -550,9 +553,9 @@ model Payment {
 model TempMission {
   id                String             @id @default(uuid())
   name              String
-  problemSummary    String?
-  objectives        String?
-  assumptions       String?
+  problemSummary    String?            @db.Text // 🆕 Ajouté db.Text pour les longs textes
+  objectives        String?            @db.Text // 🆕 Ajouté db.Text
+  assumptions       String?            @db.Text // 🆕 Ajouté db.Text
   audiences         Json?
   status            String?
   updatedType       String?
@@ -560,6 +563,7 @@ model TempMission {
   internal          Boolean?           @default(false)
   isPublic          Boolean            @default(true)
   validationStatus  String             @default("pending") // pending, approved, rejected, applied
+  validationComment String?            @db.Text // 🆕 Nouveau champ pour le commentaire du SuperAdmin
   validatedAt       DateTime?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -1151,6 +1155,22 @@ model quality_metric {
   qualityControl   qualityControl @relation(fields: [qualityControlId], references: [id], onDelete: Cascade)
 
   @@index([metricName, metricType])
+}
+
+model MissionConfigContributor {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  gain        BigInt
+  duration    BigInt
+  missionId   String
+  imageUrl    String?
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime? @updatedAt @db.Timestamp(6)
+  deadline    DateTime? @db.Timestamptz(6)
+  mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("mission_config_contributor")
 }
 
 enum AdminSubRole {

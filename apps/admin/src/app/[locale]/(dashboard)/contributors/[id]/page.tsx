@@ -27,6 +27,7 @@ export default async function ContributorPage({
       kyc_status: true,
       image: true,
       location: true,
+      country: true,
       job: true,
       banned: true,
     },
@@ -154,6 +155,10 @@ export default async function ContributorPage({
               {
                 label: t("contributors.detail.infos.location"),
                 value: contributor.location,
+              },
+              {
+                label: t("contributors.detail.infos.country"),
+                value: contributor.country,
               },
               {
                 label: t("contributors.detail.stats.totalMissions"),

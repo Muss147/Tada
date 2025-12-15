@@ -1,3 +1,5 @@
+"use client";
+
 import { createMissionAction } from "@/actions/missions/create-mission-action";
 import { createMissionSchema } from "@/actions/missions/schema";
 import { Icons } from "@/components/icons";
@@ -9,7 +11,8 @@ import { FormControl, FormField, FormItem } from "@tada/ui/components/form";
 import { Edit } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+// 🚨 CORRECTION 1 : Importer 'useCallback'
+import { useEffect, useRef, useState, useCallback } from "react"; 
 import { useFormContext } from "react-hook-form";
 import { AudiencesFilterModal } from "../modals/audiences-filter-modal";
 import type { Mission } from "../type";
@@ -24,6 +27,8 @@ interface Section {
   placeholder?: string;
   selectedMarkets?: string[];
 }
+
+// 🚨 CORRECTION 4 (Option A) : Définition de la fonction de rendu (ou utiliser useCallback à l'intérieur)
 
 export function CreateMissionForm() {
   const t = useI18n();
@@ -49,24 +54,8 @@ export function CreateMissionForm() {
     filterGroups,
     handleOptionSelect,
   } = useAudiencesFilter();
-
-  const createMission = useAction(createMissionAction, {
-    onSuccess: (data) => {
-      toast({
-        title: t("missions.createMission.form.success"),
-      });
-
-      if (data.data?.data) {
-        router.push(`/missions/${data.data.data.id}/surveys`);
-      }
-    },
-    onError: () => {
-      toast({
-        title: t("missions.createMission.form.error"),
-        variant: "destructive",
-      });
-    },
-  });
+  
+  // 🚨 CORRECTION 2 : Déplacer la déclaration de l'état 'sections' ici (plus haut)
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
@@ -106,53 +95,8 @@ export function CreateMissionForm() {
     },
   ]);
 
-  const startEditingTitle = () => {
-    setEditingTitle(true);
-    setTempTitle(title);
-  };
-
-  const saveTitleChanges = () => {
-    if (tempTitle && tempTitle.trim() !== "") {
-      setTitle(tempTitle);
-    }
-    setEditingTitle(false);
-  };
-
-  const startEditingContent = (id: number) => {
-    const section = sections.find((s) => s.id === id);
-    setEditingSection(id);
-    setTempContent(section?.content || "");
-  };
-
-  const saveContentChanges = () => {
-    if (editingSection) {
-      setSections(
-        sections?.map((section) =>
-          section.id === editingSection
-            ? {
-                ...section,
-                content: tempContent,
-                status: tempContent ? "completed" : "pending",
-              }
-            : section
-        )
-      );
-      setEditingSection(null);
-    }
-  };
-
-  const onSubmit = async (values: object) => {
-    createMission.execute(
-      createMissionSchema.parse({
-        ...values,
-        audiences: selectedFilters,
-        templateId,
-        mode,
-      })
-    );
-  };
-
-  function renderBulletedList(text: string): JSX.Element {
+  // 🚨 CORRECTION 4 (Option B) : Redéfinir renderBulletedList avec useCallback
+  const renderBulletedList = useCallback((text: string): JSX.Element => {
     if (!text) return <></>;
     const items = text
       .split(/\n|\. /)
@@ -169,16 +113,105 @@ export function CreateMissionForm() {
       );
 
     return <span>{items[0]?.endsWith(".") ? items[0] : items[0] + "."}</span>;
-  }
+  }, []);
+
+  const saveTitleChanges = useCallback(() => {
+    const newTitle = form.getValues("name");
+    if (newTitle && newTitle.trim() !== "") {
+      setTitle(newTitle);
+    } else {
+      form.trigger("name");
+    }
+    setEditingTitle(false);
+  }, [form]);
+
+  const startEditingTitle = () => {
+    setEditingTitle(true);
+    setTempTitle(form.getValues("name") || title);
+  };
+
+  const saveContentChanges = useCallback(() => {
+    if (editingSection) {
+      const sectionToUpdate = sections.find((s) => s.id === editingSection);
+      if (sectionToUpdate) {
+        const newContent = form.getValues(sectionToUpdate.key);
+        
+        if (!newContent || newContent.trim() === "") {
+             form.trigger(sectionToUpdate.key);
+        }
+
+        setSections((prev) =>
+          prev.map((section) =>
+            section.id === editingSection
+              ? {
+                  ...section,
+                  content: newContent,
+                  status: newContent ? "completed" : "pending",
+                }
+              : section
+          )
+        );
+      }
+      setEditingSection(null);
+    }
+  }, [editingSection, form, sections]);
+
+  const startEditingContent = (id: number) => {
+    const section = sections.find((s) => s.id === id);
+    setEditingSection(id);
+    setTempContent(form.getValues(section?.key || '') || section?.content || "");
+  };
+
+  const createMission = useAction(createMissionAction, {
+    onSuccess: (data) => {
+      toast({
+        title: t("missions.createMission.form.success"),
+      });
+
+      if (data.data?.data) {
+        router.push(`/missions/${data.data.data.id}/surveys`);
+      }
+    },
+    // 🚨 CORRECTION 3 : Accéder correctement à 'serverError'
+    onError: (error) => {
+      console.error(error);
+      toast({
+        title: t("missions.createMission.form.error"),
+        description: error.error?.serverError || "Erreur de validation ou serveur.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onSubmit = async () => {
+    const values = form.getValues(); 
+
+    const isValid = await form.trigger();
+    if (!isValid) {
+        toast({
+            title: t("missions.createMission.form.error"),
+            description: "Veuillez remplir tous les champs obligatoires.",
+            variant: "destructive",
+        });
+        return;
+    }
+
+    createMission.execute(
+      createMissionSchema.parse({
+        ...values,
+        audiences: selectedFilters,
+        templateId: templateId || undefined,
+        mode: mode || undefined,
+      })
+    );
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingSection &&
         editSectionRef.current &&
-        !editSectionRef.current.contains(
-          (event as unknown as React.ChangeEvent<HTMLInputElement>).target
-        )
+        !editSectionRef.current.contains(event.target as Node)
       ) {
         saveContentChanges();
       }
@@ -188,16 +221,14 @@ export function CreateMissionForm() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [editingSection]);
+  }, [editingSection, saveContentChanges]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingTitle &&
         editTitleRef.current &&
-        !editTitleRef.current.contains(
-          (event as unknown as React.ChangeEvent<HTMLInputElement>).target
-        )
+        !editTitleRef.current.contains(event.target as Node)
       ) {
         saveTitleChanges();
       }
@@ -207,24 +238,25 @@ export function CreateMissionForm() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [editingTitle]);
+  }, [editingTitle, saveTitleChanges]);
 
   useEffect(() => {
     const subscription = form.watch((values) => {
-      if (values.name) {
+      if (values.name !== undefined && values.name !== null) {
         setTitle(values.name);
       }
 
-      // biome-ignore lint/complexity/noForEach: <explanation>
       sections.forEach((section) => {
-        if (values[section.key]) {
+        const formValue = values[section.key as keyof typeof values];
+        
+        if (formValue !== undefined && formValue !== null) {
           setSections((prev) =>
             prev.map((s) =>
               s.key === section.key
                 ? {
                     ...s,
-                    content: values[section.key],
-                    status: values[section.key] ? "completed" : "pending",
+                    content: formValue as string,
+                    status: formValue ? "completed" : "pending",
                   }
                 : s
             )
@@ -234,7 +266,7 @@ export function CreateMissionForm() {
     });
 
     return () => subscription.unsubscribe();
-  }, [form]);
+  }, [form, sections]);
 
   useEffect(() => {
     if (activeFiltersCount > 0) {
@@ -259,7 +291,6 @@ export function CreateMissionForm() {
             <div ref={editTitleRef} className="mb-2">
               <FormField
                 control={form.control}
-                defaultValue={tempTitle}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -268,12 +299,13 @@ export function CreateMissionForm() {
                         className="w-full text-black dark:text-white p-2 border border-gray-600 rounded focus:outline-none focus:border-blue-500"
                         rows={2}
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                          setTitle(e.target.value);
-                        }}
                       />
                     </FormControl>
+                    {form.formState.errors.name && (
+                        <p className="text-red-500 text-sm mt-1">
+                            {form.formState.errors.name.message as string}
+                        </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -283,7 +315,10 @@ export function CreateMissionForm() {
                   variant="outline"
                   size="sm"
                   type="button"
-                  onClick={() => setEditingTitle(false)}
+                  onClick={() => {
+                    form.setValue("name", title);
+                    setEditingTitle(false);
+                  }}
                   className="text-black dark:text-white"
                 >
                   {t("common.cancel")}
@@ -291,10 +326,7 @@ export function CreateMissionForm() {
                 <Button
                   size="sm"
                   type="button"
-                  onClick={() => {
-                    setTitle(form.getValues("name"));
-                    setEditingTitle(false);
-                  }}
+                  onClick={() => saveTitleChanges()}
                 >
                   {t("common.save")}
                 </Button>
@@ -322,7 +354,7 @@ export function CreateMissionForm() {
             {t("missions.createMission.form.researchMarket")}
           </span>
         </div>
-        <Button variant="default" size="lg" type="submit">
+        <Button variant="default" size="lg" type="submit" disabled={createMission.status === "executing"}>
           {createMission.status === "executing" ? (
             <Icons.spinner className="w-4 h-4 animate-spin" />
           ) : (
@@ -339,7 +371,6 @@ export function CreateMissionForm() {
             className="bg-[#FFD3CE] dark:bg-gray-900 border border-[#FFD3CE] rounded-md p-4"
           >
             <div className="flex items-center mb-3">
-              {/* Point coloré indiquant le statut */}
               <div
                 className={`w-3 h-3 rounded-full mr-3 ${
                   section.status === "pending"
@@ -354,7 +385,6 @@ export function CreateMissionForm() {
                 {section.title}
               </h2>
 
-              {/* Boutons d'action */}
               <div className="flex space-x-2">
                 <Button
                   variant="outline"
@@ -370,6 +400,7 @@ export function CreateMissionForm() {
             {/* Contenu de la section */}
             <div className="ml-6">
               {section.id === 4 ? (
+                // ... (Logique Audiences inchangée)
                 <div className="flex-1 space-x-2 overflow-y-auto">
                   <Button
                     size="lg"
@@ -456,10 +487,10 @@ export function CreateMissionForm() {
                   )}
                 </div>
               ) : editingSection === section.id ? (
+                // Edition de contenu
                 <div ref={editSectionRef} className="w-full">
                   <FormField
                     control={form.control}
-                    defaultValue={tempContent}
                     name={section.key}
                     render={({ field }) => (
                       <FormItem>
@@ -470,10 +501,14 @@ export function CreateMissionForm() {
                             {...field}
                             onChange={(e) => {
                               field.onChange(e.target.value);
-                              setTempContent(e.target.value);
                             }}
                           />
                         </FormControl>
+                         {form.formState.errors[section.key as keyof typeof form.formState.errors] && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {form.formState.errors[section.key as keyof typeof form.formState.errors]?.message as string}
+                            </p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -483,7 +518,11 @@ export function CreateMissionForm() {
                       variant="outline"
                       size="sm"
                       type="button"
-                      onClick={() => setEditingSection(null)}
+                      onClick={() => {
+                        const previousContent = sections.find(s => s.id === section.id)?.content;
+                        form.setValue(section.key, previousContent || "", { shouldValidate: true });
+                        setEditingSection(null);
+                      }}
                       className="text-black dark:text-white"
                     >
                       {t("common.cancel")}
@@ -491,88 +530,30 @@ export function CreateMissionForm() {
                     <Button
                       size="sm"
                       type="button"
-                      onClick={() => {
-                        if (editingSection) {
-                          form.setValue(section.key, tempContent);
-                        }
-                        saveContentChanges();
-                      }}
+                      onClick={() => saveContentChanges()}
                     >
                       {t("common.save")}
                     </Button>
                   </div>
                 </div>
               ) : (
+                // Affichage du contenu
                 <button
                   type="button"
-                  className="text-black dark:text-white hover:bg-opacity-30 p-2 rounded-md transition-colors"
+                  className="text-black dark:text-white hover:bg-opacity-30 p-2 rounded-md transition-colors text-left"
                   onClick={() => startEditingContent(section.id)}
                 >
-                  {section.content
-                    ? renderBulletedList(section.content)
-                    : section.placeholder}
+                  {section.content && section.content.trim() !== ""
+                    ? renderBulletedList(section.content) // 👈 Appel corrigé
+                    : (section.placeholder || t("missions.createMission.form.placeholder"))}
                 </button>
               )}
             </div>
           </div>
         ))}
-
-        {/* <div className="bg-[#FFD3CE] dark:bg-gray-900 border border-[#FFD3CE] rounded-md p-4">
-          <div className="flex items-center mb-3">
-            
-            <div
-              className={`w-3 h-3 rounded-full mr-3 ${
-                haveSurveys === "pending"
-                  ? "bg-yellow-400"
-                  : haveSurveys === "completed"
-                  ? "bg-green-500"
-                  : "bg-gray-400"
-              }`}
-            />
-            <h2 className="text-black dark:text-white font-bold text-lg flex-grow ">
-              {t("missions.createMission.form.surveys")}
-            </h2>
-
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                type="button"
-                onClick={() => {
-                  if (mission) {
-                    router.push(`/missions/${mission.id}/surveys`);
-                    return;
-                  }
-                  toast({
-                    title: t("missions.surveys.saveAfterSurvey"),
-                    variant: "destructive",
-                  });
-                }}
-              >
-                <Edit className="w-4 h-4 " />
-              </Button>
-            </div>
-          </div>
-          <Button
-            size="lg"
-            className="w-full"
-            type="button"
-            onClick={() => {
-              if (mission) {
-                router.push(`/missions/${mission.id}/surveys`);
-                return;
-              }
-              toast({
-                title: t("missions.surveys.saveAfterSurvey"),
-                variant: "destructive",
-              });
-            }}
-          >
-            {t("missions.createMission.form.showSurveys")}
-          </Button>
-        </div> */}
       </div>
 
+      {/* ... (Modal inchangée) */}
       <AudiencesFilterModal
         onOpenChange={setIsAudiencesFilterModalOpen}
         isOpen={isAudiencesFilterModalOpen}

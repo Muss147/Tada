@@ -1,7 +1,7 @@
 "use client";
 
 import { useChartBuilder } from "@/context/chart-builder-context";
-import { Vega, VegaLite } from "react-vega";
+import { Vega } from "react-vega";
 
 export function ChartGraph() {
   const { vegaLiteSpec, data: values } = useChartBuilder();
@@ -32,7 +32,7 @@ export function ChartGraph() {
 
   return (
     <div className="">
-      <VegaLite
+      <Vega
         data={{
           values,
         }}
