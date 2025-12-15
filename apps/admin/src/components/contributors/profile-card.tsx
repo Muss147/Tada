@@ -12,6 +12,10 @@ import {
 import { Button } from "@tada/ui/components/button";
 import React, { useState } from "react";
 import type { Contributor } from "./type";
+import Link from "next/link";
+import {
+  Edit,
+} from "lucide-react";
 
 const ProfileCard = ({
   contributor,
@@ -99,6 +103,18 @@ const ProfileCard = ({
         <Button
           className="w-full"
           variant="default"
+        >
+          <Link
+            href={`/contributors/edit/${contributor.id}`}
+            className="flex items-center gap-2"
+          >
+            <Edit className="h-4 w-4 text-white" />
+            {t("contributors.detail.actions.edit")}
+          </Link>
+        </Button>
+        {/* <Button
+          className="w-full"
+          variant="default"
           onClick={() => handleSuspend()}
           disabled={isLoading}
         >
@@ -114,7 +130,7 @@ const ProfileCard = ({
           ) : (
             t("contributors.detail.actions.suspend")
           )}
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

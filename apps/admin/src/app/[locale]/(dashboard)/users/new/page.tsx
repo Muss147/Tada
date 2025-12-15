@@ -29,7 +29,7 @@ export default function NewUserPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <UserForm mode="create" />
+          <UserForm mode="create" model="superAdmin" />
         </CardContent>
       </Card>
     </div>

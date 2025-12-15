@@ -149,7 +149,7 @@ export function UserForm({ mode, model, initialData }: UserFormProps) {
     kyc_status: initialData?.kyc_status || "in_progress",
     banned: initialData?.banned || false,
     emailVerified: initialData?.emailVerified || false,
-    role: "system_admin",
+    role: model,
   });
 
   const { uploadFile } = useUpload();
@@ -204,7 +204,7 @@ export function UserForm({ mode, model, initialData }: UserFormProps) {
           : "Utilisateur mis à jour"
       );
 
-      router.push("/users");
+      model === "superAdmin" ? router.push("/users") : router.push("/contributors");
       router.refresh();
     } catch (err) {
       console.error(err);
@@ -265,7 +265,7 @@ export function UserForm({ mode, model, initialData }: UserFormProps) {
           </div>
         </div>
 
-        {model == "system_admin" && (
+        {model == "superAdmin" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="adminSubRole">

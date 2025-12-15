@@ -56,6 +56,7 @@ export function MissionToSubmitCard({ mission }: MissionCardProps) {
 
   const handleClick = () => {
     setIsLoading(true);
+    // 🚨 CORRECTION : Pointer vers la nouvelle page de validation
     router.push(`/missions-to-validate/${mission.id}`);
   };
 

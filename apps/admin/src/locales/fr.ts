@@ -1,5 +1,7 @@
 export default {
   common: {
+    generic_error: "Une erreur inattendue est survenue. Veuillez réessayer.",
+    none: "Aucun",
     search: {
       placeholder: "Rechercher...",
     },
@@ -915,6 +917,59 @@ export default {
       },
     },
   },
+  missionsToSubmit: {
+    validation: {
+      title: "Validation de Mission",
+      mission_not_found: "Mission introuvable.",
+      step1_title: "Analyse du brief IA",
+      step2_title: "Analyse du questionnaire généré par IA",
+      c1_objectives: "Objectifs de l'étude (clairs et SMART)",
+      c1_problem: "Problématique (bien définie)",
+      c1_segments: "Segments visés (précis)",
+      c1_coherence: "Cohérence globale du brief",
+      c2_brief_coherence: "Cohérence entre brief et questionnaire",
+      c2_structure: "Structure et types de questions appropriés",
+      c2_clarity: "Clarté pour les contributeurs",
+      c2_workload: "Charge de travail et longueur",
+      c2_feasibility: "Faisabilité (référence Premise)",
+      comment_placeholder: "Ajouter un commentaire ou des instructions de modification pour le client (obligatoire pour Rejet/Modification)",
+      action_approve: "Approuver (Mission prête à être publiée)",
+      action_modify: "Demander des modifications",
+      action_reject: "Rejeter la mission",
+      success: "Validation enregistrée.",
+      error: "Erreur lors de la validation.",
+      warning: "Action requise",
+      comment_required_reject: "Un commentaire est obligatoire pour rejeter la mission.",
+      comment_required_modify: "Un commentaire est obligatoire pour demander des modifications.",
+      questionnaire_placeholder: "Contenu du questionnaire généré par l'IA...",
+      rejected_title: "Mission en attente de modification client",
+      rejected_message: "Cette mission a été marquée comme nécessitant des modifications. Veuillez attendre que le client la mette à jour.",
+      admin_comment: "Commentaire de l'administrateur"
+    },
+    config: {
+      page_title: "Configuration Opérationnelle",
+      ready_message: "Mission approuvée ! Veuillez configurer les paramètres opérationnels avant publication.",
+      section_public: "Paramètres Publics (Côté Contributeur)",
+      section_operational: "Paramètres Opérationnels",
+      section_media: "Médias Obligatoires",
+      image_url: "URL de l'image de mission",
+      public_title: "Titre Public",
+      public_description: "Description / Instructions Publiques",
+      description_placeholder: "Instructions claires pour les contributeurs.",
+      gain: "Gain par soumission (€)",
+      deadline: "Date de Clôture",
+      target_submissions: "Objectif de Soumissions",
+      geographic_zones: "Zones Géographiques (Codes)",
+      requires_photo: "Photo obligatoire",
+      requires_video: "Vidéo obligatoire",
+      requires_audio: "Audio obligatoire",
+      save_and_preview: "Enregistrer et Prévisualiser",
+      success: "Configuration enregistrée.",
+      success_description: "La mission est prête pour la prévisualisation et la publication.",
+      error: "Erreur de configuration.",
+      mission_not_ready: "La mission n'est pas encore approuvée ou est introuvable."
+    },
+  },
   filters: {
     groups: {
       personal_info: {
@@ -1665,6 +1720,12 @@ export default {
     detail: {
       title: "Contributeur | Tada",
       notFound: "Contributeur non trouvé",
+      infos: {
+        job: "Métier",
+        location: "Localisation",
+        kyc_status: "Status KYC",
+        country: "Pays",
+      },
       stats: {
         totalMissions: "Nombre total de missions",
         points: "Points enregistrés",
@@ -1672,6 +1733,7 @@ export default {
         completed: "Missions terminées",
       },
       actions: {
+        edit: "Modifier le mapper",
         suspend: "Suspendre le mapper",
         unsuspend: "Réactiver le mapper",
         loading: {

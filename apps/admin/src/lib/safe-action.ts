@@ -1,9 +1,13 @@
-import { createAction } from "next-safe-action";
-import type { z } from "zod";
+// src/lib/safe-action.ts
+import { createSafeActionClient } from "next-safe-action";
 
-export const createSafeAction = <TInput, TOutput>(
-  schema: z.Schema<TInput>,
-  handler: (data: TInput) => Promise<TOutput>,
-) => {
-  return createAction(schema, handler);
-};
+// Création de l'instance du client safe action.
+// C'est cette instance qui est LA fonction 'action' que vous utilisez partout.
+export const action = createSafeActionClient({
+    // Vous pouvez ajouter ici la configuration du côté serveur :
+    // - handleReturnedValidationError: ({ error, input }) => ({ input, validationError: error.flatten() }),
+    // - middleware: async ({ next }) => { /* ... */ return next({ ctx: {} }); },
+});
+
+// Si vous voulez exporter un alias pour la procédure publique (sans middleware, sans authentification)
+export const publicProcedure = action;
