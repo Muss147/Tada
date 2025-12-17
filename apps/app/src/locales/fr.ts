@@ -632,6 +632,7 @@ export default {
       description:
         "Gérez votre équipe existante et modifiez les rôles / autorisations.",
       membersCountLabel: "membre(s)",
+      empty: "Aucun membre d'équipe pour le moment.",
       columns: {
         name: "Nom",
         role: "Rôle",
@@ -772,9 +773,9 @@ export default {
             inviteButton: "Envoyer l'invitation",
             fields:{
               logo: "Logo du workspace",
-          name: "Nom du workspace",
-          slug: "Slug du workspace",
-          slugHelp: "Le slug du workspace est utilisé dans l'URL pour identifier votre workspace.",
+              name: "Nom du workspace",
+              slug: "Slug du workspace",
+              slugHelp: "Le slug du workspace est utilisé dans l'URL pour identifier votre workspace.",
         },
         menu: {
           generalTitle: "Général",

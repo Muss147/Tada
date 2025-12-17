@@ -20,10 +20,10 @@ import { toast } from "@/hooks/use-toast";
 import { publishMissionAction } from "@/actions/missions/publish-mission-action";
 import { MissionAssignmentModal } from "./mission-assignment-modal";
 import { AssignedContributorsView } from "./assigned-contributors";
-import { TempMission } from "@prisma/client";
+import { Mission } from "@prisma/client";
 
 interface MissionCardProps {
-  mission: TempMission & { submissions: number; percentage: number };
+  mission: Mission & { submissions: number; percentage: number };
 }
 
 export function MissionToSubmitCard({ mission }: MissionCardProps) {

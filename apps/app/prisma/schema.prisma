@@ -51,6 +51,8 @@ model User {
   commentsResolved Comment[]        @relation("ResolvedComments")
   commentMentions  CommentMention[]
   commentEvents    CommentEvent[]
+  members          Member[]
+  invitations      invitation[]
 
   @@map("user")
 }
@@ -79,6 +81,8 @@ model Organization {
   //Ai Analysis relations
   aiDatasets                   AiDataset[]
   audienceAttributeSuggestions AudienceAttributeSuggestion[]
+  members                      Member[]
+  invitations                  invitation[]
 
   @@map("organization")
 }
@@ -265,6 +269,18 @@ model DashboardFilter {
   @@map("dashboard_filter")
 }
 
+model Member {
+  id             String       @id @default(uuid())
+  organizationId String
+  userId         String
+  role           String
+  createdAt      DateTime     @db.Timestamp(6)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user           User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("member")
+}
+
 model ProjectRole {
   id        String   @id @default(uuid())
   userId    String
@@ -440,6 +456,20 @@ model SubDashboardItem {
   updatedAt      DateTime     @updatedAt
 
   @@map("sub_dashboard_item")
+}
+
+model invitation {
+  id             String       @id @default(uuid())
+  organizationId String
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime     @db.Timestamp(6)
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("invitation")
 }
 
 model MissionPermission {

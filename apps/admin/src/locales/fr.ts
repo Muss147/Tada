@@ -1,7 +1,8 @@
 export default {
   common: {
     generic_error: "Une erreur inattendue est survenue. Veuillez réessayer.",
-    none: "Aucun",
+    no_data: "Aucun",
+    not_specified: "Not specified",
     search: {
       placeholder: "Rechercher...",
     },
@@ -1275,6 +1276,19 @@ export default {
       pricings: "Tarifs",
       signOut: "Se déconnecter",
     },
+    infos: {
+      title: "Informations de profil",
+      goBack: "Retour à la liste",
+      data: {
+        job: "Job",
+        role: "Rôle",
+        sector: "Secteur",
+        position: "Poste",
+        location: "Localisation",
+        kyc_status: "KYC Status",
+        country: "Country",
+      },
+    }
   },
   welcome: "Bonjour {name}!",
   auth: {

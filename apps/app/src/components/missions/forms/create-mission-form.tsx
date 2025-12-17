@@ -317,8 +317,15 @@ export function CreateMissionForm({
     if (!isAiMode) return;
     if (!threadMessages.length) return;
 
-    const ASK_RE = /remplir le formulaire/i;
-    const CONFIRM_RE = /^(oui|ok|okay|c['’]est bon|yes|yep|parfait)/i;
+    const ASK_RE =
+      locale === "fr"
+        ? /Est-ce que tout cela vous semble correct \? Si oui, je peux maintenant remplir le formulaire avec ces informations\./
+        : /Does all of this look correct\? If yes, I can now fill the form with this information\./;
+
+    const CONFIRM_RE =
+      locale === "fr"
+        ? /^\s*(oui|ok|okay|d['’]accord|c['’]est bon|parfait)\s*[.!?]?\s*$/i
+        : /^\s*(yes|yep|ok|okay|sounds good|perfect)\s*[.!?]?\s*$/i;
 
     // 1) On cherche le DERNIER message assistant qui propose de remplir le formulaire
     let askedIndex = -1;

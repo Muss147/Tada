@@ -35,7 +35,7 @@ import {
 } from "@tada/ui/components/dialog";
 import { recordMissionConsultation } from "@/actions/missions/consulted-mission";
 
-const DEFAULT_MISSION_IMAGE = "/images/missions/default.jpeg";
+const DEFAULT_MISSION_IMAGE = "/images/missions/default.jpg";
 
 interface DisplayMission {
   id: string;

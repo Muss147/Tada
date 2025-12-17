@@ -37,6 +37,7 @@ import {
   WorkspaceSettingsTab,
 } from "@/components/workspaces/workspace-settings-menu";
 import { getPublicUrlForPath } from "@/lib/uploads.public";
+import { useWorkspace } from "@/context/workspace-context";
 
 type WorkspaceMember = {
   id: string;
@@ -71,10 +72,18 @@ type WorkspaceSettingsData = {
   invitations: WorkspaceInvitation[];
 };
 
+function withCacheBust(url: string | null | undefined, v?: string | null) {
+  if (!url) return null;
+  const version = v ? encodeURIComponent(v) : Date.now().toString();
+  return `${url}${url.includes("?") ? "&" : "?"}v=${version}`;
+}
+
 export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
   const t = useI18n();
   const locale = useCurrentLocale();
   const router = useRouter();
+
+  const { patchWorkspaceInState, refresh } = useWorkspace();
 
   const [data, setData] = useState<WorkspaceSettingsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -108,14 +117,12 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     useState<WorkspaceInvitation | null>(null);
   const [isDeletingInvitation, setIsDeletingInvitation] = useState(false);
 
-  /**
-   * Chargement du workspace + membres (GET /api/workspaces/[workspaceId])
-   */
   const loadWorkspace = async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/workspaces/${workspaceId}`, {
         method: "GET",
+        cache: "no-store",
       });
 
       if (!res.ok) {
@@ -145,15 +152,17 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
         members: ws.members ?? [],
         invitations: ws.invitations ?? [],
       });
+
       setWorkspaceNameInput(ws.name || "");
       setWorkspaceSlugInput(ws.slug || "");
 
-      setLogoPreview(
-        getPublicUrlForPath({
-          category: "workspaceLogo",
-          pathOrUrl: ws.logo,
-        })
-      );
+      const publicUrl = getPublicUrlForPath({
+        category: "workspaceLogo",
+        pathOrUrl: ws.logo,
+      });
+
+      // ✅ cache bust sur preview
+      setLogoPreview(withCacheBust(publicUrl, ws.logo ?? null));
       setNewLogoFile(null);
     } catch (e) {
       console.error("Error loading workspace settings", e);
@@ -178,15 +187,16 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     const file = e.target.files?.[0];
     if (!file) {
       setNewLogoFile(null);
-      setLogoPreview(
-        getPublicUrlForPath({
-          category: "workspaceLogo",
-          pathOrUrl: data?.workspace.logo,
-        })
-      );
 
+      const fallbackUrl = getPublicUrlForPath({
+        category: "workspaceLogo",
+        pathOrUrl: data?.workspace.logo,
+      });
+
+      setLogoPreview(withCacheBust(fallbackUrl, data?.workspace.logo ?? null));
       return;
     }
+
     setNewLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
   };
@@ -213,12 +223,12 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       if (!res.ok) {
         console.error("Error updating workspace", await res.text());
-        setIsSavingWorkspace(false);
         return;
       }
 
       const updated = await res.json();
 
+      // ✅ 1) Update local Settings state
       setData((prev) =>
         prev
           ? {
@@ -233,14 +243,24 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
           : prev
       );
 
-      setLogoPreview(
-        getPublicUrlForPath({
-          category: "workspaceLogo",
-          pathOrUrl: updated.logo,
-        })
-      );
+      // ✅ 2) Update context immediately (switcher)
+      patchWorkspaceInState(workspaceId, {
+        name: updated.name,
+        slug: updated.slug,
+        logo: updated.logo ?? null,
+      });
+
+      // ✅ 3) Update preview (cache bust)
+      const publicUrl = getPublicUrlForPath({
+        category: "workspaceLogo",
+        pathOrUrl: updated.logo,
+      });
+      setLogoPreview(withCacheBust(publicUrl, updated.logo ?? null));
 
       setNewLogoFile(null);
+
+      // ✅ 4) Optional but recommended: resync from API
+      await refresh();
     } catch (e) {
       console.error("Error updating workspace", e);
     } finally {
@@ -252,9 +272,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     void loadWorkspace();
   }, [workspaceId]);
 
-  /**
-   * Invitation d’un membre : POST /api/workspaces/[workspaceId]/invite
-   */
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
 
@@ -299,11 +316,9 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       if (!res.ok) {
         console.error("Error deleting invitation", await res.text());
-        setIsDeletingInvitation(false);
         return;
       }
 
-      // Mise à jour locale : on enlève l’invitation du state
       setData((prev) =>
         prev
           ? {
@@ -323,9 +338,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     }
   };
 
-  /**
-   * Suppression du workspace : DELETE /api/workspaces/[workspaceId]
-   */
   const handleDeleteWorkspace = async () => {
     if (!data) return;
     if (confirmName !== data.workspace.name) return;
@@ -342,11 +354,9 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       if (!res.ok) {
         console.error("Error deleting workspace", await res.text());
-        setIsDeleting(false);
         return;
       }
 
-      // Après suppression : redirection vers la home (ou une page de choix)
       router.push(`/${locale}`);
     } catch (e) {
       console.error("Error deleting workspace", e);
@@ -355,17 +365,11 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     }
   };
 
-  /**
-   * Ouverture du dialog d’édition de rôle
-   */
   const openEditMember = (member: WorkspaceMember) => {
     setEditingMember(member);
     setEditingRole(member.role);
   };
 
-  /**
-   * PATCH rôle d’un membre : /api/workspaces/[workspaceId]/members/[memberId]
-   */
   const handleUpdateMemberRole = async () => {
     if (!editingMember) return;
 
@@ -384,11 +388,9 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       if (!res.ok) {
         console.error("Error updating member role", await res.text());
-        setIsSavingRole(false);
         return;
       }
 
-      // Mettre à jour le state local
       setData((prev) =>
         prev
           ? {
@@ -408,9 +410,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     }
   };
 
-  /**
-   * DELETE membre (soft remove) : /api/workspaces/[workspaceId]/members/[memberId]
-   */
   const handleRemoveMember = async (member: WorkspaceMember) => {
     setRemovingMemberId(member.id);
     try {
@@ -423,12 +422,9 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       if (!res.ok) {
         console.error("Error removing member", await res.text());
-        setRemovingMemberId(null);
         return;
       }
 
-      // Soit on filtre localement, soit on reload
-      // Ici on met à jour localement les members actifs
       setData((prev) =>
         prev
           ? {
@@ -462,7 +458,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
   return (
     <div className="space-y-10">
-      {/* Titre principal */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
           {t("workspace.settings.title") || "Workspace settings"}
@@ -473,17 +468,12 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
         </p>
       </div>
 
-      {/* Contenu + mini menu à droite */}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(260px,1fr)_minmax(0,3fr)] gap-8 items-start">
-        {/* Colonne gauche : mini menu */}
         <WorkspaceSettingsMenu active={activeTab} onChange={setActiveTab} />
 
-        {/* Colonne droite : contenu selon l’onglet */}
         <div className="space-y-8">
-          {/* Onglet 1 : modifier workspace + danger zone */}
           {activeTab === "general" && (
             <>
-              {/* Card : infos générales du workspace */}
               <Card>
                 <CardHeader className="px-6 pt-6 pb-3">
                   <CardTitle className="text-lg">
@@ -492,13 +482,11 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="px-6 pb-6 space-y-4">
-                  {/* Logo du workspace */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
                       {t("workspace.settings.fields.logo") || "Workspace logo"}
                     </label>
                     <div className="flex items-center gap-4">
-                      {/* Aperçu logo actuel ou fallback */}
                       {logoPreview ? (
                         <div className="h-14 w-14 rounded-lg border border-gray-200 overflow-hidden bg-white">
                           <img
@@ -580,7 +568,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                 </CardContent>
               </Card>
 
-              {/* Danger zone (tu gardes exactement ta logique actuelle) */}
               <Card className="border-red-200">
                 <CardHeader className="px-6 pt-6 pb-3">
                   <CardTitle className="text-lg text-red-600">
@@ -605,7 +592,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
             </>
           )}
 
-          {/* Onglet 2 : membres / invitations */}
           {activeTab === "members" && (
             <Card>
               <CardHeader className="px-6 pt-6 pb-3">
@@ -614,13 +600,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-6 pb-6 space-y-6">
-                {/* 👉 ici tu gardes TOUT ton bloc existant :
-                    - invitation (input email + select role + bouton)
-                    - tableau des membres
-                    - tableau des invitations en attente
-                    Je le recolle exactement tel que tu l’avais : */}
-
-                {/* Invitation */}
                 <div className="flex flex-col md:flex-row gap-5 items-start md:items-center">
                   <div className="flex-1 w-full">
                     <Input
@@ -657,7 +636,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                   </Button>
                 </div>
 
-                {/* Liste des membres */}
                 <div className="border border-gray-200 rounded-xl overflow-hidden">
                   <div className="px-4 py-2 bg-gray-50 text-xs font-semibold uppercase text-gray-500 grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,1fr)]">
                     <div>
@@ -737,7 +715,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                   )}
                 </div>
 
-                {/* Invitations en attente */}
                 {pendingInvitations.length > 0 && (
                   <div className="mt-6 border border-dashed border-gray-200 rounded-xl overflow-hidden">
                     <div className="px-4 py-2 bg-gray-50 text-xs font-semibold uppercase text-gray-500 grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,1fr)]">
@@ -788,7 +765,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
             </Card>
           )}
 
-          {/* Onglet 3 : Billing (placeholder pour l’instant) */}
           {activeTab === "billing" && (
             <Card>
               <CardHeader className="px-6 pt-6 pb-3">
@@ -807,7 +783,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
         </div>
       </div>
 
-      {/* Dialog de confirmation suppression */}
       <Dialog open={dangerOpen} onOpenChange={setDangerOpen}>
         <DialogContent>
           <DialogHeader>
@@ -857,7 +832,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog édition rôle membre */}
       <Dialog
         open={!!editingMember}
         onOpenChange={(open) => {
@@ -933,7 +907,6 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
         </DialogContent>
       </Dialog>
 
-      {/* Dialog confirmation suppression invitation */}
       <Dialog
         open={!!invitationToDelete}
         onOpenChange={(open) => {

@@ -20,13 +20,46 @@ function normalizeSlug(input: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const workspaces = await getUserWorkspaces(user.id);
+  // 1) Orgs où le user est admin/owner
+  const orgMemberships = await prisma.member.findMany({
+    where: {
+      userId: user.id,
+      role: { in: ["admin", "owner"] },
+    },
+    select: { organizationId: true },
+  });
+
+  const adminOrgIds = orgMemberships.map((m) => m.organizationId);
+
+  // 2) Workspaces visibles
+  const workspaces = await prisma.workspace.findMany({
+    where: adminOrgIds.length
+      ? {
+          OR: [
+            { ownerId: user.id },
+            { organizationId: { in: adminOrgIds } }, // règle business
+          ],
+        }
+      : {
+          OR: [
+            { ownerId: user.id },
+            { members: { some: { userId: user.id } } },
+          ],
+        },
+    select: { id: true, name: true, slug: true, logo: true, organizationId: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  console.log("adminOrgIds:", adminOrgIds);
+  console.log("workspaces:", workspaces);
+
   return NextResponse.json(workspaces);
 }
+
 
 export async function POST(req: NextRequest) {
   // Pour cleanup si la transaction échoue après upload

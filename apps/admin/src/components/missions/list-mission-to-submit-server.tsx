@@ -28,8 +28,11 @@ function fetchMissions({
 }: FetchMissionsParams) {
   const whereClause = {
     ...(query && { name: { contains: query } }),
-    ...(status && status !== "all" && { status }),
+    // ...(status && status !== "all" && { status }),
     ...(date && { createdAt: { gte: new Date(date) } }),
+    status: {
+      in: ["on hold", "draft", "modification_needed"],
+    },
   };
 
   const orderByClause = sort.map((s) => ({ [s]: "asc" }));
@@ -37,7 +40,7 @@ function fetchMissions({
   const skip = from * pageSize;
   const take = (to - from + 1) * pageSize;
 
-  return prisma.tempMission.findMany({
+  return prisma.mission.findMany({
     where: whereClause,
     orderBy: orderByClause,
     skip,

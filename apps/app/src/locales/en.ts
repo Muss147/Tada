@@ -634,6 +634,7 @@ export default {
       title: "Current members",
       description: "Manage your existing team and modify roles/permissions.",
       membersCountLabel: "member(s)",
+      empty: "No team members yet.",
       columns: {
         name: "Name",
         role: "Role",

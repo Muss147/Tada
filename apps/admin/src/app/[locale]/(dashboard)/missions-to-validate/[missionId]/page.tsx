@@ -23,7 +23,7 @@ export default async function ValidationPage({
   const missionId = params.missionId;
 
   // 1. Récupérer la mission temporaire et ses données complètes
-  const mission = await prisma.tempMission.findUnique({
+  const mission = await prisma.mission.findUnique({
     where: { id: missionId },
     // Inclure les relations si le questionnaire et les objectifs sont stockés séparément
     // include: {
@@ -42,7 +42,7 @@ export default async function ValidationPage({
   }
 
   // 💡 Note: Le brief IA (objectifs, problématique, segments, etc.) 
-  // est supposé être stocké dans les champs de TempMission.
+  // est supposé être stocké dans les champs de mission.
   // Le "questionnaire généré par IA" doit être disponible via `mission.questionnaire`
   // ou un autre champ de données.
   

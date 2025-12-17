@@ -108,9 +108,9 @@ model Organization {
 model Mission {
   id                  String        @id @default(uuid())
   name                String
-  problemSummary      String?
-  objectives          String?
-  assumptions         String?
+  problemSummary      String?       @db.Text // 🆕 Ajouté db.Text pour les longs textes
+  objectives          String?       @db.Text // 🆕 Ajouté db.Text
+  assumptions         String?       @db.Text // 🆕 Ajouté db.Text
   audiences           Json?
   organizationId      String?
   organization        Organization? @relation(fields: [organizationId], references: [id])
@@ -122,6 +122,9 @@ model Mission {
   updatedAt           DateTime?     @updatedAt
   isPublic            Boolean       @default(true)
   isSuperAdminMission Boolean       @default(false)
+  validationStatus    String?       @default("pending") // pending, approved, rejected, applied
+  validationComment   String?       @db.Text // 🆕 Nouveau champ pour le commentaire du SuperAdmin
+  validatedAt         DateTime?
 
   // Ajout dash admin (Muss)
   contributorData            ContributorData[]
@@ -570,6 +573,7 @@ model TempMission {
   missionId         String             @unique
   mission           Mission            @relation(fields: [missionId], references: [id])
   tempSubDashboards TempSubDashboard[]
+  targetSampleSize  Int?
 
   @@map("temp_mission")
 }
