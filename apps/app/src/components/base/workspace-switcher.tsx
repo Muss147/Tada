@@ -1,7 +1,7 @@
 // src/components/base/workspace-switcher.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useI18n, useCurrentLocale } from "@/locales/client";
 import { useWorkspace } from "@/context/workspace-context";
 import { Button } from "@tada/ui/components/button";
@@ -21,10 +21,21 @@ function WorkspaceAvatar({
   className?: string;
 }) {
   const initial = name?.charAt(0)?.toUpperCase() || "?";
-  const src = getPublicUrlForPath({
-    category: "workspaceLogo",
-    pathOrUrl: logo,
-  });
+
+  const src = useMemo(() => {
+    return getPublicUrlForPath({
+      category: "workspaceLogo",
+      pathOrUrl: logo,
+    });
+  }, [logo]);
+
+  // ✅ Cache-busting : si le backend réécrit le même chemin, le navigateur ne gardera pas l'ancien
+  const srcWithVersion = useMemo(() => {
+    if (!src) return null;
+    // Si logo = string path, on l'encode en "v", sinon fallback sur timestamp
+    const v = logo ? encodeURIComponent(logo) : Date.now().toString();
+    return `${src}${src.includes("?") ? "&" : "?"}v=${v}`;
+  }, [src, logo]);
 
   return (
     <div
@@ -33,9 +44,9 @@ function WorkspaceAvatar({
         className
       )}
     >
-      {src ? (
+      {srcWithVersion ? (
         <img
-          src={src}
+          src={srcWithVersion}
           alt={name}
           className="h-full w-full object-cover"
           onError={(e) => {
@@ -80,6 +91,7 @@ export function WorkspaceSwitcher() {
     if (!workspaces.length || !workspaceIdFromUrl) return;
     const exists = workspaces.find((w) => w.id === workspaceIdFromUrl);
     if (!exists) return;
+
     if (!currentWorkspace || currentWorkspace.id !== workspaceIdFromUrl) {
       setCurrentWorkspaceId(workspaceIdFromUrl);
     }
@@ -115,14 +127,8 @@ export function WorkspaceSwitcher() {
     setOpenList(false);
   };
 
-  console.log("Rendering WorkspaceSwitcher", {
-    workspaces,
-    currentWorkspace,
-    selectedId,
-  });
   return (
     <div className="px-4 mb-4">
-      {/* En-tête : workspace actif + chevron pour ouvrir la liste */}
       <button
         type="button"
         className={cn(
@@ -141,12 +147,14 @@ export function WorkspaceSwitcher() {
             ) : (
               <WorkspaceAvatar name="Tada" logo={null} />
             )}
+
             <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
               {activeWorkspace?.name ||
                 (loading ? t("common.loading") : t("navigation.workspace"))}
             </span>
           </div>
         </div>
+
         <ChevronDown
           className={cn(
             "h-4 w-4 text-gray-400 transition-transform",
@@ -155,7 +163,6 @@ export function WorkspaceSwitcher() {
         />
       </button>
 
-      {/* Liste déroulante des workspaces + bouton "nouveau workspace" */}
       {openList && (
         <div className="mt-2 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm max-h-72 overflow-y-auto">
           {workspaces.length > 0 ? (
@@ -177,12 +184,9 @@ export function WorkspaceSwitcher() {
                       <span className="font-medium text-gray-900 dark:text-gray-100 truncate">
                         {ws.name}
                       </span>
-                      {/* Si tu veux afficher un sous-texte (ex: nombre de membres), tu peux le mettre ici */}
-                      {/* <span className="text-[11px] text-gray-500">1 member</span> */}
                     </div>
                   </div>
 
-                  {/* Bouton paramètres visible seulement au survol */}
                   <div
                     role="button"
                     tabIndex={0}
@@ -207,15 +211,12 @@ export function WorkspaceSwitcher() {
                 </button>
               ))}
 
-              {/* Bouton "Nouveau workspace" en bas, comme sur ta capture */}
               <div className="pt-2 mt-1 border-t border-gray-200 dark:border-gray-800">
                 <Button
                   variant="outline"
                   size="sm"
                   className="w-full justify-center gap-2 text-xs"
-                  onClick={() => {
-                    setOpenCreate(true);
-                  }}
+                  onClick={() => setOpenCreate(true)}
                 >
                   <Plus className="h-4 w-4" />
                   {t("navigation.createWorkspace")}

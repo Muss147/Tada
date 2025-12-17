@@ -1,3 +1,5 @@
+//src/app/api/workspaces/[workspaceId]/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";

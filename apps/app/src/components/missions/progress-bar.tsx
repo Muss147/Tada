@@ -51,29 +51,32 @@ export function ProgressSidebar() {
     const subscription = form.watch((values) => {
       setSections((prev) =>
         prev.map((section) => {
-          if (values[section.id]) {
-            // ici plus tard tu peux gérer un completed = 0.5 si tu veux du partiel
-            return {
-              ...section,
-              completed: Boolean(values[section.id]),
-            };
+          // audiences: on laisse l'autre effect gérer via activeFiltersCount
+          if (section.id === "audiences") return section;
+
+          const v = values?.[section.id];
+
+          // string => trim
+          if (typeof v === "string") {
+            return { ...section, completed: v.trim().length > 0 };
           }
-          return section;
+
+          // autres types (si jamais)
+          return { ...section, completed: Boolean(v) };
         })
       );
     });
 
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   // Audiences : complété si au moins 1 filtre
   useEffect(() => {
-    if (activeFiltersCount > 0) {
-      setSections((prev) =>
-        prev.map((s) => (s.id === "audiences" ? { ...s, completed: true } : s))
-      );
-    }
+    setSections((prev) =>
+      prev.map((s) =>
+        s.id === "audiences" ? { ...s, completed: activeFiltersCount > 0 } : s
+      )
+    );
   }, [activeFiltersCount]);
 
   const getBriefRating = useCallback(

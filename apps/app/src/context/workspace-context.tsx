@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -16,11 +17,14 @@ type Workspace = {
   organizationId?: string | null;
 };
 
+type WorkspacePatch = Partial<Pick<Workspace, "name" | "slug" | "logo">>;
+
 type WorkspaceContextValue = {
   workspaces: Workspace[];
   currentWorkspace: Workspace | null;
   setCurrentWorkspaceId: (id: string) => void;
   refresh: () => Promise<void>;
+  patchWorkspaceInState: (id: string, patch: WorkspacePatch) => void;
   loading: boolean;
 };
 
@@ -75,7 +79,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    fetchWorkspaces();
+    void fetchWorkspaces();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,8 +90,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const currentWorkspace =
-    workspaces.find((w) => w.id === currentWorkspaceId) || null;
+  const patchWorkspaceInState = (id: string, patch: WorkspacePatch) => {
+    setWorkspaces((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, ...patch } : w))
+    );
+  };
+
+  const currentWorkspace = useMemo(() => {
+    return workspaces.find((w) => w.id === currentWorkspaceId) || null;
+  }, [workspaces, currentWorkspaceId]);
 
   return (
     <WorkspaceContext.Provider
@@ -96,6 +107,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         currentWorkspace,
         setCurrentWorkspaceId,
         refresh: fetchWorkspaces,
+        patchWorkspaceInState,
         loading,
       }}
     >

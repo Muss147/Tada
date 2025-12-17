@@ -21,7 +21,7 @@ import {
 } from "./permissions-organization";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL!, // Optional if the API base URL matches the frontend
+  baseURL: process.env.NEXT_PUBLIC_APP_URL!,
   appName: "Tada",
   plugins: [
     emailOTPClient(),

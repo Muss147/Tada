@@ -88,13 +88,10 @@ export const createMissionAction = authActionClient
               schema: z.object({
                 questions: z.array(SurveyQuestionSchema),
               }),
-              prompt: `You MUST generate at least 20 questions for this survey (ideally between 20 and 30).
-Each question MUST strictly follow the SurveyQuestionSchema.
-
-Problem: ${problemSummary}
-Objectives: ${objectives}
-Hypotheses: ${assumptions}
-Audiences: ${JSON.stringify(audiences, null, 2)}`,
+              prompt: `Problem: ${problemSummary}
+                  Objective: ${objectives}
+                  Hypotheses: ${assumptions}
+                  audiences: ${audiences}`,
               system: promptSystem,
             });
 

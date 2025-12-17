@@ -216,6 +216,7 @@ const TeamMembersPreview: React.FC = () => {
     });
   };
 
+  console.log("Rendering TeamMembersPreview with members:", members);
   return (
     <div className="p-5 text-gray-800">
       {/* Section d'invitation */}
