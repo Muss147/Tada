@@ -1121,6 +1121,7 @@ export default {
         configMissionGain: "Gain (FCFA)",
         configMissionDuration: "Duration (min)",
         configMissionDeadline: "Deadline",
+        configMissionSampleSize: "Number of validated submissions to be achieved",
         next: "Next",
         previous: "Previous",
         done: "Done",

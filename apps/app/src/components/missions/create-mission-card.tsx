@@ -3,6 +3,7 @@
 import { AudiencesFilterProvider } from "@/context/audiences-filter-context";
 import { useI18n } from "@/locales/client";
 import { useAssistantInstructions, useThread } from "@assistant-ui/react";
+import { useAssistantForm } from "@assistant-ui/react-hook-form";
 import { Form } from "@tada/ui/components/form";
 import { CreateMissionForm } from "./forms/create-mission-form";
 import { ProgressSidebar } from "./progress-bar";
@@ -14,42 +15,6 @@ type ThreadMessage = {
   role: "user" | "assistant" | string;
   content?: Array<{ type: string; text?: string }>;
 };
-
-const extractTextFromMessage = (msg: ThreadMessage): string => {
-  const content = msg?.content;
-  if (!Array.isArray(content)) return "";
-  return content
-    .filter((c) => c?.type === "text" && typeof c.text === "string")
-    .map((c) => c.text!)
-    .join("\n");
-};
-
-function detectLang(text: string): "fr" | "en" {
-  const t = text.toLowerCase();
-  const frHits = [
-    " le ",
-    " la ",
-    " les ",
-    " des ",
-    " une ",
-    " je ",
-    " tu ",
-    " est ",
-    " avec ",
-  ].reduce((acc, w) => acc + (t.includes(w) ? 1 : 0), 0);
-  const enHits = [
-    " the ",
-    " and ",
-    " is ",
-    " are ",
-    " with ",
-    " you ",
-    " we ",
-    " to ",
-  ].reduce((acc, w) => acc + (t.includes(w) ? 1 : 0), 0);
-
-  return frHits >= enHits ? "fr" : "en";
-}
 
 export function CreateMissionCard({
   organization,
@@ -65,46 +30,9 @@ export function CreateMissionCard({
   const templateId = searchParams.get("t");
   const mode = searchParams.get("mode");
 
-  // Detect language based on the user's most recent message
-  const thread = useThread();
-  const msgs = thread?.messages ?? [];
-  const lastUser = [...msgs].reverse().find((m) => m.role === "user") as
-    | ThreadMessage
-    | undefined;
+  useAssistantInstructions(`You are Jarvis, a Marketing Research Copilot, specialized in guiding users through the process of completing a comprehensive marketing research form. Your purpose is to help users define their business problems, research objectives, target markets, and formulate testable hypotheses in a structured yet conversational manner.
 
-  const lastUserText = lastUser ? extractTextFromMessage(lastUser) : "";
-  const inferredLang: "fr" | "en" = lastUserText
-    ? detectLang(lastUserText)
-    : locale === "fr"
-      ? "fr"
-      : "en";
-
-  useAssistantInstructions(`
-You are Dina, a Marketing Research Copilot, specialized in guiding users through the process of completing a comprehensive marketing research form. Your purpose is to help users define their business problems, research objectives, target markets, and formulate testable hypotheses in a structured yet conversational manner.
-
-CRITICAL LANGUAGE OVERRIDE:
-- For your next response, reply strictly in ${
-    inferredLang === "fr" ? "French" : "English"
-  }.
-- Then continue mirroring the user's most recent message language.
-
-LANGUAGE RULE (CRITICAL):
-- Always reply in the same language as the user's most recent message.
-- If there is no user message yet, greet using the UI locale.
-- If locale is "fr": "Bonjour, bienvenue dans le copilote d’insights Tada. Quel problème business puis-je t’aider à résoudre aujourd’hui ?"
-- If locale is "en": "Hi, welcome to Tada! I’m here to assist you in building your survey brief. What problem would you like help with today?"
-- If the user writes in French, reply in French.
-- If the user writes in English, reply in English.
-- If the user switches language, you switch immediately on the next answer.
-- If the message is mixed, use the dominant language; if unclear, default to the UI locale: ${locale}.
-
-FIRST MESSAGE BEHAVIOR:
-- When the conversation starts and the user has not provided any message yet, you MUST always start with a single, short, friendly question.
-- Do NOT ask multiple questions at once. Always ask one single open question at a time.
-- If the UI is in French (default for this project), your first message SHOULD be:
-  "Bonjour, bienvenue dans le copilote d’insights Tada. Quel problème business puis-je t’aider à résoudre aujourd’hui ?"
-- If the UI is in English, your first message SHOULD be:
-  "Hi, welcome to Tada! I’m here to assist you in building your survey brief. What problem would you like help with today?"
+IMPORTANT: Always adapt to the language used by the user in their first interaction. If they write to you in French, respond in French. If they use Spanish, continue in Spanish, and so on. Maintain this language consistency throughout the entire conversation.
 
 CRITICAL: You must first collect all the required information from the user through conversation before filling out the form. Do not use the form tools until you have gathered complete information for all required sections. The essential information you need to collect includes:
 1. Mission name/title
@@ -135,23 +63,31 @@ Your conversation should guide users through these key sections in sequence:
 
 After collecting all required information, summarize what you've gathered for each section and confirm with the user that everything is accurate. Only then use the form tools to complete the entire form in one go. Let the user know when you've completed the form and ask if they would like to make any adjustments.
 
-Begin by introducing yourself and asking about their business context and the general area they wish to research. Adapt your subsequent questions based on their responses to create a natural conversation flow while ensuring all essential aspects of marketing research planning are addressed.
-`);
+Begin by introducing yourself and asking about their business context and the general area they wish to research. Adapt your subsequent questions based on their responses to create a natural conversation flow while ensuring all essential aspects of marketing research planning are addressed.`);
 
   const hasRenderedField = useRef(false);
-
-  const form = useForm({
+  const form = useAssistantForm({
     defaultValues: {
       name: "",
       problemSummary: "",
       objectives: "",
       assumptions: "",
       audiences: "",
-      image: "",
-      sampleSummary: "",
-      targetSampleSize: undefined,
-      preliminaryRecommendations: "",
-      studyStructure: "",
+    },
+    assistant: {
+      tools: {
+        set_form_field: {
+          render: () => {
+            if (hasRenderedField.current === true) return null;
+            hasRenderedField.current = true;
+            return (
+              <p className="text-center font-mono text-sm font-bold text-blue-500">
+                {t("missions.createMission.filedFilled")}
+              </p>
+            );
+          },
+        },
+      },
     },
   });
 

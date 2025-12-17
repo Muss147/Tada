@@ -195,46 +195,70 @@ export function ConfigMissionForContributorsForm({
             )}
           />
         </div>
-        <div>
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm/5 font-medium">
-                  {t("missions.publish.form.configMissionDuration")}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder={t(
-                      "missions.publish.form.configMissionDuration"
-                    )}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="md:col-span-1">
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm/5 font-medium">
+                    {t("missions.publish.form.configMissionDuration")}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder={t(
+                        "missions.publish.form.configMissionDuration"
+                      )}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="md:col-span-1">
+            <FormField
+              control={form.control}
+              name="deadline"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm/5 font-medium">
+                    {t("missions.publish.form.configMissionDeadline")}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      placeholder={t("missions.publish.form.configMissionDeadline")}
+                      {...field}
+                      value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
+                      onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div>
           <FormField
             control={form.control}
-            name="deadline"
+            name="sampleSize"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm/5 font-medium">
-                  {t("missions.publish.form.configMissionDeadline")}
+                  {t("missions.publish.form.configMissionSampleSize")}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    type="datetime-local"
-                    placeholder={t("missions.publish.form.configMissionDeadline")}
+                    type="number"
+                    placeholder={t("missions.publish.form.configMissionSampleSize")}
                     {...field}
-                    value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
-                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
                 <FormMessage />

@@ -111,7 +111,7 @@ export function AudienceSuggestionSection({
               <option value="">
                 {t(
                   "missions.createMission.form.audienceSuggestionGroupPlaceholder"
-                )}
+                ) ?? "Select audience group"}
               </option>
               {filterGroups.map((group) => (
                 <option key={group.id} value={group.id}>

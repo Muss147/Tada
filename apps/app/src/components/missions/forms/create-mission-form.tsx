@@ -32,16 +32,6 @@ interface Section {
   selectedMarkets?: string[];
 }
 
-const extractTextFromMessage = (msg: any): string => {
-  if (!msg?.content) return "";
-  return (
-    msg.content
-      .filter((c: any) => c.type === "text")
-      .map((c: any) => c.text)
-      .join("\n") ?? ""
-  );
-};
-
 export function CreateMissionForm({
   organization,
   workspaceId,
@@ -80,6 +70,9 @@ export function CreateMissionForm({
     selectedFilters,
     filterGroups,
     handleOptionSelect,
+
+    suggestions,
+    removeSuggestion,
   } = useAudiencesFilter();
 
   const watchedName = form.watch("name");
@@ -314,97 +307,6 @@ export function CreateMissionForm({
   }
 
   useEffect(() => {
-    if (!isAiMode) return;
-    if (!threadMessages.length) return;
-
-    const ASK_RE =
-      locale === "fr"
-        ? /Est-ce que tout cela vous semble correct \? Si oui, je peux maintenant remplir le formulaire avec ces informations\./
-        : /Does all of this look correct\? If yes, I can now fill the form with this information\./;
-
-    const CONFIRM_RE =
-      locale === "fr"
-        ? /^\s*(oui|ok|okay|d['’]accord|c['’]est bon|parfait)\s*[.!?]?\s*$/i
-        : /^\s*(yes|yep|ok|okay|sounds good|perfect)\s*[.!?]?\s*$/i;
-
-    // 1) On cherche le DERNIER message assistant qui propose de remplir le formulaire
-    let askedIndex = -1;
-    for (let i = threadMessages.length - 1; i >= 0; i--) {
-      const msg = threadMessages[i];
-      if (msg.role !== "assistant") continue;
-      const text = extractTextFromMessage(msg);
-      if (ASK_RE.test(text)) {
-        askedIndex = i;
-        break;
-      }
-    }
-
-    if (askedIndex === -1) {
-      return; // aucun assistant n'a proposé de remplir le formulaire
-    }
-
-    const assistantMsg = threadMessages[askedIndex];
-    const assistantText = extractTextFromMessage(assistantMsg);
-
-    // 2) On cherche une confirmation utilisateur APRÈS ce message
-    const confirmMsg = threadMessages
-      .slice(askedIndex + 1)
-      .reverse()
-      .find((m) => {
-        if (m.role !== "user") return false;
-        const userText = extractTextFromMessage(m).trim();
-        return CONFIRM_RE.test(userText);
-      });
-
-    if (!confirmMsg) {
-      return; // pas encore de "oui / ok / parfait" après la proposition
-    }
-
-    // 3) On obtient un identifiant stable pour ce récap assistant
-    const assistantId =
-      (assistantMsg as any).id ??
-      (assistantMsg as any).messageId ??
-      `assistant-${askedIndex}`;
-
-    if (assistantId === lastSyncedAssistantId) {
-      return; // déjà traité
-    }
-
-    if (generateBrief.status === "executing") {
-      return;
-    }
-
-    // 4) On marque ce récap comme traité AVANT de lancer la génération
-    setLastSyncedAssistantId(assistantId);
-
-    // 5) On lance la génération du brief
-    toast({
-      title:
-        locale === "fr"
-          ? "Génération du brief en cours…"
-          : "Generating the brief…",
-      description:
-        locale === "fr"
-          ? "Je remplis automatiquement le formulaire à partir de la conversation."
-          : "I'm filling the form from the conversation.",
-    });
-    generateBrief.execute({
-      name: form.getValues("name"),
-      problemSummary: assistantText || form.getValues("problemSummary"),
-      objectives: form.getValues("objectives"),
-      assumptions: form.getValues("assumptions"),
-      audiences: selectedFilters,
-    });
-  }, [
-    isAiMode,
-    threadMessages,
-    lastSyncedAssistantId,
-    generateBrief.status,
-    form,
-    selectedFilters,
-  ]);
-
-  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingSection &&
@@ -470,14 +372,21 @@ export function CreateMissionForm({
   }, [form]);
 
   useEffect(() => {
-    if (activeFiltersCount > 0) {
-      setSections((prev) =>
-        prev.map((s) =>
-          s.key === "audiences" ? { ...s, status: "completed" } : s
-        )
-      );
-    }
-  }, [activeFiltersCount]);
+    const hasAnyAudiences = activeFiltersCount > 0 || suggestions.length > 0;
+
+    setSections((prev) =>
+      prev.map((s) =>
+        s.key === "audiences"
+          ? { ...s, status: hasAnyAudiences ? "completed" : "pending" }
+          : s
+      )
+    );
+  }, [activeFiltersCount, suggestions.length]);
+
+  useEffect(() => {
+    console.log("[CreateMissionForm] thread?", thread);
+    console.log("[CreateMissionForm] messages length:", threadMessages.length);
+  }, [thread, threadMessages.length]);
 
   return (
     <form
@@ -523,7 +432,7 @@ export function CreateMissionForm({
                 </Button>
 
                 {/* Bouton 2 : Mettre à jour depuis la conversation AI */}
-                <Button
+                {/* <Button
                   type="button"
                   variant="outline"
                   size="sm"
@@ -551,7 +460,7 @@ export function CreateMissionForm({
                   }}
                 >
                   {t("missions.createMission.form.aiUpdateFromConversation")}
-                </Button>
+                </Button> */}
 
                 <Button
                   size="sm"
@@ -667,7 +576,7 @@ export function CreateMissionForm({
                     )}
                   </Button>
 
-                  {activeFiltersCount > 0 && (
+                  {(activeFiltersCount > 0 || suggestions.length > 0) && (
                     <div className="mt-2">
                       <div className="flow-root">
                         <div className="-mx-2 -my-1 flex flex-wrap">
@@ -734,6 +643,59 @@ export function CreateMissionForm({
                             )
                           )}
                         </div>
+
+                        {/* ✅ Séparateur + suggestions */}
+                        {suggestions.length > 0 && (
+                          <>
+                            <div className="my-2 w-full">
+                              <div className="h-px w-full bg-gray-200" />
+                              <p className="mt-2 text-xs text-gray-500">
+                                {locale === "fr"
+                                  ? "Suggestions"
+                                  : "Suggestions"}
+                              </p>
+                            </div>
+
+                            {suggestions.map((s, idx) => (
+                              <span
+                                key={`${s.groupId ?? "none"}-${s.label}-${idx}`}
+                                className="m-1 inline-flex items-center rounded-full border border-amber-200 bg-amber-50 py-1.5 pl-3 pr-1 text-sm font-medium text-amber-900"
+                                title={s.description ?? ""}
+                              >
+                                <span>
+                                  {s.groupId
+                                    ? `${filterGroups.find((g) => g.id === s.groupId)?.label ?? s.groupId}: `
+                                    : ""}
+                                  {s.label}
+                                </span>
+
+                                <button
+                                  type="button"
+                                  className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-amber-700 hover:bg-amber-100"
+                                  onClick={() => removeSuggestion(idx)}
+                                >
+                                  <span className="sr-only">
+                                    {locale === "fr"
+                                      ? "Retirer la suggestion"
+                                      : "Remove suggestion"}
+                                  </span>
+                                  <svg
+                                    className="h-2 w-2"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 8 8"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeWidth="1.5"
+                                      d="M1 1l6 6m0-6L1 7"
+                                    />
+                                  </svg>
+                                </button>
+                              </span>
+                            ))}
+                          </>
+                        )}
                       </div>
                     </div>
                   )}

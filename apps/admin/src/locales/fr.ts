@@ -579,6 +579,7 @@ export default {
         configMissionGain: "Revenu (FCFA)",
         configMissionDuration: "Durée (min)",
         configMissionDeadline: "Date limite",
+        configMissionSampleSize: "Nombre de soumissions validées à atteindre",
         next: "Continuer",
         previous: "Précédent",
         done: "Terminer",
