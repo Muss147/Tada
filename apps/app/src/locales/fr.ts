@@ -413,6 +413,38 @@ export default {
   },
   welcome: "Bonjour {name}!",
   auth: {
+    invitation: {
+      titleDefault: "Invitation",
+      subtitleDefault: "Finalisez l’accès à votre workspace.",
+      title: "Rejoindre {workspace}",
+      subtitleNew: "Créez votre compte pour {email}",
+      subtitleExisting: "Connectez-vous pour accepter l’invitation.",
+      loading: "Vérification de l’invitation…",
+
+      password: "Mot de passe",
+      passwordPlaceholder: "Minimum 8 caractères",
+      passwordHint: "Utilisez au moins 8 caractères.",
+      confirmPassword: "Confirmer le mot de passe",
+      confirmPasswordPlaceholder: "Confirmez votre mot de passe",
+      passwordMismatch: "Les mots de passe ne correspondent pas.",
+
+      submit: "Créer mon compte et rejoindre",
+      creating: "Création…",
+
+      existingHint: "Un compte existe déjà avec cet email. Veuillez vous connecter pour accepter l’invitation.",
+      goToLogin: "Se connecter",
+
+      alreadyHaveAccount: "Vous avez déjà un compte ?",
+      loginLink: "Se connecter",
+
+      errors: {
+        missingToken: "Token manquant.",
+        resolveFailed: "Impossible de vérifier l’invitation.",
+        acceptFailed: "Impossible d’accepter l’invitation.",
+        completeFailed: "Impossible de finaliser l’invitation.",
+        network: "Erreur réseau."
+      }
+    },
     login: {
       title:
         "Débloquez les données en temps réel pour prendre de meilleures décisions — partout, à tout moment.",
@@ -771,6 +803,11 @@ export default {
             rolePlaceholder: "Sélectionner un rôle",
             emptyMembers: "Aucun membre n'a été ajouté pour le moment.",
             inviteButton: "Envoyer l'invitation",
+            deleteInvitationTitle: "Supprimer l'invitation",
+            deleteInvitationDescription:
+              "Êtes-vous sûr de vouloir supprimer cette invitation ?",
+            deleteInvitationCancel: "Annuler",
+            deleteInvitationConfirm: "Oui, supprimer l'invitation",
             fields:{
               logo: "Logo du workspace",
               name: "Nom du workspace",
@@ -1193,6 +1230,13 @@ export default {
         audienceSuggestionSentTitle: "Suggestion envoyée",
         audienceSuggestionSentDescription:
           "Votre suggestion d'audience a été envoyée à l'équipe Tada pour examen.",
+        sampleSizeTitle: "Recommandation de taille d'échantillon",
+        sampleSizeDescription:
+          "En fonction de votre public cible et de vos objectifs de recherche, nous recommandons la taille d'échantillon suivante :",
+        iWantToSurvey: "Je veux interroger",
+        participants: "participants",
+        sampleSizeHint:
+          "La taille d'échantillon recommandée garantit des résultats statistiquement significatifs pour votre étude.",
       },
     },
     missionSubmission: {

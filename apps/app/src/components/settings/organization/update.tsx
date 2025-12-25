@@ -78,6 +78,15 @@ export default function SettingsPage() {
   const { toast } = useToast();
   const { uploadFile, isLoading } = useUpload();
 
+  const { data: session } = authClient.useSession();
+
+  const currentUserId = session?.user?.id;
+
+  const currentMembership = members.find((m) => m.userId === currentUserId);
+  const currentRole = currentMembership?.role;
+
+  const canManageOrg = currentRole === "owner" || currentRole === "admin";
+
   const {
     data: organizations,
     isPending: isLoadingOrganizations,
@@ -172,6 +181,14 @@ export default function SettingsPage() {
   };
 
   async function onSubmit(values: UpdateOrganizationFormData) {
+    if (!canManageOrg) {
+      toast({
+        title: "Accès refusé",
+        description: "Seuls les admins/owners peuvent modifier l’organisation.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       let logoUrl = avatarUrl;
 
@@ -271,9 +288,14 @@ export default function SettingsPage() {
                     className="hidden"
                     accept="image/*"
                     onChange={handleAvatarUpload}
-                    disabled={isAvatarUploading}
+                    disabled={isAvatarUploading || !canManageOrg}
                   />
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors
+    ${canManageOrg ? "hover:border-gray-400 cursor-pointer" : "opacity-60 cursor-not-allowed"}
+    ${canManageOrg ? "border-gray-300" : "border-gray-200"}
+  `}
+                  >
                     <div className="w-12 h-12 bg-blue-50 rounded-full mx-auto mb-4 flex items-center justify-center">
                       <Upload className="h-6 w-6 text-blue-600" />
                     </div>
@@ -313,6 +335,7 @@ export default function SettingsPage() {
                         "teamMembers.organization.name.placeholder"
                       )}
                       {...field}
+                      disabled={!canManageOrg}
                     />
                   </FormControl>
                   <FormMessage />
@@ -331,9 +354,13 @@ export default function SettingsPage() {
                       {t("teamMembers.organization.country")}
                       <span className="text-red-500 ml-1">*</span>
                     </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={!canManageOrg}
+                    >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger disabled={!canManageOrg}>
                           <SelectValue
                             placeholder={t(
                               "teamMembers.organization.countryPlaceholder"
@@ -394,7 +421,11 @@ export default function SettingsPage() {
             <div className="flex justify-end pt-4">
               <Button
                 type="submit"
-                disabled={form.formState.isSubmitting || isAvatarUploading}
+                disabled={
+                  !canManageOrg ||
+                  form.formState.isSubmitting ||
+                  isAvatarUploading
+                }
                 className="min-w-[120px]"
               >
                 {form.formState.isSubmitting ? (

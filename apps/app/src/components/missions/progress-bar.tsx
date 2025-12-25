@@ -227,7 +227,6 @@ export function ProgressSidebar() {
               <span className="text-base font-semibold text-slate-900">
                 {briefScore.toFixed(0)}
               </span>
-              <span className="text-[11px] text-slate-500 mt-0.5">/ 10</span>
             </div>
           </div>
         </div>

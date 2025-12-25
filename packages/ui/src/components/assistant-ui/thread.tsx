@@ -25,12 +25,7 @@ import { TooltipIconButton } from "./tooltip-icon-button";
 
 export const Thread: FC = () => {
   return (
-    <ThreadPrimitive.Root
-      className="bg-background box-border flex h-full flex-col overflow-hidden"
-      style={{
-        ["--thread-max-width" as string]: "42rem",
-      }}
-    >
+    <ThreadPrimitive.Root className="bg-background box-border flex h-full flex-col overflow-hidden">
       <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
         <ThreadWelcome />
 
@@ -204,8 +199,8 @@ const AssistantMessage: FC = () => {
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
       <Avatar className="flex size-8 flex-shrink-0 items-center justify-center rounded-[24px] border border-white/15 shadow ">
         <AvatarImage
-          src="/logo-icon.png"
-          alt="logo"
+          src="/avatar.png"
+          alt="avatar"
           className="max-w-6 h-full"
         />
       </Avatar>

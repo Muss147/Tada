@@ -11,6 +11,7 @@ import "survey-core/i18n/english";
 import { useCurrentLocale } from "@/locales/client";
 import { darkTheme, lightTheme } from "@/constants/surveys-themes";
 import { mapSurveyToSurveyJS } from "@/utils/mapDomainSurveyToSurveyJs";
+import { registerMediaAndGpsQuestions } from "../surveys/custom-questions/register-media-gps";
 
 export function SurveyShow() {
   const [survey, setSurvey] = useState<Model>();
@@ -25,6 +26,8 @@ export function SurveyShow() {
   // }, [surveyJson, theme, currentLocale]);
   useEffect(() => {
     if (!domainSurvey) return;
+
+    registerMediaAndGpsQuestions();
 
     const surveyJsJson = mapSurveyToSurveyJS(domainSurvey);
 

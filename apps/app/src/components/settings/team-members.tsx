@@ -63,6 +63,14 @@ const TeamMembersPreview: React.FC = () => {
   );
   const [isPending, startTransition] = useTransition();
 
+  const { data: session } = authClient.useSession();
+
+  const currentUserId = session?.user?.id;
+  const currentMembership = members.find((m) => m.userId === currentUserId);
+
+  const currentRole = currentMembership?.role;
+  const canManageOrg = currentRole === "owner" || currentRole === "admin";
+
   // Charger les membres au montage du composant
   useEffect(() => {
     const loadMembers = async () => {
@@ -180,6 +188,15 @@ const TeamMembersPreview: React.FC = () => {
 
     const orgId = organizations?.[0]?.id;
 
+    if (!canManageOrg) {
+      toast({
+        title: "Accès refusé",
+        description: "Seuls les admins/owners peuvent modifier l’organisation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!orgId) {
       toast({
         title: t("teamMembers.organization.edit.missingId"),
@@ -264,7 +281,10 @@ const TeamMembersPreview: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="flex gap-2" disabled={isInviting}>
+            <Button
+              className="flex gap-2"
+              disabled={isInviting || !canManageOrg}
+            >
               {isInviting ? (
                 <>
                   <Icons.spinner className="h-4 w-4 animate-spin" />
@@ -322,61 +342,77 @@ const TeamMembersPreview: React.FC = () => {
 
               {/* Lignes membres */}
               <div className="divide-y divide-gray-100">
-                {members.map((member) => (
-                  <div
-                    key={member.id}
-                    className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] px-6 py-3 items-center hover:bg-gray-50 transition-colors"
-                  >
-                    {/* Nom + email */}
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage
-                          src={member.user.image}
-                          alt={`Avatar de ${member.user.name}`}
-                        />
-                        <AvatarFallback>
-                          {member.user.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()
-                            .slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <div className="font-medium text-sm text-gray-900 truncate">
-                          {member.user.name}
-                        </div>
-                        <div className="text-xs text-gray-500 truncate">
-                          {member.user.email}
+                {members.map((member) => {
+                  const isSelf = member.userId === currentUserId;
+                  const isOwner = member.role === "owner";
+                  const disableDelete = !canManageOrg || isOwner;
+                  const disableEdit = !canManageOrg || isOwner;
+                  return (
+                    <div
+                      key={member.id}
+                      className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,2fr)] px-6 py-3 items-center hover:bg-gray-50 transition-colors"
+                    >
+                      {/* Nom + email */}
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9">
+                          <AvatarImage
+                            src={member.user.image}
+                            alt={`Avatar de ${member.user.name}`}
+                          />
+                          <AvatarFallback>
+                            {member.user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()
+                              .slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <div className="font-medium text-sm text-gray-900 truncate">
+                            {member.user.name}
+                          </div>
+                          <div className="text-xs text-gray-500 truncate">
+                            {member.user.email}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Rôle */}
-                    <div className="text-sm font-medium text-gray-700">
-                      {t(`teamMembers.invite.roles.${member.role}`)}
-                    </div>
+                      {/* Rôle */}
+                      <div className="text-sm font-medium text-gray-700">
+                        {t(`teamMembers.invite.roles.${member.role}`)}
+                      </div>
 
-                    {/* Actions */}
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        className="h-8 px-3 text-xs font-medium text-red-600 border border-red-200 rounded-full hover:bg-red-50"
-                        onClick={() => handleDelete(member.id)}
-                      >
-                        {t("teamMembers.current.actions.delete")}
-                      </button>
-                      <button
-                        type="button"
-                        className="h-8 px-3 text-xs font-medium text-gray-700 border border-gray-200 rounded-full hover:bg-gray-50"
-                        onClick={() => handleEdit(member)}
-                      >
-                        {t("teamMembers.current.actions.edit")}
-                      </button>
+                      {/* Actions */}
+                      <div className="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          disabled={disableDelete}
+                          className={`h-8 px-3 text-xs font-medium border rounded-full ${
+                            disableDelete
+                              ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                              : "text-red-600 border-red-200 hover:bg-red-50"
+                          }`}
+                          onClick={() => handleDelete(member.id)}
+                        >
+                          {t("teamMembers.current.actions.delete")}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={disableEdit}
+                          className={`h-8 px-3 text-xs font-medium border rounded-full ${
+                            disableEdit
+                              ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                              : "text-gray-700 border-gray-200 hover:bg-gray-50"
+                          }`}
+                          onClick={() => handleEdit(member)}
+                        >
+                          {t("teamMembers.current.actions.edit")}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -411,7 +447,10 @@ const TeamMembersPreview: React.FC = () => {
               />
             </div>
 
-            <Button className="flex gap-2" disabled={isOrgSaving}>
+            <Button
+              className="flex gap-2"
+              disabled={isOrgSaving || !canManageOrg}
+            >
               {isOrgSaving ? (
                 <>
                   <Icons.spinner className="h-4 w-4 animate-spin" />
