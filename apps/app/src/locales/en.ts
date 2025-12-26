@@ -1611,6 +1611,8 @@ export default {
               "Are you sure you want to delete this invitation?",
         deleteInvitationCancel: "Cancel",
         deleteInvitationConfirm: "Yes, delete the invitation",
+        billingTitle: "Workspace Billing",
+        billingEmpty: "No billing information available.",
         fields:{
           logo: "Workspace Logo",
           name: "Workspace Name",

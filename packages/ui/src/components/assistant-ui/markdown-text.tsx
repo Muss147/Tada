@@ -64,6 +64,8 @@ const useCopyToClipboard = ({
   return { isCopied, copyToClipboard };
 };
 
+const HIDDEN_TOKENS_RE = /\[\[READY_TO_FILL_FORM\]\]/gi;
+
 const defaultComponents = memoizeMarkdownComponents({
   h1: ({ className, ...props }) => (
     <h1
@@ -208,6 +210,11 @@ const defaultComponents = memoizeMarkdownComponents({
         {...props}
       />
     );
+  },
+  text: ({ children }: { children?: any }) => {
+    if (typeof children !== "string") return <>{children}</>;
+    const cleaned = children.replace(HIDDEN_TOKENS_RE, "");
+    return <>{cleaned}</>;
   },
   CodeHeader,
 });

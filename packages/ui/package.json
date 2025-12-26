@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@assistant-ui/react-markdown": "^0.8.1",
+    "@assistant-ui/react-markdown": "^0.11.8",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -62,7 +62,7 @@
     "./tailwind.config": "./tailwind.config.ts"
   },
   "peerDependencies": {
-    "@assistant-ui/react": "0.8.20",
+    "@assistant-ui/react": "^0.11.50",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
