@@ -5,25 +5,32 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/current-user";
 import { assertWorkspaceAdmin } from "@/lib/workspaces";
 import { uploadFileToSupabase, deleteFromSupabase } from "@/lib/uploads.server";
+import { slugify } from "@/lib/slugify";
 
 export const runtime = "nodejs";
 
-/**
- * Utilitaire pour récupérer bucket + path depuis une publicUrl Supabase
- */
-function extractSupabasePathFromPublicUrl(publicUrl: string) {
-  const marker = "/storage/v1/object/public/";
-  const idx = publicUrl.indexOf(marker);
-  if (idx === -1) return null;
+async function ensureUniqueWorkspaceSlug(base: string, workspaceId: string) {
+  const cleanBase = slugify(base) || `workspace-${Date.now()}`;
 
-  const rest = publicUrl.slice(idx + marker.length);
-  const parts = rest.split("/");
-  if (parts.length < 2) return null;
+  // 1) try base
+  const exists = await prisma.workspace.findFirst({
+    where: { slug: cleanBase, NOT: { id: workspaceId } },
+    select: { id: true },
+  });
+  if (!exists) return cleanBase;
 
-  return {
-    bucket: parts[0],
-    path: parts.slice(1).join("/"),
-  };
+  // 2) try with suffixes
+  for (let i = 2; i <= 50; i++) {
+    const candidate = `${cleanBase}-${i}`;
+    const clash = await prisma.workspace.findFirst({
+      where: { slug: candidate, NOT: { id: workspaceId } },
+      select: { id: true },
+    });
+    if (!clash) return candidate;
+  }
+
+  // fallback last resort
+  return `${cleanBase}-${Date.now()}`;
 }
 
 /**
@@ -60,17 +67,13 @@ export async function GET(
 
 /**
  * PATCH /api/workspaces/[workspaceId]
- * - update name / slug
- * - upload logo to Supabase
  */
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ workspaceId: string }> },
 ) {
   const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { workspaceId } = await params;
 
@@ -80,15 +83,9 @@ export async function PATCH(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const existing = await prisma.workspace.findUnique({
-    where: { id: workspaceId },
-  });
-
+  const existing = await prisma.workspace.findUnique({ where: { id: workspaceId } });
   if (!existing) {
-    return NextResponse.json(
-      { error: "Workspace introuvable" },
-      { status: 404 },
-    );
+    return NextResponse.json({ error: "Workspace introuvable" }, { status: 404 });
   }
 
   const contentType = req.headers.get("content-type") || "";
@@ -97,46 +94,56 @@ export async function PATCH(
   let slug: string | undefined;
   let logoFile: File | null = null;
 
+  // nouveaux champs
+  let country: string | undefined;
+  let industry: string | undefined;
+  let companySize: string | undefined;
+  let street: string | undefined;
+  let city: string | undefined;
+  let website: string | undefined;
+  let phone: string | undefined;
+
   if (contentType.includes("multipart/form-data")) {
     const formData = await req.formData();
-    const rawName = formData.get("name");
-    const rawSlug = formData.get("slug");
-    const rawLogo = formData.get("logo");
 
-    if (typeof rawName === "string") name = rawName.trim();
-    if (typeof rawSlug === "string") slug = rawSlug.trim();
+    const getStr = (k: string) => {
+      const v = formData.get(k);
+      return typeof v === "string" ? v.trim() : undefined;
+    };
+
+    name = getStr("name");
+    slug = getStr("slug");
+    country = getStr("country");
+    industry = getStr("industry");
+    companySize = getStr("companySize");
+    street = getStr("street");
+    city = getStr("city");
+    website = getStr("website");
+    phone = getStr("phone");
+
+    const rawLogo = formData.get("logo");
     if (rawLogo instanceof File) logoFile = rawLogo;
   } else {
     const body = await req.json().catch(() => ({}));
     if (typeof body.name === "string") name = body.name.trim();
     if (typeof body.slug === "string") slug = body.slug.trim();
+
+    if (typeof body.country === "string") country = body.country.trim();
+    if (typeof body.industry === "string") industry = body.industry.trim();
+    if (typeof body.companySize === "string") companySize = body.companySize.trim();
+    if (typeof body.street === "string") street = body.street.trim();
+    if (typeof body.city === "string") city = body.city.trim();
+    if (typeof body.website === "string") website = body.website.trim();
+    if (typeof body.phone === "string") phone = body.phone.trim();
   }
 
   const finalName = name && name.length > 0 ? name : existing.name;
 
-  let finalSlug = existing.slug || undefined;
-
-  if (slug && slug.length > 0) {
-    const base = slug
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-    let normalized = base || `workspace-${Date.now()}`;
-
-    const clash = await prisma.workspace.findFirst({
-      where: {
-        slug: normalized,
-        NOT: { id: workspaceId },
-      },
-    });
-
-    if (clash) normalized = `${base}-${Date.now()}`;
-
-    finalSlug = normalized;
-  }
+  // slug auto :
+  // - si slug fourni -> base = slug
+  // - sinon base = finalName
+  const baseForSlug = (slug && slug.length > 0) ? slug : finalName;
+  const finalSlug = await ensureUniqueWorkspaceSlug(baseForSlug, workspaceId);
 
   let finalLogo: string | null = existing.logo ?? null;
 
@@ -144,7 +151,7 @@ export async function PATCH(
     const uploaded = await uploadFileToSupabase({
       file: logoFile,
       category: "workspaceLogo",
-      baseName: finalSlug ?? finalName,
+      baseName: finalSlug,
     });
 
     if (existing.logo) {
@@ -154,13 +161,21 @@ export async function PATCH(
     finalLogo = uploaded.path;
   }
 
-
   const updated = await prisma.workspace.update({
     where: { id: workspaceId },
     data: {
       name: finalName,
-      ...(finalSlug ? { slug: finalSlug } : {}),
+      slug: finalSlug,
       logo: finalLogo,
+
+      // nouveaux champs (nullable)
+      country: country ?? existing.country ?? null,
+      industry: industry ?? existing.industry ?? null,
+      companySize: companySize ?? existing.companySize ?? null,
+      street: street ?? existing.street ?? null,
+      city: city ?? existing.city ?? null,
+      website: website ?? existing.website ?? null,
+      phone: phone ?? existing.phone ?? null,
     },
   });
 

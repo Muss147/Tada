@@ -3,13 +3,32 @@ import { z } from "zod";
 
 const MediaTypeEnum = z.enum(["photo", "video", "audio"]);
 const GpsModeEnum = z.enum(["pin", "navigate", "checkin"]);
-const ImageChoiceSchema = z.object({
-  id: z.string(),
-  value: z.string(),
-  label: z.string(),
-  imageUrl: z.string(), // si tu veux tu peux mettre .url() après
-  description: z.string().optional(),
+
+const HeatmapSchema = z.object({
+  stimulusSource: z.enum(["url", "upload"]).optional(),
+  stimulusImageUrl: z.string().optional(),
+  allowMultipleClicks: z.boolean().optional(),
+  maxClicks: z.number().int().min(1).max(10).optional(),
+  collectReason: z.boolean().optional(),
 });
+
+const AllowedQuestionTypeEnum = z.enum([
+  "single_choice",
+  "multiple_choice",
+  "likert",
+  "numeric_scale",
+  "slider",
+  "matrix",
+  "open",
+  "rating",
+  "image_ranking",
+  "ranking",
+  "media",
+  "heatmap",
+  "gps",
+  "section",
+  "boolean",
+]);
 
 export const createMissionSchema = z.object({
   name: z.string().min(1),
@@ -22,7 +41,6 @@ export const createMissionSchema = z.object({
   audiences: z.record(z.string(), z.any()),
   image: z.string().optional().nullable(),
 
-  // 🆕 Brief enrichi
   sampleSummary: z.string().optional().nullable(),
   targetSampleSize: z.coerce.number().int().optional().nullable(),
   preliminaryRecommendations: z.string().optional().nullable(),
@@ -52,108 +70,79 @@ export const generateExecutiveSummarySchema = z.object({
 });
 
 export const SurveyQuestionSchema = z.object({
-  //
-  // Base (SurveyJS / question générique)
-  //
-  type: z.string(),              // ex: "radiogroup", "checkbox", "rating", "file", "matrix", "text", ...
-  name: z.string(),
+
+  type: AllowedQuestionTypeEnum,
+  category: AllowedQuestionTypeEnum.optional(),
+
+  name: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
   isRequired: z.boolean().optional(),
-  imageChoices: z.array(ImageChoiceSchema).optional(), // pour les questions de type image_ranking
 
-  //
-  // Catégorie logique (pour l'IA et ton form builder)
-  //
-  category: z
-    .enum([
-      "single_choice",      // QCM / choix unique
-      "multiple_choice",    // choix multiples
-      "likert",             // échelle d’accord
-      "numeric_scale",      // échelle numérique
-      "slider",             // curseur
-      "matrix",             // matrice multi-dimensionnelle
-      "open",               // question ouverte
-      "rating",             // étoiles / notes
-      "image_ranking",      // classement d’images
-      "media",              // question média (photo / vidéo / audio)
-      "gps",                // question GPS / déplacement
-      "section",            // titre de section / groupe de questions
-    ])
-    .optional(),
-
-  //
-  // CHOIX (QCM / multi / ranking)
-  //
+  // ----- CHOIX / RANKING -----
   choices: z.array(z.string()).optional(),
-  allowMultiple: z.boolean().optional(),       // choix multiples vs unique
-  randomizeChoices: z.boolean().optional(),    // randomisation
+  allowMultiple: z.boolean().optional(),
+  randomizeChoices: z.boolean().optional(),
   hasOther: z.boolean().optional(),
-  otherText: z.string().optional(),
 
-  //
-  // ÉCHELLES / RATING / LIKERT / SLIDER
-  //
+  // ----- SCALES -----
   rateMin: z.number().optional(),
   rateMax: z.number().optional(),
   rateStep: z.number().optional(),
   minRateDescription: z.string().optional(),
   maxRateDescription: z.string().optional(),
   displayRateDescriptionsAsExtremes: z.boolean().optional(),
-  displayMode: z.enum(["auto", "buttons", "dropdown"]).optional(),
 
-  //
-  // NUMÉRIQUE / INPUT
-  //
-  inputType: z.string().optional(), // "number", "text", "email", etc.
+  // ----- NUMERIC -----
   min: z.number().optional(),
   max: z.number().optional(),
   step: z.number().optional(),
-  placeholder: z.string().optional(),
+  inputType: z.string().optional(),
   maxLength: z.number().optional(),
 
-  //
-  // MATRICE / CLASSEMENT
-  //
-  rows: z.array(z.string()).optional(),          // lignes de matrice ou items à classer
-  columns: z.array(z.string()).optional(),       // colonnes de matrice
-  allowRowReorder: z.boolean().optional(),       // classement glissé-déposé
+  // ----- MATRIX -----
+  rows: z.array(z.string()).optional(),
+  columns: z.array(z.string()).optional(),
+  allowRowReorder: z.boolean().optional(),
 
-  //
-  // 📸 Questions MÉDIA (US-AC-021)
-  //
-  mediaTypes: z.array(MediaTypeEnum).optional(), // ["photo"] ou ["photo","video"]...
-  maxDurationSeconds: z.number().optional(),     // pour vidéo / audio
+  // ----- IMAGE RANKING -----
+  imageChoices: z
+    .array(
+      z.object({
+        id: z.string(),
+        value: z.string(),
+        label: z.string(),
+        imageUrl: z.string(),
+        description: z.string().optional(),
+      })
+    )
+    .optional(),
+
+  // ----- MEDIA -----
+  mediaTypes: z.array(MediaTypeEnum).optional(),
+  maxDurationSeconds: z.number().optional(),
   maxSizeMb: z.number().optional(),
-  maxFiles: z.number().optional(),               // nombre max de fichiers
-  captureRequired: z.boolean().optional(),       // ex: photo prise en direct obligatoire
+  maxFiles: z.number().optional(),
+  captureRequired: z.boolean().optional(),
+  mediaMode: z.enum(["upload", "stimulus"]).optional(),
+  stimulusSource: z.enum(["upload", "url"]).optional(),
+  stimulusMediaUrl: z.string().optional(),
+  stimulusMediaType: MediaTypeEnum.optional(),
 
-  //
-  // 📍 Questions GPS (US-AC-022)
-  //
-  gpsMode: GpsModeEnum.optional(),               // "pin" | "navigate" | "checkin"
+  // ----- HEATMAP -----
+  heatmap: HeatmapSchema.optional(),
+
+  // ----- GPS -----
+  gpsMode: GpsModeEnum.optional(),
   targetLocation: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-      label: z.string().optional(),
-    })
+    .object({ lat: z.number(), lng: z.number(), label: z.string().optional() })
     .optional(),
   maxDistanceMeters: z.number().optional(),
   minTimeOnSiteSeconds: z.number().optional(),
-  requiresPathTracking: z.boolean().optional(),  // suivre le déplacement (optionnel)
+  requiresPathTracking: z.boolean().optional(),
   gpsToleranceMeters: z.number().optional(),
 
-  //
-  // Logique conditionnelle / visibilité
-  //
-  visibleIf: z.string().optional(),              // expression SurveyJS
-  enableIf: z.string().optional(),
-  requiredIf: z.string().optional(),
-
-  //
-  // Groupes / sections
-  //
+  // ----- SECTION -----
   isSectionTitle: z.boolean().optional(),
   sectionId: z.string().optional(),
   sectionTitle: z.string().optional(),

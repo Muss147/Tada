@@ -160,7 +160,7 @@ export async function POST(req: Request) {
     await Promise.all(
       result.mentions.map((mention: any) =>
         transporter.sendMail({
-          from: "no-reply@tada.com",
+          from: "no-reply@tadaiq.com",
           to: [mention.user.email],
           subject: "[Tada] Vous avez été mentionné dans un commentaire",
           html: `

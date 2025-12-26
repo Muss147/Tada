@@ -55,7 +55,7 @@ const ResumeStep = ({ mission }: { mission: Mission }) => {
           </div>
         </AudiencesFilterProvider>
       </div>
-      <div className="col-span-3 md:col-span-2 flex-1 overflow-y-auto max-h-screen p-6">
+      <div className="col-span-3 md:col-span-2 flex-1 p-6">
         <div className="flex flex-col md:flex-row justify-between gap-4">
           <h2 className="text-2xl font-bold ">Prévisualisation</h2>
           

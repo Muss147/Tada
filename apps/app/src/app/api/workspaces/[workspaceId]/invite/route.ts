@@ -85,7 +85,7 @@ export async function POST(
       },
     });
 
-    const inviteUrl = `${APP_URL}/fr/workspaces/invitations/accept?token=${token}`;
+    const inviteUrl = `${APP_URL}/fr/invitations/accept?token=${token}`;
 
     console.log("====================================");
     console.log("🔐 Email confirm link (LOCAL) :");

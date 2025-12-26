@@ -1,3 +1,4 @@
+//src/app/api/workspaces/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
@@ -251,7 +252,7 @@ export async function POST(req: NextRequest) {
 
     // 4) emails hors transaction
     for (const invite of invitationsForEmail) {
-      const inviteUrl = `${APP_URL}/fr/workspaces/invitations/accept?token=${invite.token}`;
+      const inviteUrl = `${APP_URL}/fr/invitations/accept?token=${invite.token}`;
 
       try {
         await transporter.sendMail({

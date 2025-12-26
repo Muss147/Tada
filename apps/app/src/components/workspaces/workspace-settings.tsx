@@ -1,8 +1,11 @@
+//src/components/workspaces/workspace-settings.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useI18n, useCurrentLocale } from "@/locales/client";
 import { useRouter } from "next/navigation";
+
+import { slugify } from "@/lib/slugify";
 
 import { Button } from "@tada/ui/components/button";
 import {
@@ -39,6 +42,9 @@ import {
 import { getPublicUrlForPath } from "@/lib/uploads.public";
 import { useWorkspace } from "@/context/workspace-context";
 
+import { countries } from "@/constants/countries";
+import { industries } from "@/constants/industries";
+
 type WorkspaceMember = {
   id: string;
   role: string;
@@ -64,6 +70,13 @@ type WorkspaceInfo = {
   name: string;
   slug: string;
   logo: string | null;
+  country?: string | null;
+  industry?: string | null;
+  companySize?: string | null;
+  street?: string | null;
+  city?: string | null;
+  website?: string | null;
+  phone?: string | null;
 };
 
 type WorkspaceSettingsData = {
@@ -113,6 +126,14 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [newLogoFile, setNewLogoFile] = useState<File | null>(null);
 
+  const [workspaceCountry, setWorkspaceCountry] = useState("");
+  const [workspaceIndustry, setWorkspaceIndustry] = useState("");
+  const [workspaceCompanySize, setWorkspaceCompanySize] = useState("");
+  const [workspaceStreet, setWorkspaceStreet] = useState("");
+  const [workspaceCity, setWorkspaceCity] = useState("");
+  const [workspaceWebsite, setWorkspaceWebsite] = useState("");
+  const [workspacePhone, setWorkspacePhone] = useState("");
+
   const [invitationToDelete, setInvitationToDelete] =
     useState<WorkspaceInvitation | null>(null);
   const [isDeletingInvitation, setIsDeletingInvitation] = useState(false);
@@ -133,6 +154,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
             name: "Workspace",
             slug: "",
             logo: null,
+            country: null,
+            industry: null,
+            companySize: null,
+            street: null,
+            city: null,
+            website: null,
+            phone: null,
           },
           members: [],
           invitations: [],
@@ -148,6 +176,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
           name: ws.name,
           slug: ws.slug,
           logo: ws.logo ?? null,
+          country: ws.country ?? null,
+          industry: ws.industry ?? null,
+          companySize: ws.companySize ?? null,
+          street: ws.street ?? null,
+          city: ws.city ?? null,
+          website: ws.website ?? null,
+          phone: ws.phone ?? null,
         },
         members: ws.members ?? [],
         invitations: ws.invitations ?? [],
@@ -155,6 +190,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
 
       setWorkspaceNameInput(ws.name || "");
       setWorkspaceSlugInput(ws.slug || "");
+      setWorkspaceCountry(ws.country ?? "");
+      setWorkspaceIndustry(ws.industry ?? "");
+      setWorkspaceCompanySize(ws.companySize ?? "");
+      setWorkspaceStreet(ws.street ?? "");
+      setWorkspaceCity(ws.city ?? "");
+      setWorkspaceWebsite(ws.website ?? "");
+      setWorkspacePhone(ws.phone ?? "");
 
       const publicUrl = getPublicUrlForPath({
         category: "workspaceLogo",
@@ -215,6 +257,18 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
       if (newLogoFile) {
         formData.append("logo", newLogoFile);
       }
+      if (workspaceCountry) formData.append("country", workspaceCountry);
+      if (workspaceIndustry) formData.append("industry", workspaceIndustry);
+      if (workspaceCompanySize)
+        formData.append("companySize", workspaceCompanySize);
+
+      if (workspaceStreet.trim())
+        formData.append("street", workspaceStreet.trim());
+      if (workspaceCity.trim()) formData.append("city", workspaceCity.trim());
+      if (workspaceWebsite.trim())
+        formData.append("website", workspaceWebsite.trim());
+      if (workspacePhone.trim())
+        formData.append("phone", workspacePhone.trim());
 
       const res = await fetch(`/api/workspaces/${workspaceId}`, {
         method: "PATCH",
@@ -238,6 +292,13 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                 name: updated.name,
                 slug: updated.slug,
                 logo: updated.logo ?? prev.workspace.logo,
+                country: updated.country ?? prev.workspace.country,
+                industry: updated.industry ?? prev.workspace.industry,
+                companySize: updated.companySize ?? prev.workspace.companySize,
+                street: updated.street ?? prev.workspace.street,
+                city: updated.city ?? prev.workspace.city,
+                website: updated.website ?? prev.workspace.website,
+                phone: updated.phone ?? prev.workspace.phone,
               },
             }
           : prev
@@ -448,6 +509,11 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
     };
   }, [logoPreview]);
 
+  useEffect(() => {
+    const next = slugify(workspaceNameInput || "");
+    setWorkspaceSlugInput(next);
+  }, [workspaceNameInput]);
+
   const workspaceName = data?.workspace.name || "Workspace";
 
   const activeMembers =
@@ -546,13 +612,126 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                     </label>
                     <Input
                       value={workspaceSlugInput}
-                      onChange={(e) => setWorkspaceSlugInput(e.target.value)}
+                      readOnly
                       placeholder="my-workspace"
                     />
+
                     <p className="text-xs text-gray-500">
                       {t("workspace.settings.fields.slugHelp") ||
                         "Used in URLs and public links."}
                     </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Country */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.country") || "Country"}
+                      </label>
+                      <Select
+                        value={workspaceCountry}
+                        onValueChange={setWorkspaceCountry}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select country..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(countries).map(([code, country]) => (
+                            <SelectItem key={code} value={code}>
+                              <span className="flex items-center gap-2">
+                                <span>{country.emoji}</span>
+                                <span>{country.name}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Industry */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.industry") || "Industry"}
+                      </label>
+                      <Select
+                        value={workspaceIndustry}
+                        onValueChange={setWorkspaceIndustry}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select industry..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(industries).map(([key, item]) => (
+                            <SelectItem key={key} value={key}>
+                              {item.name[locale as "en" | "fr"]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Company size */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.companySize") ||
+                          "Company size"}
+                      </label>
+                      <Select
+                        value={workspaceCompanySize}
+                        onValueChange={setWorkspaceCompanySize}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select size..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1-10">1-10</SelectItem>
+                          <SelectItem value="11-50">11-50</SelectItem>
+                          <SelectItem value="51-100">51-100</SelectItem>
+                          <SelectItem value="101-500">101-500</SelectItem>
+                          <SelectItem value="501-1000">501-1000</SelectItem>
+                          <SelectItem value="1000+">1000+</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Phone */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.phone") || "Phone"}
+                      </label>
+                      <Input
+                        value={workspacePhone}
+                        onChange={(e) => setWorkspacePhone(e.target.value)}
+                        placeholder="+225 ..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Street */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.street") || "Street"}
+                      </label>
+                      <Input
+                        value={workspaceStreet}
+                        onChange={(e) => setWorkspaceStreet(e.target.value)}
+                        placeholder="Street name and number"
+                      />
+                    </div>
+
+                    {/* City */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        {t("workspace.settings.fields.city") || "City"}
+                      </label>
+                      <Input
+                        value={workspaceCity}
+                        onChange={(e) => setWorkspaceCity(e.target.value)}
+                        placeholder="City"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex justify-end">
@@ -658,59 +837,66 @@ export function WorkspaceSettings({ workspaceId }: { workspaceId: string }) {
                     </div>
                   ) : (
                     <div className="divide-y divide-gray-100">
-                      {activeMembers.map((member) => (
-                        <div
-                          key={member.id}
-                          className="px-4 py-3 grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,1fr)] items-center"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage
-                                src={member.user.image || undefined}
-                              />
-                              <AvatarFallback>
-                                {member.user.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")
-                                  .toUpperCase()
-                                  .slice(0, 2)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="min-w-0">
-                              <div className="text-sm font-medium text-gray-900 truncate">
-                                {member.user.name}
-                              </div>
-                              <div className="text-xs text-gray-500 truncate">
-                                {member.user.email}
+                      {activeMembers.map((member) => {
+                        const isOwner = member.role === "owner";
+                        const isRemoveDisabled = isOwner;
+                        return (
+                          <div
+                            key={member.id}
+                            className="px-4 py-3 grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)_minmax(0,1fr)] items-center"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage
+                                  src={member.user.image || undefined}
+                                />
+                                <AvatarFallback>
+                                  {member.user.name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .toUpperCase()
+                                    .slice(0, 2)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0">
+                                <div className="text-sm font-medium text-gray-900 truncate">
+                                  {member.user.name}
+                                </div>
+                                <div className="text-xs text-gray-500 truncate">
+                                  {member.user.email}
+                                </div>
                               </div>
                             </div>
+                            <div className="text-sm text-gray-700">
+                              {member.role}
+                            </div>
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openEditMember(member)}
+                              >
+                                {t("common.edit") || "Edit"}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                                onClick={() => handleRemoveMember(member)}
+                                disabled={
+                                  isRemoveDisabled ||
+                                  removingMemberId === member.id
+                                }
+                              >
+                                {removingMemberId === member.id
+                                  ? t("common.loading") || "Removing..."
+                                  : t("common.remove") || "Remove"}
+                              </Button>
+                            </div>
                           </div>
-                          <div className="text-sm text-gray-700">
-                            {member.role}
-                          </div>
-                          <div className="flex justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openEditMember(member)}
-                            >
-                              {t("common.edit") || "Edit"}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-red-600 border-red-200 hover:bg-red-50"
-                              onClick={() => handleRemoveMember(member)}
-                              disabled={removingMemberId === member.id}
-                            >
-                              {removingMemberId === member.id
-                                ? t("common.loading") || "Removing..."
-                                : t("common.remove") || "Remove"}
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

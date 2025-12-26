@@ -50,7 +50,7 @@ export function CreateWorkspaceDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const workspaceDomain =
-    process.env.NEXT_PUBLIC_WORKSPACE_DOMAIN || "tada.com";
+    process.env.NEXT_PUBLIC_WORKSPACE_DOMAIN || "tadaiq.com";
 
   // Auto-slug quand l’utilisateur tape le nom
   const handleNameChange = (value: string) => {

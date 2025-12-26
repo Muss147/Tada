@@ -164,56 +164,47 @@ function mapQuestionToSurveyJS(question: SurveyQuestion): any {
           (question.imageChoices ?? []).map((c) => c.value),
         imageChoices: question.imageChoices,
       };
-
     //
-    // MEDIA → file (photo / video / audio)
+    // SECTION → html (titre + description)
     //
-    case "media": {
-      const mediaTypes = question.mediaTypes ?? ["photo"];
-      const accept: string[] = [];
 
-      if (mediaTypes.includes("photo")) accept.push("image/*");
-      if (mediaTypes.includes("video")) accept.push("video/*");
-      if (mediaTypes.includes("audio")) accept.push("audio/*");
-
+    case "media":
       return {
         ...base,
-        type: "file",
-        maxFiles: question.maxFiles ?? 1,
-        maxSize: (question.maxSizeMb ?? 10) * 1024 * 1024,
-        allowMultiple: (question.maxFiles ?? 1) > 1,
-        showPreview: true,
-        // Custom meta, utilisable par ton frontend
-        mediaTypes,
-        captureRequired: question.captureRequired ?? false,
-        acceptedTypes: accept.join(","),
+        type: "media", 
+        category: "media",
+
+        mediaMode: question.mediaMode,
+        mediaTypes: question.mediaTypes ?? [],
+
+        // upload
+        maxFiles: question.maxFiles,
+        maxSizeMb: question.maxSizeMb,
+        maxDurationSeconds: question.maxDurationSeconds,
+        captureRequired: question.captureRequired,
+
+        // stimulus
+        stimulusSource: question.stimulusSource,
+        stimulusMediaUrl: question.stimulusMediaUrl,
+        stimulusMediaType: question.stimulusMediaType,
       };
-    }
 
-    //
-    // GPS → text + métadonnées (pour futur widget custom)
-    //
-    case "gps": {
-      const helper =
-        "La géolocalisation pourra être utilisée pour analyser la localisation de la réponse.";
+    case "gps":
       return {
         ...base,
-        type: "text",
-        inputType: "text",
-        placeholder: helper,
-        // On garde toute la config GPS en props custom
+        type: "gps",
+        category: "gps",
+
         gpsMode: question.gpsMode,
         targetLocation: question.targetLocation,
         maxDistanceMeters: question.maxDistanceMeters,
         minTimeOnSiteSeconds: question.minTimeOnSiteSeconds,
-        requiresPathTracking: question.requiresPathTracking,
         gpsToleranceMeters: question.gpsToleranceMeters,
+        requiresPathTracking: question.requiresPathTracking,
       };
-    }
 
-    //
-    // SECTION → html (titre + description)
-    //
+
+
     case "section":
       return {
         name: question.name,

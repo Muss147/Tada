@@ -694,6 +694,15 @@ model Workspace {
   description String?
   logo        String?
 
+  // Onboarding / company profile (nullable pour ne pas casser la création)
+  industry    String? // ex: "Accounting", "Airlines/Aviation", ...
+  companySize String? // ex: "1-10", "11-50", ...
+  street      String?
+  city        String?
+  country     String?
+  website     String?
+  phone       String?
+
   // L'organisation cliente qui "possède" ce workspace (facultatif si tu veux aussi du solo)
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])

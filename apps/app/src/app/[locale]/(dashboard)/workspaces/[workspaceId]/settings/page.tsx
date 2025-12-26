@@ -1,3 +1,4 @@
+//src/app/[locale]/(dashboard)/workspaces/[workspaceId]/settings/page.tsx
 "use client";
 
 import { useParams } from "next/navigation";

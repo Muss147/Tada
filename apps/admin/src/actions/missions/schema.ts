@@ -19,6 +19,7 @@ export const createMissionConfigForContributorsSchema = z.object({
   description: z.string().min(1),
   gain: z.number(),
   duration: z.number(),
+  targetSampleSize: z.number(),
   deadline: z.date().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
 });

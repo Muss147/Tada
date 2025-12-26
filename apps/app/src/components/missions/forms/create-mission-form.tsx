@@ -1,35 +1,101 @@
 import { createMissionAction } from "@/actions/missions/create-mission-action";
+import { generateMissionBriefAIAction } from "@/actions/missions/generate-mission-brief-ai";
 import { createMissionSchema } from "@/actions/missions/schema";
 import { Icons } from "@/components/icons";
 import { useAudiencesFilter } from "@/context/audiences-filter-context";
 import { useToast } from "@/hooks/use-toast";
 import { useI18n } from "@/locales/client";
 import { Button } from "@tada/ui/components/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@tada/ui/components/form";
+import { FormControl, FormField, FormItem } from "@tada/ui/components/form";
+import { useThread } from "@assistant-ui/react";
 import { Edit } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { AudiencesFilterModal } from "../modals/audiences-filter-modal";
-
-import { generateMissionBriefAIAction } from "@/actions/missions/generate-mission-brief-ai";
-import { useThread } from "@assistant-ui/react";
+import { Input } from "@tada/ui/components/input";
 
 interface Section {
   id: number;
   key: string;
   title: string;
   content: string;
-  status: string;
+  status: "pending" | "completed";
   color: string;
   placeholder?: string;
   selectedMarkets?: string[];
+}
+
+type ThreadMessage = {
+  role: "user" | "assistant" | string;
+  content?: Array<{ type: string; text?: string }>;
+  id?: string;
+  messageId?: string;
+};
+
+const extractTextFromMessage = (msg: any): string => {
+  const c = msg?.content;
+  if (!c) return "";
+  if (typeof c === "string") return c;
+
+  if (Array.isArray(c)) {
+    return c
+      .map((part: any) => {
+        if (!part) return "";
+        if (typeof part === "string") return part;
+        if (part.type === "text") {
+          if (typeof part.text === "string") return part.text;
+          if (typeof part.text?.value === "string") return part.text.value;
+        }
+        if (typeof part?.content === "string") return part.content;
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  return "";
+};
+
+function buildTranscript(messages: readonly ThreadMessage[]) {
+  return messages
+    .filter((m) => m.role === "user" || m.role === "assistant")
+    .map((m) => {
+      const txt = extractTextFromMessage(m).trim();
+      if (!txt) return null;
+      return `${m.role.toUpperCase()}: ${txt}`;
+    })
+    .filter((x): x is string => Boolean(x))
+    .join("\n\n");
+}
+
+function renderBulletedList(text: string): JSX.Element {
+  if (!text) return <></>;
+
+  const rawLines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (rawLines.length <= 1) {
+    return <p className="whitespace-pre-line text-left">{rawLines[0] ?? ""}</p>;
+  }
+
+  const items = rawLines.map((line) =>
+    line
+      .replace(/^[-*•●]\s*/, "")
+      .replace(/^\d+[\.\)]\s*/, "")
+      .trim()
+  );
+
+  return (
+    <ul className="list-disc pl-5 space-y-1 text-left">
+      {items.map((item, idx) => (
+        <li key={idx}>{item.endsWith(".") ? item : item + "."}</li>
+      ))}
+    </ul>
+  );
 }
 
 export function CreateMissionForm({
@@ -48,16 +114,18 @@ export function CreateMissionForm({
   const searchParams = useSearchParams();
   const templateId = searchParams.get("t");
   const mode = searchParams.get("mode");
-
   const isAiMode = mode === "ai";
 
   const editSectionRef = useRef<HTMLDivElement>(null);
   const editTitleRef = useRef<HTMLDivElement>(null);
+
   const [isAudiencesFilterModalOpen, setIsAudiencesFilterModalOpen] =
     useState(false);
+
   const [title, setTitle] = useState(t("missions.createMission.form.name"));
   const [editingTitle, setEditingTitle] = useState(false);
   const [tempTitle, setTempTitle] = useState("");
+
   const [editingSection, setEditingSection] = useState<number | null>(null);
   const [tempContent, setTempContent] = useState("");
 
@@ -70,50 +138,13 @@ export function CreateMissionForm({
     selectedFilters,
     filterGroups,
     handleOptionSelect,
-
     suggestions,
     removeSuggestion,
   } = useAudiencesFilter();
 
-  const watchedName = form.watch("name");
-  const watchedProblem = form.watch("problemSummary");
-  const watchedObjectives = form.watch("objectives");
-  const watchedAssumptions = form.watch("assumptions");
-
-  const hasCoreInputs =
-    !!watchedName?.trim() ||
-    !!watchedProblem?.trim() ||
-    !!watchedObjectives?.trim() ||
-    !!watchedAssumptions?.trim();
-
-  const hasAudiences = activeFiltersCount > 0;
-
-  // Messages du thread assistant-ui
-  const thread = useThread();
-
-  // thread peut être undefined au tout début
-  const threadMessages = thread?.messages ?? [];
-
-  const lastAssistantMessage = threadMessages
-    .slice()
-    .reverse()
-    .find((m) => m.role === "assistant");
-
-  // On garde le texte pour plus tard (quand tu feras vraiment le refine)
-  const lastAssistantText =
-    lastAssistantMessage?.content
-      ?.filter((c: any) => c.type === "text")
-      .map((c: any) => c.text)
-      .join("\n") ?? "";
-
-  const hasAssistantMessage = !!lastAssistantMessage;
-
   const createMission = useAction(createMissionAction, {
     onSuccess: (data) => {
-      toast({
-        title: t("missions.createMission.form.success"),
-      });
-
+      toast({ title: t("missions.createMission.form.success") });
       const mission = data.data?.data;
       if (mission) {
         router.push(`/${locale}/missions/${workspaceId}/${mission.id}/surveys`);
@@ -126,6 +157,62 @@ export function CreateMissionForm({
       });
     },
   });
+
+  const generateBrief = useAction(generateMissionBriefAIAction, {
+    onSuccess: (res) => {
+      const brief = res.data?.data;
+      if (!brief) return;
+
+      form.setValue("name", brief.name, { shouldDirty: true });
+      form.setValue("problemSummary", brief.problemSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("objectives", brief.objectives, { shouldDirty: true });
+      form.setValue("assumptions", brief.assumptions, { shouldDirty: true });
+
+      form.setValue("sampleSummary", brief.sampleSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("targetSampleSize", brief.targetSampleSize ?? undefined, {
+        shouldDirty: true,
+      });
+      form.setValue(
+        "preliminaryRecommendations",
+        brief.preliminaryRecommendations,
+        {
+          shouldDirty: true,
+        }
+      );
+      form.setValue("studyStructure", brief.studyStructure, {
+        shouldDirty: true,
+      });
+
+      setSections((prev) =>
+        prev.map((s) => {
+          if (["problemSummary", "objectives", "assumptions"].includes(s.key)) {
+            const v = (form.getValues(s.key) as string) ?? "";
+            return { ...s, content: v, status: v ? "completed" : "pending" };
+          }
+          return s;
+        })
+      );
+
+      toast({
+        title: t("missions.createMission.form.aiBriefFilled"),
+        description:
+          "Le brief complet a été rempli automatiquement. Tu peux encore l’éditer avant de sauvegarder.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: t("common.error.somethingWentWrong"),
+        description:
+          "Impossible de générer le plan complet de l’étude. Réessaie dans un instant.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const [sections, setSections] = useState<Section[]>([
     {
       id: 1,
@@ -172,9 +259,7 @@ export function CreateMissionForm({
   };
 
   const saveTitleChanges = () => {
-    if (tempTitle && tempTitle.trim() !== "") {
-      setTitle(tempTitle);
-    }
+    if (tempTitle.trim()) setTitle(tempTitle.trim());
     setEditingTitle(false);
   };
 
@@ -185,20 +270,21 @@ export function CreateMissionForm({
   };
 
   const saveContentChanges = () => {
-    if (editingSection) {
-      setSections(
-        sections?.map((section) =>
-          section.id === editingSection
-            ? {
-                ...section,
-                content: tempContent,
-                status: tempContent ? "completed" : "pending",
-              }
-            : section
-        )
-      );
-      setEditingSection(null);
-    }
+    if (!editingSection) return;
+
+    setSections((prev) =>
+      prev.map((section) =>
+        section.id === editingSection
+          ? {
+              ...section,
+              content: tempContent,
+              status: tempContent ? "completed" : "pending",
+            }
+          : section
+      )
+    );
+
+    setEditingSection(null);
   };
 
   const onSubmit = async (values: object) => {
@@ -214,166 +300,174 @@ export function CreateMissionForm({
     );
   };
 
-  const generateBrief = useAction(generateMissionBriefAIAction, {
-    onSuccess: (res) => {
-      const brief = res.data?.data;
-      if (!brief) return;
+  // Thread assistant-ui
+  const thread = useThread();
+  const threadMessages = (thread?.messages ?? []) as readonly ThreadMessage[];
 
-      form.setValue("name", brief.name, { shouldDirty: true });
-      form.setValue("problemSummary", brief.problemSummary, {
-        shouldDirty: true,
-      });
-      form.setValue("objectives", brief.objectives, { shouldDirty: true });
-      form.setValue("assumptions", brief.assumptions, { shouldDirty: true });
-      form.setValue("sampleSummary", brief.sampleSummary, {
-        shouldDirty: true,
-      });
-      form.setValue("targetSampleSize", brief.targetSampleSize ?? undefined, {
-        shouldDirty: true,
-      });
-      form.setValue(
-        "preliminaryRecommendations",
-        brief.preliminaryRecommendations,
-        { shouldDirty: true }
-      );
-      form.setValue("studyStructure", brief.studyStructure, {
-        shouldDirty: true,
-      });
+  const lastAssistant = useMemo(() => {
+    return [...threadMessages].reverse().find((m) => m.role === "assistant");
+  }, [threadMessages]);
 
-      // Mettre à jour les sections (pastilles vertes)
-      setSections((prev) =>
-        prev.map((s) => {
-          if (["problemSummary", "objectives", "assumptions"].includes(s.key)) {
-            const v = form.getValues(s.key);
-            return {
-              ...s,
-              content: v,
-              status: v ? "completed" : "pending",
-            };
-          }
-          return s;
-        })
-      );
+  const lastAssistantText = useMemo(() => {
+    return lastAssistant ? extractTextFromMessage(lastAssistant) : "";
+  }, [lastAssistant]);
 
-      toast({
-        title: t("missions.createMission.form.aiBriefFilled"),
-        description:
-          "Le brief complet a été rempli automatiquement. Tu peux encore l’éditer avant de sauvegarder.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: t("common.error.somethingWentWrong"),
-        description:
-          "Impossible de générer le plan complet de l’étude. Réessaie dans un instant.",
-        variant: "destructive",
-      });
-    },
-  });
+  /**
+   * AI FILL trigger:
+   * - Primary: token [[READY_TO_FILL_FORM]]
+   * - Fallback: assistant message looks like a "brief" and is long enough
+   * - (Optionnel) Confirmation user: gardée uniquement si tu veux, sinon tu peux la retirer
+   */
+  useEffect(() => {
+    const log = (...args: any[]) => console.log("[AI FILL]", ...args);
 
-  function renderBulletedList(text: string): JSX.Element {
-    if (!text) return <></>;
+    if (!isAiMode) return log("skip: not AI mode");
+    if (!threadMessages.length) return log("skip: no thread messages yet");
 
-    // On découpe UNIQUEMENT sur les retours à la ligne
-    const rawLines = text
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean);
+    const READY_RE = /\[\[READY_TO_FILL_FORM\]\]/i;
 
-    // Si une seule ligne => on affiche juste le texte tel quel
-    if (rawLines.length <= 1) {
-      return (
-        <p className="whitespace-pre-line text-left">
-          {rawLines[0]?.endsWith(".") ? rawLines[0] : rawLines[0]}
-        </p>
-      );
+    const CONFIRM_RE =
+      /\b(yes|yeah|yep|ok|okay|sure|confirmed|go ahead|do it|sounds good|looks good|oui|d['’]accord|ok|vas-y|c['’]est bon|parfait)\b/i;
+
+    // 1) Trouver le DERNIER message assistant avec le token READY
+    let askedIndex = -1;
+    for (let i = threadMessages.length - 1; i >= 0; i--) {
+      const msg = threadMessages[i];
+      if (msg.role !== "assistant") continue;
+      const text = extractTextFromMessage(msg);
+      if (READY_RE.test(text)) {
+        askedIndex = i;
+        break;
+      }
     }
 
-    // On nettoie les bullets / numéros : "• ", "- ", "1. ", "2) ", etc.
-    const items = rawLines.map((line) =>
-      line
-        .replace(/^[-*•●]\s*/, "") // bullets
-        .replace(/^\d+[\.\)]\s*/, "") // numéros "1. " ou "2) "
-        .trim()
-    );
+    if (askedIndex === -1) return log("skip: READY token not found");
 
-    return (
-      <ul className="list-disc pl-5 space-y-1 text-left">
-        {items.map((item, idx) => (
-          <li key={idx}>{item.endsWith(".") ? item : item + "."}</li>
-        ))}
-      </ul>
-    );
-  }
+    // 2) Chercher une confirmation USER après ce message
+    const after = threadMessages.slice(askedIndex + 1);
 
+    const confirmMsg = after.find((m) => {
+      if (m.role !== "user") return false;
+      const userText = extractTextFromMessage(m).trim();
+      return CONFIRM_RE.test(userText);
+    });
+
+    if (!confirmMsg) return log("skip: no user confirmation after READY");
+
+    const assistantMsg = threadMessages[askedIndex];
+
+    const assistantId =
+      (assistantMsg as any).id ??
+      (assistantMsg as any).messageId ??
+      `assistant-${askedIndex}`;
+
+    if (assistantId === lastSyncedAssistantId) {
+      return log("already synced for assistantId:", assistantId);
+    }
+
+    if (generateBrief.status === "executing") return log("skip: executing");
+
+    const transcript = buildTranscript(threadMessages);
+
+    setLastSyncedAssistantId(assistantId);
+
+    toast({
+      title:
+        locale === "fr"
+          ? "Génération du brief en cours…"
+          : "Generating the brief…",
+      description:
+        locale === "fr"
+          ? "Je remplis automatiquement le formulaire à partir de la conversation."
+          : "I'm filling the form from the conversation.",
+    });
+
+    generateBrief.execute({
+      locale,
+      transcript,
+      currentBrief: {
+        name: form.getValues("name"),
+        problemSummary: form.getValues("problemSummary"),
+        objectives: form.getValues("objectives"),
+        assumptions: form.getValues("assumptions"),
+        sampleSummary: form.getValues("sampleSummary"),
+        targetSampleSize: form.getValues("targetSampleSize"),
+        preliminaryRecommendations: form.getValues(
+          "preliminaryRecommendations"
+        ),
+        studyStructure: form.getValues("studyStructure"),
+      },
+      audiences: selectedFilters,
+    });
+  }, [
+    isAiMode,
+    threadMessages,
+    lastSyncedAssistantId,
+    generateBrief.status,
+    locale,
+    toast,
+    form,
+    selectedFilters,
+  ]);
+
+  // Click outside: section edit
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingSection &&
         editSectionRef.current &&
-        !editSectionRef.current.contains(
-          (event as unknown as React.ChangeEvent<HTMLInputElement>).target
-        )
+        !editSectionRef.current.contains(event.target as Node)
       ) {
         saveContentChanges();
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [editingSection]);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [editingSection, tempContent]);
 
+  // Click outside: title edit
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
         editingTitle &&
         editTitleRef.current &&
-        !editTitleRef.current.contains(
-          (event as unknown as React.ChangeEvent<HTMLInputElement>).target
-        )
+        !editTitleRef.current.contains(event.target as Node)
       ) {
         saveTitleChanges();
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [editingTitle]);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [editingTitle, tempTitle]);
 
+  // Sync title + section statuses with form values
   useEffect(() => {
-    const subscription = form.watch((values) => {
-      if (values.name) {
-        setTitle(values.name);
-      }
+    const subscription = form.watch((values: any) => {
+      if (values?.name) setTitle(values.name);
 
-      // biome-ignore lint/complexity/noForEach: <explanation>
-      sections.forEach((section) => {
-        if (values[section.key]) {
-          setSections((prev) =>
-            prev.map((s) =>
-              s.key === section.key
-                ? {
-                    ...s,
-                    content: values[section.key],
-                    status: values[section.key] ? "completed" : "pending",
-                  }
-                : s
-            )
-          );
-        }
-      });
+      setSections((prev) =>
+        prev.map((section) => {
+          const v = values?.[section.key];
+          if (typeof v === "string") {
+            return {
+              ...section,
+              content: v,
+              status: v ? "completed" : "pending",
+            };
+          }
+          return section;
+        })
+      );
     });
 
     return () => subscription.unsubscribe();
   }, [form]);
 
+  // Audiences section status
   useEffect(() => {
     const hasAnyAudiences = activeFiltersCount > 0 || suggestions.length > 0;
-
     setSections((prev) =>
       prev.map((s) =>
         s.key === "audiences"
@@ -382,11 +476,6 @@ export function CreateMissionForm({
       )
     );
   }, [activeFiltersCount, suggestions.length]);
-
-  useEffect(() => {
-    console.log("[CreateMissionForm] thread?", thread);
-    console.log("[CreateMissionForm] messages length:", threadMessages.length);
-  }, [thread, threadMessages.length]);
 
   return (
     <form
@@ -413,6 +502,7 @@ export function CreateMissionForm({
                         onChange={(e) => {
                           field.onChange(e.target.value);
                           setTitle(e.target.value);
+                          setTempTitle(e.target.value);
                         }}
                       />
                     </FormControl>
@@ -431,37 +521,6 @@ export function CreateMissionForm({
                   {t("common.cancel")}
                 </Button>
 
-                {/* Bouton 2 : Mettre à jour depuis la conversation AI */}
-                {/* <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  //disabled={!canRefineFromConversation}
-                  onClick={() => {
-                    console.log(
-                      "[AI refine brief] lastAssistantText:",
-                      lastAssistantText
-                    );
-
-                    // Ici plus tard :
-                    // refineMissionBriefAIAction.execute({
-                    //   conversation: lastAssistantText,
-                    //   currentBrief: {
-                    //     name: form.getValues("name"),
-                    //     problemSummary: form.getValues("problemSummary"),
-                    //     objectives: form.getValues("objectives"),
-                    //     assumptions: form.getValues("assumptions"),
-                    //     sampleSummary: form.getValues("sampleSummary"),
-                    //     targetSampleSize: form.getValues("targetSampleSize"),
-                    //     preliminaryRecommendations: form.getValues("preliminaryRecommendations"),
-                    //     studyStructure: form.getValues("studyStructure"),
-                    //   },
-                    // });
-                  }}
-                >
-                  {t("missions.createMission.form.aiUpdateFromConversation")}
-                </Button> */}
-
                 <Button
                   size="sm"
                   type="button"
@@ -475,7 +534,7 @@ export function CreateMissionForm({
               </div>
             </div>
           ) : (
-            <div className=" flex space-x-8 items-center">
+            <div className="flex space-x-8 items-center">
               <h1 className="text-xl font-semibold text-black dark:text-white transition-colors border-b border-transparent hover:border-gray-600 inline-block">
                 {title}
               </h1>
@@ -486,7 +545,7 @@ export function CreateMissionForm({
                   type="button"
                   onClick={startEditingTitle}
                 >
-                  <Edit className="w-4 h-4 " />
+                  <Edit className="w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -508,7 +567,6 @@ export function CreateMissionForm({
         </div>
       </div>
 
-      {/* Bandeau "Brief en cours de génération" */}
       {generateBrief.status === "executing" && (
         <div className="mb-4 flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100">
           <Icons.spinner className="h-4 w-4 animate-spin" />
@@ -521,7 +579,6 @@ export function CreateMissionForm({
         </div>
       )}
 
-      {/* Sections */}
       <div className="space-y-6 w-full">
         {sections.map((section) => (
           <div
@@ -533,9 +590,7 @@ export function CreateMissionForm({
                 className={`w-3 h-3 rounded-full mr-3 ${
                   section.status === "pending"
                     ? "bg-yellow-400"
-                    : section.status === "completed"
-                      ? "bg-green-500"
-                      : "bg-gray-400"
+                    : "bg-green-500"
                 }`}
               />
 
@@ -553,11 +608,9 @@ export function CreateMissionForm({
               </Button>
             </div>
 
-            {/* Contenu de la section */}
             <div className="ml-6">
               {section.id === 4 ? (
                 <div className="flex-1 flex flex-col space-y-3 overflow-y-auto">
-                  {/* 🔹 Placeholder au-dessus du bouton */}
                   <p className="text-sm text-black/80 dark:text-white/80">
                     {section.placeholder}
                   </p>
@@ -591,9 +644,9 @@ export function CreateMissionForm({
                                 );
 
                                 return (
-                                  selectedFilters![groupId]![
-                                    filterId
-                                  ] as string[]
+                                  selectedFilters[groupId]?.[filterId] as
+                                    | string[]
+                                    | undefined
                                 )?.map((value) => {
                                   const option = filter?.options?.find(
                                     (o) => o.value === value
@@ -644,7 +697,6 @@ export function CreateMissionForm({
                           )}
                         </div>
 
-                        {/* ✅ Séparateur + suggestions */}
                         {suggestions.length > 0 && (
                           <>
                             <div className="my-2 w-full">
@@ -737,9 +789,9 @@ export function CreateMissionForm({
                       size="sm"
                       type="button"
                       onClick={() => {
-                        if (editingSection) {
-                          form.setValue(section.key, tempContent);
-                        }
+                        form.setValue(section.key as any, tempContent, {
+                          shouldDirty: true,
+                        });
                         saveContentChanges();
                       }}
                     >
@@ -761,67 +813,73 @@ export function CreateMissionForm({
             </div>
           </div>
         ))}
-        {/* {organization?.status === "active" && (
-          <div className="bg-[#FFD3CE] dark:bg-gray-900 border border-[#FFD3CE] rounded-md p-4">
-            <div className="flex items-center mb-3">
-            
-              <div
-                className={`w-3 h-3 rounded-full mr-3 ${
-                  haveSurveys === "pending"
-                    ? "bg-yellow-400"
-                    : haveSurveys === "completed"
-                    ? "bg-green-500"
-                    : "bg-gray-400"
-                }`}
-              />
-              <h2 className="text-black dark:text-white font-bold text-lg flex-grow ">
-                {t("missions.createMission.form.surveys")}
-              </h2>
-
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  onClick={() => {
-                    if (mission) {
-                      router.push(
-                        `/missions/${organization.id}/${mission.id}/surveys`
-                      );
-                      return;
-                    }
-                    toast({
-                      title: t("missions.surveys.saveAfterSurvey"),
-                      variant: "destructive",
-                    });
-                  }}
-                >
-                  <Edit className="w-4 h-4 " />
-                </Button>
-              </div>
-            </div>
-            <Button
-              size="lg"
-              className="w-full"
-              type="button"
-              onClick={() => {
-                if (mission) {
-                  router.push(
-                    `/missions/${organization.id}/${mission.id}/surveys`
-                  );
-                  return;
-                }
-                toast({
-                  title: t("missions.surveys.saveAfterSurvey"),
-                  variant: "destructive",
-                });
-              }}
-            >
-              {t("missions.createMission.form.showSurveys")}
-            </Button>
-          </div>
-        )} */}
       </div>
+
+      {/* Target sample size */}
+      <div className="bg-[#FFD3CE] dark:bg-gray-900 border border-[#FFD3CE] rounded-md p-4 pt-10 mt-6">
+        <div className="flex items-center mb-3">
+          <div className="w-3 h-3 rounded-full mr-3 bg-yellow-400" />
+          <h2 className="text-black dark:text-white font-bold text-lg flex-grow">
+            {t("missions.createMission.form.sampleSizeTitle", {
+              defaultValue:
+                locale === "fr" ? "Taille d’échantillon" : "Sample size",
+            })}
+          </h2>
+        </div>
+
+        <div className="ml-6">
+          <FormField
+            control={form.control}
+            name="targetSampleSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex flex-wrap items-center gap-2 text-black dark:text-white">
+                    <span className="text-sm">
+                      {t("missions.createMission.form.iWantToSurvey", {
+                        defaultValue:
+                          locale === "fr"
+                            ? "Je veux interroger"
+                            : "I want to survey",
+                      })}
+                    </span>
+
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      min={0}
+                      className="w-28 bg-white dark:bg-gray-800 text-black dark:text-white"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        field.onChange(v === "" ? undefined : Number(v));
+                      }}
+                      placeholder="0"
+                    />
+
+                    <span className="text-sm">
+                      {t("missions.createMission.form.participants", {
+                        defaultValue:
+                          locale === "fr" ? "participants" : "participants",
+                      })}
+                    </span>
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <p className="mt-2 text-xs text-black/70 dark:text-white/70">
+            {t("missions.createMission.form.sampleSizeHint", {
+              defaultValue:
+                locale === "fr"
+                  ? "Optionnel. L’IA peut proposer une valeur, mais tu peux la modifier."
+                  : "Optional. AI may suggest a value, but you can adjust it.",
+            })}
+          </p>
+        </div>
+      </div>
+
       <AudiencesFilterModal
         isOpen={isAudiencesFilterModalOpen}
         onOpenChange={() => setIsAudiencesFilterModalOpen(false)}

@@ -422,6 +422,38 @@ export default {
   },
   welcome: "Hello {name}!",
   auth: {
+    invitation: {
+          titleDefault: "Invitation",
+          subtitleDefault: "You have been invited to join a workspace.",
+          title: "Join {workspace}",
+          subtitleNew: "Create your account for {email}",
+          subtitleExisting: "Sign in to accept the invitation.",
+          loading: "Verifying invitation…",
+    
+          password: "Password",
+          passwordPlaceholder: "Minimum 8 characters",
+          passwordHint: "Use at least 8 characters.",
+          confirmPassword: "Confirm password",
+          confirmPasswordPlaceholder: "Confirm your password",
+          passwordMismatch: "Passwords do not match.",
+    
+          submit: "Create my account and join",
+          creating: "Creating…",
+    
+          existingHint: "An account already exists with this email. Please sign in to accept the invitation.",
+          goToLogin: "Sign in",
+    
+          alreadyHaveAccount: "Already have an account?",
+          loginLink: "Sign in",
+    
+          errors: {
+            missingToken: "Missing token.",
+            resolveFailed: "Unable to verify invitation.",
+            acceptFailed: "Unable to accept invitation.",
+            completeFailed: "Unable to complete invitation.",
+            network: "Network error."
+          }
+        },
     login: {
       title: "Unlock Real-Time Data for Better Decisions — Anytime, Anywhere.",
       testimonial: {
@@ -1117,6 +1149,13 @@ export default {
         audienceSuggestionSentTitle: "Suggestion sent",
         audienceSuggestionSentDescription:
           "Your audience suggestion has been sent to the Tada team for review.",
+        sampleSizeTitle: "Sample Size Recommendation",
+        sampleSizeDescription:
+          "Based on your target audience and research objectives, we recommend the following sample size:",
+        iWantToSurvey: "I want to survey",
+        participants: "participants",
+        sampleSizeHint:
+          "The recommended sample size ensures statistically significant results for your study.",
       },
     },
     missionSubmission: {
@@ -1567,6 +1606,11 @@ export default {
         rolePlaceholder: "Select a role",
         emptyMembers: "No members have been added yet.",
         inviteButton: "Send Invitation",
+        deleteInvitationTitle: "Delete Invitation",
+        deleteInvitationDescription:
+              "Are you sure you want to delete this invitation?",
+        deleteInvitationCancel: "Cancel",
+        deleteInvitationConfirm: "Yes, delete the invitation",
         fields:{
           logo: "Workspace Logo",
           name: "Workspace Name",

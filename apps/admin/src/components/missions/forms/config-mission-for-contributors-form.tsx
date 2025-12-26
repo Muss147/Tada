@@ -247,7 +247,7 @@ export function ConfigMissionForContributorsForm({
         <div>
           <FormField
             control={form.control}
-            name="sampleSize"
+            name="targetSampleSize"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm/5 font-medium">

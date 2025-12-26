@@ -1,3 +1,4 @@
+//src/middleware.ts
 import { betterFetch } from "@better-fetch/fetch";
 import type { Session } from "better-auth";
 import { createI18nMiddleware } from "next-international/middleware";
@@ -19,6 +20,7 @@ const publicPaths = new Set([
   "/reset-password",
   "/accept-invitation",
   "/check-email",
+  "/workspaces/invitations/accept",
 ]);
 
 function stripLocale(pathname: string) {
