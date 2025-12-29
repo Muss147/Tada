@@ -1,6 +1,5 @@
 import { Header } from "@/components/base/header";
 import { Sidebar } from "@/components/base/sidebar";
-import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { WorkspaceProvider } from "@/context/workspace-context";
@@ -12,17 +11,17 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  let session: any = null;
 
-  // Authentication check disabled - allow access without login
-  // if (!session || !session.user) {
-  //   notFound();
-  // }
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    });
+  } catch (err) {
+    console.error("[DashboardLayout] getSession failed:", err);
+  }
 
-  // Mock user for development (remove when authentication is re-enabled)
-  const user = session?.user || {
+  const user = session?.user ?? {
     id: "dev-user",
     name: "Dev User",
     email: "dev@example.com",

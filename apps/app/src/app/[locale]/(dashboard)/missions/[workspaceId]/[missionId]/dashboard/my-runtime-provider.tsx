@@ -2,7 +2,6 @@
 
 import { generateExecutiveSummaryAction } from "@/actions/missions/generate-executive-summary-action";
 import { MarkdownPreviewCard } from "@/components/missions/boards/graphs/markdown-preview";
-import { executiveSummaryMock } from "@/components/missions/boards/graphs/mock-generator";
 import { ParticipantInfo } from "@/components/missions/boards/graphs/participant-info";
 import {
   extractSexAndAge,
@@ -10,7 +9,9 @@ import {
   groupParticipantsByAge,
   SurveyData,
 } from "@/lib/utils";
-import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import { useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
+import { useChat } from "@ai-sdk/react";
 //import { useSetDocumentId, VeltComments } from "@veltdev/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
@@ -32,9 +33,13 @@ export function MyRuntimeProvider({
   //useSetDocumentId(mission.id);
 
   const [executiveSummary, setExecutiveSummary] = useState<string>("");
-  const runtime = useEdgeRuntime({
+
+  const chat = useChat({
     api: "/api/chat",
+    initialMessages: [],
   });
+
+  const runtime = useAISDKRuntime(chat);
 
   const generateExecutiveSummary = useAction(
     generateExecutiveSummaryAction,
@@ -51,12 +56,9 @@ export function MyRuntimeProvider({
   );
 
   useEffect(() => {
-    // Si la mission est completed et qu'il y a un résumé en base, l'utiliser
     if (mission?.status === "completed" && mission?.executiveSummary) {
       setExecutiveSummary(mission.executiveSummary);
-    }
-    // Sinon, ne rien afficher (le résumé sera généré côté serveur)
-    else {
+    } else {
       setExecutiveSummary("");
     }
   }, [mission]);
@@ -71,18 +73,9 @@ export function MyRuntimeProvider({
               subDashboardItemId=""
               data={sexAgeData}
               config={{
-                age: {
-                  label: "age",
-                  color: "hsl(var(--chart-1))",
-                },
-                male: {
-                  label: "Homme",
-                  color: "hsl(var(--chart-6))",
-                },
-                female: {
-                  label: "Femme",
-                  color: "hsl(var(--chart-2))",
-                },
+                age: { label: "age", color: "hsl(var(--chart-1))" },
+                male: { label: "Homme", color: "hsl(var(--chart-6))" },
+                female: { label: "Femme", color: "hsl(var(--chart-2))" },
               }}
               categoryKey="age"
               title={responses?.survey_title || ""}
@@ -99,6 +92,7 @@ export function MyRuntimeProvider({
               averageAge={averageAge}
             />
           </div>
+
           <div className="mt-8 gap-4 space-y-8">
             {executiveSummary && mission?.status === "completed" && (
               <div className="w-full">
@@ -107,7 +101,9 @@ export function MyRuntimeProvider({
                   description=""
                   participationQuestions={
                     mission.executiveSummaryUpdatedAt
-                      ? `Mis à jour le ${new Date(mission.executiveSummaryUpdatedAt).toLocaleDateString("fr-FR")}`
+                      ? `Mis à jour le ${new Date(
+                          mission.executiveSummaryUpdatedAt
+                        ).toLocaleDateString("fr-FR")}`
                       : ""
                   }
                   content={executiveSummary}

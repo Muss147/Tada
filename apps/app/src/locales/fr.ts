@@ -808,6 +808,8 @@ export default {
               "Êtes-vous sûr de vouloir supprimer cette invitation ?",
             deleteInvitationCancel: "Annuler",
             deleteInvitationConfirm: "Oui, supprimer l'invitation",
+            billingTitle: "Facturation du workspace",
+            billingEmpty: "Aucune information de facturation disponible.",
             fields:{
               logo: "Logo du workspace",
               name: "Nom du workspace",
