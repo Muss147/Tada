@@ -22,29 +22,27 @@ function fetchMissions({
   status,
   date,
   from,
-  to,
   pageSize,
   sort = [],
 }: FetchMissionsParams) {
   const whereClause = {
-    ...(query && { name: { contains: query } }),
-    // ...(status && status !== "all" && { status }),
+    ...(query && { name: { contains: query, mode: "insensitive" } }),
     ...(date && { createdAt: { gte: new Date(date) } }),
     status: {
       in: ["on hold", "draft", "modification_needed"],
     },
   };
 
-  const orderByClause = sort.map((s) => ({ [s]: "asc" }));
-
-  const skip = from * pageSize;
-  const take = (to - from + 1) * pageSize;
+  const orderByClause = [
+    { createdAt: "desc" }, // ✅ récent → ancien
+    ...sort.map((s) => ({ [s]: "asc" })),
+  ];
 
   return prisma.mission.findMany({
     where: whereClause,
     orderBy: orderByClause,
-    skip,
-    take,
+    skip: from,
+    take: pageSize + 1,
   });
 }
 
@@ -94,7 +92,7 @@ export async function ListMissionToSubmitServer({
 
   return (
     <div className="space-x-4 ">
-      <MissionFilter />
+      <MissionFilter isValidatedList={false} />
       {missions.length > 0 ? (
         <ListMissionsToSubmit
           missions={missions}

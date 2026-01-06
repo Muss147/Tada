@@ -34,7 +34,10 @@ function fetchMissions({
     },
   };
 
-  const orderByClause = sort.map((s) => ({ [s]: "asc" }));
+  const orderByClause = [
+    { validatedAt: "desc" }, // PLUS RÉCENT → PLUS ANCIEN
+    ...sort.map((s) => ({ [s]: "asc" })),
+  ];
 
   const skip = from * pageSize;
   const take = (to - from + 1) * pageSize;

@@ -13,6 +13,22 @@ export const createMissionSchema = z.object({
   audiences: z.record(z.string(), z.any()),
 });
 
+export const generateMissionBriefAISchema = z.object({
+  locale: z.string().default("fr"),
+  transcript: z.string().min(10),
+  currentBrief: z.object({
+    name: z.string().optional().nullable(),
+    problemSummary: z.string().optional().nullable(),
+    objectives: z.string().optional().nullable(),
+    assumptions: z.string().optional().nullable(),
+    sampleSummary: z.string().optional().nullable(),
+    targetSampleSize: z.number().optional().nullable(),
+    preliminaryRecommendations: z.string().optional().nullable(),
+    studyStructure: z.string().optional().nullable(),
+  }),
+  audiences: z.record(z.string(), z.any()),
+});
+
 export const createMissionConfigForContributorsSchema = z.object({
   title: z.string().min(1),
   missionId: z.string().optional().nullable(),

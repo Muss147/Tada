@@ -2,6 +2,7 @@
 
 import { createMissionAction } from "@/actions/missions/create-mission-action";
 import { createMissionSchema } from "@/actions/missions/schema";
+import { generateMissionBriefAIAction } from "@/actions/missions/generate-mission-brief-ai-action";
 import { Icons } from "@/components/icons";
 import { useAudiencesFilter } from "@/context/audiences-filter-context";
 import { useToast } from "@/hooks/use-toast";
@@ -12,10 +13,12 @@ import { Edit } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 // 🚨 CORRECTION 1 : Importer 'useCallback'
-import { useEffect, useRef, useState, useCallback } from "react"; 
+import { useEffect, useRef, useState, useMemo, useCallback } from "react"; 
 import { useFormContext } from "react-hook-form";
 import { AudiencesFilterModal } from "../modals/audiences-filter-modal";
 import type { Mission } from "../type";
+
+import { useThread } from "@assistant-ui/react";
 
 interface Section {
   id: number;
@@ -26,6 +29,49 @@ interface Section {
   color: string;
   placeholder?: string;
   selectedMarkets?: string[];
+}
+
+type ThreadMessage = {
+  role: "user" | "assistant" | string;
+  content?: Array<{ type: string; text?: string }>;
+  id?: string;
+  messageId?: string;
+};
+
+const extractTextFromMessage = (msg: any): string => {
+  const c = msg?.content;
+  if (!c) return "";
+  if (typeof c === "string") return c;
+
+  if (Array.isArray(c)) {
+    return c
+      .map((part: any) => {
+        if (!part) return "";
+        if (typeof part === "string") return part;
+        if (part.type === "text") {
+          if (typeof part.text === "string") return part.text;
+          if (typeof part.text?.value === "string") return part.text.value;
+        }
+        if (typeof part?.content === "string") return part.content;
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  return "";
+};
+
+function buildTranscript(messages: readonly ThreadMessage[]) {
+  return messages
+    .filter((m) => m.role === "user" || m.role === "assistant")
+    .map((m) => {
+      const txt = extractTextFromMessage(m).trim();
+      if (!txt) return null;
+      return `${m.role.toUpperCase()}: ${txt}`;
+    })
+    .filter((x): x is string => Boolean(x))
+    .join("\n\n");
 }
 
 // 🚨 CORRECTION 4 (Option A) : Définition de la fonction de rendu (ou utiliser useCallback à l'intérieur)
@@ -44,6 +90,11 @@ export function CreateMissionForm() {
   const searchParams = useSearchParams();
   const templateId = searchParams.get("t");
   const mode = searchParams.get("mode");
+  const isAiMode = mode === "contributor-info";
+
+  const [lastSyncedAssistantId, setLastSyncedAssistantId] = useState<
+    string | null
+  >(null);
 
   const [tempTitle, setTempTitle] = useState("");
   const [editingSection, setEditingSection] = useState<number | null>(null);
@@ -162,15 +213,68 @@ export function CreateMissionForm() {
     setTempContent(form.getValues(section?.key || '') || section?.content || "");
   };
 
+  const generateBrief = useAction(generateMissionBriefAIAction, {
+    onSuccess: (res) => {
+      const brief = res.data?.data;
+      if (!brief) return;
+
+      form.setValue("name", brief.name, { shouldDirty: true });
+      form.setValue("problemSummary", brief.problemSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("objectives", brief.objectives, { shouldDirty: true });
+      form.setValue("assumptions", brief.assumptions, { shouldDirty: true });
+
+      form.setValue("sampleSummary", brief.sampleSummary, {
+        shouldDirty: true,
+      });
+      form.setValue("targetSampleSize", brief.targetSampleSize ?? undefined, {
+        shouldDirty: true,
+      });
+      form.setValue(
+        "preliminaryRecommendations",
+        brief.preliminaryRecommendations,
+        {
+          shouldDirty: true,
+        }
+      );
+      form.setValue("studyStructure", brief.studyStructure, {
+        shouldDirty: true,
+      });
+
+      setSections((prev) =>
+        prev.map((s) => {
+          if (["problemSummary", "objectives", "assumptions"].includes(s.key)) {
+            const v = (form.getValues(s.key) as string) ?? "";
+            return { ...s, content: v, status: v ? "completed" : "pending" };
+          }
+          return s;
+        })
+      );
+
+      toast({
+        title: "Génération de brief",
+        description:
+          "Le brief complet a été rempli automatiquement. Tu peux encore l’éditer avant de sauvegarder.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: t("common.error.somethingWentWrong"),
+        description:
+          "Impossible de générer le plan complet de l’étude. Réessaie dans un instant.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const createMission = useAction(createMissionAction, {
     onSuccess: (data) => {
       toast({
         title: t("missions.createMission.form.success"),
       });
 
-      if (data.data?.data) {
-        router.push(`/missions/${data.data.data.id}/surveys`);
-      }
+      router.push(`/missions-to-validate`);
     },
     // 🚨 CORRECTION 3 : Accéder correctement à 'serverError'
     onError: (error) => {
@@ -182,6 +286,108 @@ export function CreateMissionForm() {
       });
     },
   });
+
+  // Thread assistant-ui
+  const thread = useThread();
+  const threadMessages = (thread?.messages ?? []) as readonly ThreadMessage[];
+
+  const lastAssistant = useMemo(() => {
+    return [...threadMessages].reverse().find((m) => m.role === "assistant");
+  }, [threadMessages]);
+
+  const lastAssistantText = useMemo(() => {
+    return lastAssistant ? extractTextFromMessage(lastAssistant) : "";
+  }, [lastAssistant]);
+
+  /**
+   * AI FILL trigger:
+   * - Primary: token [[READY_TO_FILL_FORM]]
+   * - Fallback: assistant message looks like a "brief" and is long enough
+   * - (Optionnel) Confirmation user: gardée uniquement si tu veux, sinon tu peux la retirer
+   */
+  useEffect(() => {
+    const log = (...args: any[]) => console.log("[AI FILL]", ...args);
+
+    if (!isAiMode) return log("skip: not AI mode");
+    if (!threadMessages.length) return log("skip: no thread messages yet");
+
+    const READY_RE = /\[\[READY_TO_FILL_FORM\]\]/i;
+
+    const CONFIRM_RE =
+      /\b(yes|yeah|yep|ok|okay|sure|confirmed|go ahead|do it|sounds good|looks good|oui|d['’]accord|ok|vas-y|c['’]est bon|parfait)\b/i;
+
+    // 1) Trouver le DERNIER message assistant avec le token READY
+    let askedIndex = -1;
+    for (let i = threadMessages.length - 1; i >= 0; i--) {
+      const msg = threadMessages[i];
+      if (msg.role !== "assistant") continue;
+      const text = extractTextFromMessage(msg);
+      if (READY_RE.test(text)) {
+        askedIndex = i;
+        break;
+      }
+    }
+
+    if (askedIndex === -1) return log("skip: READY token not found");
+
+    // 2) Chercher une confirmation USER après ce message
+    const after = threadMessages.slice(askedIndex + 1);
+
+    const confirmMsg = after.find((m) => {
+      if (m.role !== "user") return false;
+      const userText = extractTextFromMessage(m).trim();
+      return CONFIRM_RE.test(userText);
+    });
+
+    if (!confirmMsg) return log("skip: no user confirmation after READY");
+
+    const assistantMsg = threadMessages[askedIndex];
+
+    const assistantId =
+      (assistantMsg as any).id ??
+      (assistantMsg as any).messageId ??
+      `assistant-${askedIndex}`;
+
+    if (assistantId === lastSyncedAssistantId) {
+      return log("already synced for assistantId:", assistantId);
+    }
+
+    if (generateBrief.status === "executing") return log("skip: executing");
+
+    const transcript = buildTranscript(threadMessages);
+
+    setLastSyncedAssistantId(assistantId);
+
+    toast({
+      title: "Génération du brief en cours…",
+      description: "Je remplis automatiquement le formulaire à partir de la conversation.",
+    });
+
+    generateBrief.execute({
+      transcript,
+      currentBrief: {
+        name: form.getValues("name"),
+        problemSummary: form.getValues("problemSummary"),
+        objectives: form.getValues("objectives"),
+        assumptions: form.getValues("assumptions"),
+        sampleSummary: form.getValues("sampleSummary"),
+        targetSampleSize: form.getValues("targetSampleSize"),
+        preliminaryRecommendations: form.getValues(
+          "preliminaryRecommendations"
+        ),
+        studyStructure: form.getValues("studyStructure"),
+      },
+      audiences: selectedFilters,
+    });
+  }, [
+    isAiMode,
+    threadMessages,
+    lastSyncedAssistantId,
+    generateBrief.status,
+    toast,
+    form,
+    selectedFilters,
+  ]);
 
   const onSubmit = async () => {
     const values = form.getValues(); 

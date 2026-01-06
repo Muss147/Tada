@@ -560,6 +560,7 @@ export default {
       all: "Toutes les missions",
       "on hold": "En attente",
       draft: "Brouillon",
+      modification_needed: "Modification nécessaire",
       on_hold: "En attente",
     },
     publish: {
@@ -573,6 +574,7 @@ export default {
         "Une erreur est survenue lors de la publication de la mission",
       titleModalPublishMission: "Publier la mission",
       updateSurveys: "Modifier le questionnaire",
+      preview: "Prévisualisation",
       form: {
         configMissionTitle: "Titre de mission",
         configMissionDescription: "Description",
@@ -582,7 +584,7 @@ export default {
         configMissionSampleSize: "Nombre de soumissions validées à atteindre",
         next: "Continuer",
         previous: "Précédent",
-        done: "Terminer",
+        done: "Publier",
       },
     },
     updated: "Mission mise à jour avec succès",

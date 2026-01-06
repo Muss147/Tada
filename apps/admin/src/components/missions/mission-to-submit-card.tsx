@@ -108,7 +108,7 @@ export function MissionToSubmitCard({ mission }: MissionCardProps) {
             </div>
 
             <div className="flex flex-col items-end justify-center">
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-8 w-8 p-0">
                     {publishMission.isExecuting ? (
@@ -141,7 +141,7 @@ export function MissionToSubmitCard({ mission }: MissionCardProps) {
 
                   <DropdownMenuSeparator />
                 </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
             </div>
           </div>
         </div>

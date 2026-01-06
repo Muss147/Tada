@@ -15,6 +15,7 @@ export function MissionStatus({
         mission.status === "complete" && "bg-green-400",
         mission.status === "draft" && "bg-gray-400",
         mission.status === "on hold" && "bg-yellow-400",
+        mission.status === "modification_needed" && "bg-gray-400",
         mission.status === "cancelled" && "bg-red-400",
         mission.status === "paused" && "bg-gray-400",
       )}

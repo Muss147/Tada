@@ -1102,6 +1102,7 @@ export default {
       draft: "Draft",
       all: "All tasks",
       "on hold": "On hold",
+      modification_needed: "Modification needed",
       on_hold: "On hold",
     },
     publish: {
@@ -1115,6 +1116,7 @@ export default {
       descriptionError: "An error occurred while publishing the mission",
       titleModalPublishMission: "Publish Mission",
       updateSurveys: "Update Survey",
+      preview: "Preview",
       form: {
         configMissionTitle: "Mission title",
         configMissionDescription: "Description",
@@ -1124,7 +1126,7 @@ export default {
         configMissionSampleSize: "Number of validated submissions to be achieved",
         next: "Next",
         previous: "Previous",
-        done: "Done",
+        done: "publish",
       },
     },
     filter: {

@@ -1,3 +1,4 @@
+// src/components/missions/mission-card.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -40,15 +41,13 @@ interface MissionCardProps {
 
 export function MissionCard({ mission }: MissionCardProps) {
   const t = useI18n();
-  const currentLocale = useCurrentLocale();
+  const locale = useCurrentLocale();
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
-  const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
-  const [isAssigning, setIsAssigning] = useState(false);
-  const [isAssignedContributorsModalOpen, setIsAssignedContributorsModalOpen] =
-    useState(false);
-  const [isPublishMissionModalOpen, setIsPublishMissionModalOpen] =
-    useState(false);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [isAssignedViewOpen, setIsAssignedViewOpen] = useState(false);
 
   const publishMission = useAction(publishMissionAction, {
     onSuccess: () => {
@@ -56,11 +55,9 @@ export function MissionCard({ mission }: MissionCardProps) {
         title: t("missions.publish.success"),
         description: t("missions.publish.successDescription"),
       });
-
-      window.location.reload();
+      router.refresh();
     },
-    onError: (error) => {
-      console.log("error", error);
+    onError: () => {
       toast({
         title: t("missions.publish.error"),
         variant: "destructive",
@@ -69,224 +66,158 @@ export function MissionCard({ mission }: MissionCardProps) {
   });
 
   const updateMissionStatus = useAction(updateMissionStatusAction, {
-    onSuccess: ({ data }) => {
-      const message = data?.data?.isUpdate
-        ? "Insights mis à jour avec succès"
-        : "Mission terminée et insights générés avec succès";
-
+    onSuccess: () => {
       toast({
-        title: "Statut mis à jour",
-        description: message,
+        title: "Mission complétée",
+        description: "La mission est maintenant terminée.",
       });
-
-      window.location.reload();
-    },
-    onError: (error) => {
-      console.log("error", error);
-      toast({
-        title: "Erreur lors de la mise à jour",
-        description: "Une erreur est survenue",
-        variant: "destructive",
-      });
+      router.refresh();
     },
   });
 
-  const handleClick = () => {
+  const goToMission = () => {
     setIsLoading(true);
     router.push(`/missions/${mission.id}`);
   };
 
-  useEffect(() => {
-    return () => {
-      setIsLoading(false);
-    };
-  }, []);
+  useEffect(() => () => setIsLoading(false), []);
 
   return (
     <>
       {isLoading && <FullScreenLoader />}
 
       <div
-        onClick={handleClick}
-        className="flex items-center justify-between cursor-pointer border-b border-gray-200 hover:bg-gray-50 transition-colors"
-      >
-        <div className="grid grid-cols-4 py-6 px-4 gap-4 w-full">
-          <div className="flex flex-col col-span-2">
-            <h2 className="font-medium text-gray-800 dark:text-gray-100">
-              {mission.name}
-            </h2>
-            <div className="flex gap-2">
-              {mission.status && <MissionStatus mission={mission} />}
-            </div>
+          onClick={
+            mission.isPublish 
+              ? goToMission 
+              : (e) => {
+                  e.stopPropagation();
+                  setIsPublishModalOpen(true);
+                }
+          }
+          className="cursor-pointer border-b hover:bg-gray-50 transition"
+        >
+        <div className="grid grid-cols-4 gap-4 px-4 py-6">
+          {/* Infos mission */}
+          <div className="col-span-2">
+            <h3 className="font-medium">{mission.name}</h3>
+            <MissionStatus mission={mission} />
           </div>
 
-          <div className="flex flex-col">
-            <span className="text-gray-600 text-sm dark:text-gray-100">
+          {/* Progression */}
+          <div>
+            <p className="text-sm text-gray-600">
               {t("missions.completion", { percentage: mission.percentage })}
-            </span>
-            {mission.createdAt && (
-              <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-                {timeAgo(new Date(mission.createdAt), currentLocale)}
-              </span>
-            )}
+            </p>
+            <p className="text-xs text-gray-400 mt-1">
+              {timeAgo(new Date(mission.createdAt), locale)}
+            </p>
           </div>
 
-          <div className="flex flex-row items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-gray-600 text-sm dark:text-gray-100">
+          {/* Actions */}
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm text-gray-600">
                 {t("missions.submissions", {
                   submissions: mission.submissions,
                 })}
-              </span>
-              {mission.updatedAt && (
-                <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-                  {timeAgo(new Date(mission.updatedAt), currentLocale)}
-                </span>
-              )}
+              </p>
+              <MissionPublishStatus mission={mission} />
             </div>
 
-            <div className="flex flex-col items-end justify-start">
-              <MissionPublishStatus mission={mission} />
-
-              <div className="flex flex-col">
-                {mission.updatedAt && (
-                  <span className="text-gray-600 text-sm dark:text-gray-100 mt-2">
-                    {timeAgo(new Date(mission.updatedAt), currentLocale)}
-                  </span>
-                )}
-                {mission.updatedType && (
-                  <span className="text-xs text-gray-400 mt-2 dark:text-gray-100">
-                    {t(
-                      `missions.updated_type.${mission.updatedType}` as keyof typeof t
-                    )}
-                  </span>
-                )}
-              </div>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    {publishMission.isExecuting ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <MoreHorizontal className="h-4 w-4" />
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsAssignmentModalOpen(true);
-                    }}
-                  >
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Attribuer à des contributeurs
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsAssignedContributorsModalOpen(true);
-                    }}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Voir les contributeurs assignés
-                  </DropdownMenuItem>
-
-                  <DropdownMenuSeparator />
-
-                  {mission.isPublish ? (
-                    <>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          publishMission.execute({
-                            missionId: mission.id,
-                            isPublish: false,
-                            status: "on hold",
-                          });
-                        }}
-                      >
-                        <CloudDownload className="h-4 w-4 mr-2" />
-                        Retirer
-                      </DropdownMenuItem>
-
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/missions/${mission.id}/submissions`);
-                        }}
-                      >
-                        <EyeIcon className="h-4 w-4 mr-2" />
-                        Voir les soumissions
-                      </DropdownMenuItem>
-
-                      <DropdownMenuSeparator />
-
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          updateMissionStatus.execute({
-                            missionId: mission.id,
-                            status: "completed",
-                          });
-                        }}
-                        disabled={
-                          updateMissionStatus.isExecuting ||
-                          mission.status === "completed"
-                        }
-                      >
-                        {updateMissionStatus.isExecuting ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                        )}
-                        {mission.status === "completed"
-                          ? "Mission déjà complétée"
-                          : "Compléter la mission"}
-                      </DropdownMenuItem>
-                    </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  {publishMission.isExecuting ? (
+                    <Loader2 className="animate-spin" />
                   ) : (
+                    <MoreHorizontal />
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAssignModalOpen(true);
+                }}>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Attribuer
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAssignedViewOpen(true);
+                }}>
+                  <Users className="mr-2 h-4 w-4" />
+                  Contributeurs
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                {!mission.isPublish ? (
+                  <DropdownMenuItem onClick={(e) => {
+                    e.stopPropagation();
+                    setIsPublishModalOpen(true);
+                  }}>
+                    <CloudUpload className="mr-2 h-4 w-4" />
+                    Publier
+                  </DropdownMenuItem>
+                ) : (
+                  <>
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsPublishMissionModalOpen(true);
+                        publishMission.execute({
+                          missionId: mission.id,
+                          isPublish: false,
+                          status: "on hold",
+                        });
                       }}
                     >
-                      <CloudUpload className="h-4 w-4 mr-2" />
-                      Publier
+                      <CloudDownload className="mr-2 h-4 w-4" />
+                      Retirer
                     </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateMissionStatus.execute({
+                          missionId: mission.id,
+                          status: "completed",
+                        });
+                      }}
+                    >
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Compléter
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
 
-      <MissionAssignmentModal
-        isOpen={isAssignmentModalOpen}
-        onClose={() => setIsAssignmentModalOpen(false)}
-        missionId={mission.id}
-        missionName={mission.name}
-        isLoading={isAssigning}
-      />
       <PublishMissionModal
-        isOpen={isPublishMissionModalOpen}
-        onClose={(isAssign?: boolean) => {
-          setIsPublishMissionModalOpen(false);
-          if (isAssign) setIsAssignmentModalOpen(true);
-          setTimeout(() => {
-            router.refresh();
-          }, 100);
+        isOpen={isPublishModalOpen}
+        onClose={(assign) => {
+          setIsPublishModalOpen(false);
+          if (assign) setIsAssignModalOpen(true);
         }}
         mission={mission}
       />
 
+      <MissionAssignmentModal
+        isOpen={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+        missionId={mission.id}
+        missionName={mission.name}
+      />
+
       <AssignedContributorsView
-        isOpen={isAssignedContributorsModalOpen}
-        onClose={() => setIsAssignedContributorsModalOpen(false)}
+        isOpen={isAssignedViewOpen}
+        onClose={() => setIsAssignedViewOpen(false)}
         missionId={mission.id}
         missionName={mission.name}
       />

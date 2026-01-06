@@ -28,7 +28,7 @@ export function MissionBrief({
     <div className="max-w-2xl rounded-lg  p-6 dark:bg-gray-800  overflow-y-auto max-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold ">Brief</h1>
-        <Button>
+        <Button variant="outline">
           <Link
             href={`/missions/${mission?.id}/update?isPublish=${isPublish}`}
             target="_blank"

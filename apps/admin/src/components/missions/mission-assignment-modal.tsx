@@ -165,7 +165,7 @@ export function MissionAssignmentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl min-h-[90vh]">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>Assigner la mission</DialogTitle>
           <DialogDescription>

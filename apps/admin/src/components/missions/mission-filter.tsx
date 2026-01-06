@@ -15,7 +15,13 @@ import { useRouter } from "next/navigation";
 import { parseAsString, useQueryStates } from "nuqs";
 import { CreateSurveyModal } from "./modals/create-mission-modal";
 
-export function MissionFilter() {
+// 1. Définir l'interface des props
+interface MissionFilterProps {
+  isValidatedList?: boolean;
+}
+
+// 2. Accepter la prop dans la fonction
+export function MissionFilter({ isValidatedList = true }: MissionFilterProps) {
   const t = useI18n();
 
   const [params, setParams] = useQueryStates(
@@ -30,14 +36,17 @@ export function MissionFilter() {
   return (
     <div className="flex items-center justify-between p-4 pb-3 ">
       <div className="flex items-center">
-        <CreateSurveyModal
-          trigger={
-            <Button>
-              <Plus className="w-5 h-5 mr-2" />
-              {t("missions.filter.add")}
-            </Button>
-          }
-        ></CreateSurveyModal>
+        {/* 3. Conditionner l'affichage ici */}
+        {isValidatedList && (
+          <CreateSurveyModal
+            trigger={
+              <Button>
+                <Plus className="w-5 h-5 mr-2" />
+                {t("missions.filter.add")}
+              </Button>
+            }
+          />
+        )}
       </div>
 
       <div className="flex items-center space-x-3">
