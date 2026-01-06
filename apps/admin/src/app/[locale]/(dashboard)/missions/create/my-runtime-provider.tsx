@@ -11,10 +11,6 @@ export function MyRuntimeProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const runtime = useEdgeRuntime({
-  //   api: "/api/chat",
-  // });
-
   const chat = useChat({
     api: "/api/chat",
     initialMessages: [],

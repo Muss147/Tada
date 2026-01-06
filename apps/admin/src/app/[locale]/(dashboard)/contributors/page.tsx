@@ -109,10 +109,10 @@ async function getContributorsWithStats() {
       ).length;
       const totalEarnings = contributor.missionAssignments
         .filter((m) => m.status === "completed")
-        .reduce(
-          (sum, m) => sum + (m.mission.type === "premium" ? 5000 : 2500),
-          0
-        );
+        .reduce((sum, m) => {
+          if (!m.mission) return sum;
+          return sum + (m.mission.type === "premium" ? 5000 : 2500);
+        }, 0);
 
       return {
         ...contributor,
