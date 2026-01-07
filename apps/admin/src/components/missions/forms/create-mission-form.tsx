@@ -273,8 +273,11 @@ export function CreateMissionForm() {
       toast({
         title: t("missions.createMission.form.success"),
       });
+      console.log(data);
+      const mission = data.data?.data;
 
-      router.push(`/missions-to-validate`);
+      router.push(`/missions/${mission.id}/surveys`);
+      // router.push(`/missions-to-validate`);
     },
     // 🚨 CORRECTION 3 : Accéder correctement à 'serverError'
     onError: (error) => {

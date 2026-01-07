@@ -18,7 +18,7 @@ export default async function Page({
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {shouldShowConversationCard && <ConversationCard />}
+      {mode !== "contributor-info" && shouldShowConversationCard && <ConversationCard />}
       <CreateMissionCard />
     </div>
   );
