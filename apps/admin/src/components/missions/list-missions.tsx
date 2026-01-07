@@ -1,3 +1,4 @@
+// src/components/missions/list-missions.tsx
 "use client";
 
 import { useI18n } from "@/locales/client";
@@ -10,6 +11,15 @@ import { Mission } from "@prisma/client";
 type MissionFull = Mission & {
   survey: {
     response: { id: string }[];
+  }[];
+  mission_config_contributor: {
+    title: string;
+    description: string;
+    gain: bigint;
+    duration: bigint;
+    deadline: Date | null;
+    targetSampleSize: number | null;
+    imageUrl: string | null;
   }[];
 };
 
@@ -59,16 +69,18 @@ export function ListMissions({
     <div className="flex flex-col space-y-4 items-end">
       <div className="w-full rounded-lg border border-gray-100 bg-white dark:bg-gray-900 shadow-sm p-5">
         <div className="divide-y divide-gray-100 dark:divide-gray-800">
-          {missions.map((task) => (
-            <MissionCard
-              key={task.id}
-              mission={
-                {
+          {missions.map((task) => {
+            const config = task.mission_config_contributor?.[0] ?? null;
+
+            return (
+              <MissionCard
+                key={task.id}
+                mission={{
                   ...task,
                   submissions:
                     task.survey.length > 0
                       ? task.survey[0]!.response.length
-                      : 0 || 0,
+                      : 0,
                   percentage: Math.min(
                     100,
                     Math.round(
@@ -79,10 +91,11 @@ export function ListMissions({
                         100
                     )
                   ),
-                } as any
-              }
-            />
-          ))}
+                  mission_config_contributor: config ? [config] : [],
+                }}
+              />
+            );
+          })}
         </div>
         {hasNextPage && (
           <div className="flex items-center justify-center mt-6" ref={ref}>

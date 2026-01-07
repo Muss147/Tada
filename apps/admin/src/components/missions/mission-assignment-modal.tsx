@@ -165,7 +165,7 @@ export function MissionAssignmentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-4xl max-h-[95vh] overflow-auto">
         <DialogHeader>
           <DialogTitle>Assigner la mission</DialogTitle>
           <DialogDescription>
@@ -259,7 +259,7 @@ export function MissionAssignmentModal({
           </div>
 
           {/* Liste des contributeurs */}
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[400px] max-h-[30vh] overflow-hidden">
             <div className="space-y-2">
               {!getContributors.isExecuting &&
                 filteredContributors.map((contributor) => {

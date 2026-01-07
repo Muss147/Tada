@@ -1167,7 +1167,7 @@ model MissionConfigContributor {
   description      String
   gain             BigInt
   duration         BigInt
-  missionId        String
+  missionId        String    @unique
   imageUrl         String?
   targetSampleSize Int?
   createdAt        DateTime  @default(now()) @db.Timestamptz(6)

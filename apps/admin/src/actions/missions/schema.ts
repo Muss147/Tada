@@ -38,7 +38,12 @@ export const createMissionConfigForContributorsSchema = z.object({
   targetSampleSize: z.number(),
   deadline: z.date().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
+  imageFile: z
+    .instanceof(File)
+    .optional()
+    .nullable(),
 });
+
 export const regenerateSurveysAISchema = z.object({
   problemSummary: z.string().min(1),
   objectives: z.string().min(1),

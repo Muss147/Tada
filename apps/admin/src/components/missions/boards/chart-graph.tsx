@@ -1,43 +1,41 @@
 "use client";
 
 import { useChartBuilder } from "@/context/chart-builder-context";
-import { Vega } from "react-vega";
+import { VegaEmbed } from "react-vega";
 
 export function ChartGraph() {
   const { vegaLiteSpec, data: values } = useChartBuilder();
 
-  // Customize the spec to remove horizontal grid lines, set white background, and add different colors for each bar
   const customizedSpec = {
     ...vegaLiteSpec,
     background: "white",
+    data: {
+      values,
+    },
     config: {
       ...((vegaLiteSpec as any)?.config || {}),
       axis: {
-        ...((vegaLiteSpec as any)?.config?.axis || {}),
-        grid: false, // Remove all grid lines
-        gridOpacity: 0, // Alternative way to hide grid lines
+        grid: false,
       },
       axisY: {
-        ...((vegaLiteSpec as any)?.config?.axisY || {}),
-        grid: false, // Specifically remove horizontal grid lines
+        grid: false,
       },
       view: {
-        ...((vegaLiteSpec as any)?.config?.view || {}),
-        fill: "white", // Ensure the chart area background is white
-        stroke: "transparent", // Remove border
+        fill: "white",
+        stroke: "transparent",
       },
     },
   };
-  console.log(vegaLiteSpec);
 
   return (
-    <div className="">
-      <Vega
-        data={{
-          values,
-        }}
+    <div className="w-full">
+      <VegaEmbed
         spec={customizedSpec}
-        actions={false}
+        options={{
+          actions: false,
+          renderer: "canvas",
+          theme: "none",
+        }}
       />
     </div>
   );

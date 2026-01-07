@@ -16,7 +16,6 @@ const updateMissionDetailsSchema = z.object({
   deadline: z.date().nullable().optional(),
   targetSampleSize: z.number().optional(),
   imageUrl: z.string().nullable().optional(),
-  status: z.enum(["draft", "live"]).optional(),
 });
 
 /* ------------------ Safe Action interne ------------------ */
@@ -26,46 +25,43 @@ const _updateMissionDetailsAction = authActionClient
     name: "update-mission-details-action",
   })
   .action(async ({ parsedInput }) => {
-    const mission = await prisma.mission.update({
-      where: { id: parsedInput.missionId },
-      data: {
-        name: parsedInput.title,
-        problemSummary: parsedInput.description,
-        image: parsedInput.imageUrl,
-        targetSampleSize: parsedInput.targetSampleSize,
-        status: parsedInput.status,
-        updatedAt: new Date(),
-      },
+    const mission = await prisma.$transaction(async (tx) => {
+      await tx.mission.update({
+        where: { id: parsedInput.missionId },
+        data: {
+          name: parsedInput.title,
+        },
+      });
+
+      return tx.missionConfigContributor.update({
+        where: { missionId: parsedInput.missionId },
+        data: {
+          title: parsedInput.title,
+          description: parsedInput.description,
+          gain:
+            parsedInput.gain !== undefined
+              ? BigInt(parsedInput.gain)
+              : undefined,
+          duration:
+            parsedInput.duration !== undefined
+              ? BigInt(parsedInput.duration)
+              : undefined,
+          deadline: parsedInput.deadline,
+          targetSampleSize: parsedInput.targetSampleSize,
+          imageUrl: parsedInput.imageUrl,
+        },
+      });
     });
 
-    // 🔄 Revalidation
-    revalidatePath("/missions");
-
-    // 📊 Génération automatique des graphiques quand la mission passe en live
-    if (parsedInput.status === "live") {
-      try {
-        const chartsResult = await generateMissionChartsAction({
-          missionId: parsedInput.missionId,
-        });
-
-        if (chartsResult?.data?.success) {
-          console.log(
-            `Graphiques générés automatiquement: ${chartsResult.data.data.chartsGenerated} graphiques créés`
-          );
-        } else {
-          console.error(
-            "Erreur lors de la génération des graphiques:",
-            chartsResult?.data?.error
-          );
-        }
-      } catch (chartError) {
-        console.error(
-          "Erreur lors de la génération des graphiques:",
-          chartError
-        );
-        // ❗ On n’échoue PAS l’action principale
-      }
+    try {
+      await generateMissionChartsAction({
+        missionId: parsedInput.missionId,
+      });
+    } catch (e) {
+      console.error("Charts generation failed", e);
     }
+
+    revalidatePath("/[locale]/missions", "page");
 
     return { success: true, data: mission };
   });

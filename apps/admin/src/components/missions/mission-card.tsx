@@ -36,7 +36,19 @@ import { AssignedContributorsView } from "./assigned-contributors";
 import { PublishMissionModal } from "./modals/publish-mission-modal";
 
 interface MissionCardProps {
-  mission: Mission & { submissions: number; percentage: number };
+  mission: Mission & {
+    submissions: number;
+    percentage: number;
+    mission_config_contributor?: {
+      title: string;
+      description: string | null;
+      gain: bigint;
+      duration: bigint;
+      deadline: Date | null;
+      targetSampleSize: number | null;
+      imageUrl: string | null;
+    }[];
+  };
 }
 
 export function MissionCard({ mission }: MissionCardProps) {
@@ -206,6 +218,7 @@ export function MissionCard({ mission }: MissionCardProps) {
           if (assign) setIsAssignModalOpen(true);
         }}
         mission={mission}
+        config={mission.mission_config_contributor?.[0] ?? null}
       />
 
       <MissionAssignmentModal

@@ -567,7 +567,7 @@ export default {
       true: "Publié",
       false: "Non publié",
       button: "Publier la mission",
-      success: "Mission publiée avec succès",
+      success: "Configuration enregistrée avec succès",
       successDescription: "La mission a été publiée avec succès",
       error: "Une erreur est survenue lors de la publication de la mission",
       descriptionError:
@@ -584,7 +584,7 @@ export default {
         configMissionSampleSize: "Nombre de soumissions validées à atteindre",
         next: "Continuer",
         previous: "Précédent",
-        done: "Publier",
+        done: "Enregistrer",
       },
     },
     updated: "Mission mise à jour avec succès",

@@ -1,9 +1,14 @@
 // src/components/missions/forms/config-mission-for-contributors-form.tsx
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useFormContext } from "react-hook-form";
+
 import { createMissionConfigForContributorsSchema } from "@/actions/missions/schema";
 import { Icons } from "@/components/icons";
 import { useI18n } from "@/locales/client";
+
 import {
   FormControl,
   FormField,
@@ -11,42 +16,79 @@ import {
   FormLabel,
   FormMessage,
 } from "@tada/ui/components/form";
-import { useFormContext } from "react-hook-form";
 import { Input } from "@tada/ui/components/input";
 import { Textarea } from "@tada/ui/components/textarea";
-import Image from "next/image";
-import { useState } from "react";
 
-export function ConfigMissionForContributorsForm() {
+import type { z } from "zod";
+import type { MissionConfigContributor } from "@prisma/client";
+
+type FormValues = z.infer<
+  typeof createMissionConfigForContributorsSchema
+>;
+
+interface Props {
+  config?: MissionConfigContributor | null;
+}
+
+export function ConfigMissionForContributorsForm({ config }: Props) {
   const t = useI18n();
-  const form = useFormContext<
-    typeof createMissionConfigForContributorsSchema._type
-  >();
+  const form = useFormContext<FormValues>();
 
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    config?.imageUrl ?? null
+  );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   /**
-   * Avatar upload (preview only)
-   * Le fichier est stocké dans le form state
-   * L’upload réel se fera dans PublishMissionModal
+   * RESET SÉCURISÉ
+   * - Seulement si la config arrive
+   * - Seulement si l’utilisateur n’a pas encore modifié le formulaire
    */
-  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (!config) return;
+
+    form.reset({
+      title: config.title,
+      description: config.description,
+      gain: Number(config.gain),
+      duration: Number(config.duration),
+      deadline: config.deadline ?? null,
+      targetSampleSize: config.targetSampleSize ?? undefined,
+    });
+
+    setAvatarPreview(config.imageUrl ?? null);
+  }, [config?.id]);
+
+  /**
+   * Avatar upload (preview only)
+   * L’upload réel se fera ailleurs (PublishMissionModal)
+   */
+  const handleAvatarUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarUrl(reader.result as string);
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    // 🔐 On stocke le fichier dans le form
+    form.setValue("imageFile", file, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
     <div className="space-y-6">
+      <FormField
+        control={form.control}
+        name="imageFile"
+        render={() => <></>}
+      />
       {/* Avatar */}
       <div>
         <FormLabel>{t("settings.personalInfo.avatar")}</FormLabel>
@@ -56,10 +98,11 @@ export function ConfigMissionForContributorsForm() {
             {avatarPreview ? (
               <Image
                 src={avatarPreview}
-                width={120}
-                height={120}
+                width={400}
+                height={200}
                 alt=""
-                className="w-full"
+                className="w-full object-cover rounded-md"
+                unoptimized={false}
               />
             ) : (
               <label className="p-6 text-center cursor-pointer block">
@@ -93,14 +136,11 @@ export function ConfigMissionForContributorsForm() {
         name="title"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm/5 font-medium">
+            <FormLabel>
               {t("missions.publish.form.configMissionTitle")}
             </FormLabel>
             <FormControl>
-              <Input
-                placeholder={t("missions.publish.form.configMissionTitle")}
-                {...field}
-              />
+              <Input {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -113,17 +153,11 @@ export function ConfigMissionForContributorsForm() {
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm/5 font-medium">
+            <FormLabel>
               {t("missions.publish.form.configMissionDescription")}
             </FormLabel>
             <FormControl>
-              <Textarea
-                placeholder={t(
-                  "missions.publish.form.configMissionDescription"
-                )}
-                rows={8}
-                {...field}
-              />
+              <Textarea rows={8} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -136,15 +170,16 @@ export function ConfigMissionForContributorsForm() {
         name="gain"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm/5 font-medium">
+            <FormLabel>
               {t("missions.publish.form.configMissionGain")}
             </FormLabel>
             <FormControl>
               <Input
                 type="number"
-                placeholder={t("missions.publish.form.configMissionGain")}
                 {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) =>
+                  field.onChange(Number(e.target.value))
+                }
               />
             </FormControl>
             <FormMessage />
@@ -159,17 +194,16 @@ export function ConfigMissionForContributorsForm() {
           name="duration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm/5 font-medium">
+              <FormLabel>
                 {t("missions.publish.form.configMissionDuration")}
               </FormLabel>
               <FormControl>
                 <Input
                   type="number"
-                  placeholder={t(
-                    "missions.publish.form.configMissionDuration"
-                  )}
                   {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  onChange={(e) =>
+                    field.onChange(Number(e.target.value))
+                  }
                 />
               </FormControl>
               <FormMessage />
@@ -182,7 +216,7 @@ export function ConfigMissionForContributorsForm() {
           name="deadline"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm/5 font-medium">
+              <FormLabel>
                 {t("missions.publish.form.configMissionDeadline")}
               </FormLabel>
               <FormControl>
@@ -190,12 +224,16 @@ export function ConfigMissionForContributorsForm() {
                   type="datetime-local"
                   value={
                     field.value
-                      ? new Date(field.value).toISOString().slice(0, 16)
+                      ? new Date(field.value)
+                          .toISOString()
+                          .slice(0, 16)
                       : ""
                   }
                   onChange={(e) =>
                     field.onChange(
-                      e.target.value ? new Date(e.target.value) : null
+                      e.target.value
+                        ? new Date(e.target.value)
+                        : null
                     )
                   }
                 />
@@ -212,17 +250,18 @@ export function ConfigMissionForContributorsForm() {
         name="targetSampleSize"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-sm/5 font-medium">
-              {t("missions.publish.form.configMissionSampleSize")}
+            <FormLabel>
+              {t(
+                "missions.publish.form.configMissionSampleSize"
+              )}
             </FormLabel>
             <FormControl>
               <Input
                 type="number"
-                placeholder={t(
-                  "missions.publish.form.configMissionSampleSize"
-                )}
                 {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) =>
+                  field.onChange(Number(e.target.value))
+                }
               />
             </FormControl>
             <FormMessage />

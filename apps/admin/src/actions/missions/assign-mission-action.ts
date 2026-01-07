@@ -2,10 +2,13 @@
 
 import { prisma } from "@/lib/prisma";
 import { createSafeActionClient } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
+import { publishMissionAction } from "@/actions/missions/publish-mission-action";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
 const action = createSafeActionClient();
+const publishMission = useAction(publishMissionAction);
 
 const assignMissionSchema = z.object({
   missionId: z.string(),
@@ -75,6 +78,13 @@ export const assignMissionAction = action
           });
         })
       );
+
+      // 3️⃣ Publication → déclenche la génération des graphiques
+      await publishMission.executeAsync({
+        missionId: mission.id,
+        isPublish: true,
+        status: "live", // 👈 OBLIGATOIRE pour générer les graphiques
+      });
 
       revalidatePath("/missions");
 

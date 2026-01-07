@@ -28,14 +28,13 @@ function fetchMissions({
   const whereClause = {
     ...(query && { name: { contains: query } }),
     ...(date && { createdAt: { gte: new Date(date) } }),
-    // ...(status && status !== "all" && { status }),
     status: {
       in: ["completed", "live"],
     },
   };
 
   const orderByClause = [
-    { validatedAt: "desc" }, // PLUS RÉCENT → PLUS ANCIEN
+    { validatedAt: "desc" },
     ...sort.map((s) => ({ [s]: "asc" })),
   ];
 
@@ -48,6 +47,7 @@ function fetchMissions({
     skip,
     take,
     include: {
+      // ✅ SURVEYS + RESPONSES
       survey: {
         include: {
           response: {
@@ -57,6 +57,9 @@ function fetchMissions({
           },
         },
       },
+
+      // ✅ CONFIG CONTRIBUTEUR (CE QUI MANQUAIT)
+      mission_config_contributor: true,
     },
   });
 }

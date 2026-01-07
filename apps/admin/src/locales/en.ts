@@ -1110,7 +1110,7 @@ export default {
       false: "Save as draft",
       title: "Publish Mission",
       button: "Publish mission",
-      success: "Mission published successfully",
+      success: "Configuration saved successfully",
       successDescription: "The mission has been published successfully",
       error: "An error occurred while publishing the mission",
       descriptionError: "An error occurred while publishing the mission",
@@ -1126,7 +1126,7 @@ export default {
         configMissionSampleSize: "Number of validated submissions to be achieved",
         next: "Next",
         previous: "Previous",
-        done: "publish",
+        done: "Save",
       },
     },
     filter: {

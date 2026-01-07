@@ -1,7 +1,8 @@
 // src/components/missions/modals/publish-mission-modal.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@tada/supabase/client";
 import { Button } from "@tada/ui/components/button";
 import {
   Dialog,
@@ -35,9 +36,18 @@ interface Props {
   isOpen: boolean;
   onClose: (assign?: boolean) => void;
   mission: Mission;
+  config: {
+    title: string;
+    description: string | null;
+    gain: bigint;
+    duration: bigint;
+    deadline: Date | null;
+    targetSampleSize: number | null;
+    imageUrl: string | null;
+  } | null;
 }
 
-export function PublishMissionModal({ isOpen, onClose, mission }: Props) {
+export function PublishMissionModal({ isOpen, onClose, mission, config }: Props) {
   const t = useI18n();
   const [step, setStep] = useState<Step>("config");
 
@@ -46,22 +56,78 @@ export function PublishMissionModal({ isOpen, onClose, mission }: Props) {
   >({
     resolver: zodResolver(createMissionConfigForContributorsSchema),
     defaultValues: {
-      title: mission.name,
-      description: mission.problemSummary || "",
-      gain: 0,
-      duration: 0,
+      title: config?.title ?? mission.name,
+      description: config?.description ?? mission.problemSummary ?? "",
+      gain: config?.gain ? Number(config.gain) : 0,
+      duration: config?.duration ? Number(config.duration) : 0,
+      deadline: config?.deadline ?? null,
+      targetSampleSize: config?.targetSampleSize ?? undefined,
+      imageUrl: config?.imageUrl ?? null,
     },
   });
+
+  useEffect(() => {
+    if (!config) return;
+
+    form.reset({
+      title: config.title,
+      description: config.description ?? "",
+      gain: Number(config.gain),
+      duration: Number(config.duration),
+      deadline: config.deadline ?? null,
+      targetSampleSize: config.targetSampleSize ?? undefined,
+      imageUrl: config.imageUrl ?? null,
+    });
+  }, [config, form]);
 
   const createConfig = useAction(createConfigMissionAction);
   const updateMission = useAction(updateMissionDetailsAction);
   const publishMission = useAction(publishMissionAction);
 
+  const supabase = createClient();
+
+  async function uploadImage(file: File): Promise<string> {
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `missions/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from("missions")
+      .upload(filePath, file, {
+        upsert: true,
+        contentType: file.type,
+      });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const { data } = supabase.storage
+      .from("missions")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  }
+
   const handlePublish = async () => {
     const values = form.getValues();
 
     try {
-      let imageUrl: string | null = null;
+      const values = form.getValues();
+
+      if (!values.imageFile && !config?.imageUrl) {
+        toast({
+          title: "Image requise",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      let imageUrl = config?.imageUrl ?? null;
+
+      if (values.imageFile) {
+        imageUrl = await uploadImage(values.imageFile);
+      }
 
       // Mise à jour des infos principales
       await updateMission.executeAsync({
@@ -72,14 +138,16 @@ export function PublishMissionModal({ isOpen, onClose, mission }: Props) {
         duration: values.duration,
         deadline: values.deadline,
         targetSampleSize: values.targetSampleSize,
-        imageUrl: imageUrl ?? null,
+        imageUrl, // ✅ URL finale (nouvelle ou existante)
       });
 
       // 2️⃣ Config contributeur
-      await createConfig.executeAsync({
-        missionId: mission.id,
-        ...values,
-      });
+      if (!config) {
+        await createConfig.executeAsync({
+          missionId: mission.id,
+          ...values,
+        });
+      }
 
       // 3️⃣ Publication → déclenche la génération des graphiques
       // await publishMission.executeAsync({
