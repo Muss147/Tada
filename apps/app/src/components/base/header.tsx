@@ -63,6 +63,8 @@ import { useBillingStore } from "@/hooks/use-billing-store";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "@/hooks/use-toast";
 import { Avatar, AvatarImage } from "@tada/ui/components/avatar";
+import { useWorkspace } from "@/context/workspace-context";
+import { useWorkspaceCreditsStore } from "@/hooks/use-workspace-credit-store";
 
 interface HeaderProps {
   title?: string;
@@ -99,9 +101,6 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
   const changeLocale = useChangeLocale();
   const currentLocale = useCurrentLocale();
 
-  const [credits, setCredits] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-
   const { data: organizations } = authClient.useListOrganizations();
 
   const { street, zip, city, country, company, setField, setAllFields } =
@@ -109,9 +108,10 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
 
   const orgId = organizations?.[0]?.id;
 
-  const handleThemeToggle = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const { currentWorkspace } = useWorkspace();
+  const workspaceId = currentWorkspace?.id;
+  const { balance, setCredits } = useWorkspaceCreditsStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -158,7 +158,7 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
 
         const billingData = data.data;
 
-        setCredits(billingData?.credits || 0);
+        //setCredits(billingData?.credits || 0);
 
         setAllFields({
           credits: billingData.credits,
@@ -185,6 +185,48 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
 
     fetchBillingInfo();
   }, [orgId, setField, setAllFields]);
+
+  useEffect(() => {
+    const fetchWorkspaceCredits = async () => {
+      if (!workspaceId) return;
+
+      setIsLoading(true);
+      try {
+        const res = await fetch(`/api/workspaces/${workspaceId}/credits`, {
+          cache: "no-store",
+        });
+
+        let json: any = null;
+        try {
+          json = await res.json();
+        } catch {
+          // body non-JSON (ou vide)
+        }
+
+        if (!res.ok) {
+          console.error("[WORKSPACE_CREDITS_FETCH_ERROR]", {
+            status: res.status,
+            workspaceId,
+            json,
+          });
+          return;
+        }
+
+        if (json?.success) {
+          setCredits(json.data.balance, json.data.currency);
+        } else {
+          console.error("[WORKSPACE_CREDITS_BAD_RESPONSE]", {
+            workspaceId,
+            json,
+          });
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchWorkspaceCredits();
+  }, [workspaceId, setCredits]);
 
   const isFormValid = street && zip && city && country && company;
 
@@ -220,7 +262,7 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <span className="text-sm font-medium">
-                {credits || 0} {headerT("credits")}
+                {balance} {headerT("credits")}
               </span>
             )}
           </Button>
@@ -509,12 +551,15 @@ export function Header({ title = "Dashboard", className, user }: HeaderProps) {
         open={creditModal.value}
         toggleOpen={creditModal.onToggle}
         handleAsYouGo={handleAsYouGo}
-        organizationId={organizations?.[0]?.id!}
+        organizationId={organizations?.[0]?.id}
+        workspaceId={workspaceId!}
       />
+
       <PaymentModal
         open={paymentModal.value}
         onOpenChange={paymentModal.onFalse}
-        inComingredits={credits}
+        inComingredits={balance}
+        workspaceId={workspaceId!}
       />
     </header>
   );

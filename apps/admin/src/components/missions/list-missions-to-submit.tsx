@@ -4,7 +4,7 @@ import { useI18n } from "@/locales/client";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Icons } from "../icons";
-import { TempMission } from "@prisma/client";
+import { Mission } from "@prisma/client";
 import { MissionToSubmitCard } from "./mission-to-submit-card";
 
 export function ListMissionsToSubmit({
@@ -13,10 +13,10 @@ export function ListMissionsToSubmit({
   pageSize,
   loadMore,
 }: {
-  missions: TempMission[];
+  missions: Mission[];
   hasNextPage: boolean;
   pageSize: number;
-  loadMore: (value: { from: number; to: number }) => Promise<TempMission[]>;
+  loadMore: (value: { from: number; to: number }) => Promise<Mission[]>;
 }) {
   const t = useI18n();
   const { ref, inView } = useInView();

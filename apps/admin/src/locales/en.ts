@@ -1,7 +1,8 @@
 export default {
   common: {
     generic_error: "Une erreur inattendue est survenue. Veuillez réessayer.",
-    none: "Aucun",
+    no_data: "Aucun",
+    not_specified: "Not Specified",
     search: {
       placeholder: "Search...",
     },
@@ -354,6 +355,19 @@ export default {
       pricings: "Pricings",
       signOut: "Sign out",
     },
+    infos: {
+      title: "Informations de profil",
+      goBack: "Back to the list",
+      data: {
+        job: "Job",
+        role: "Role",
+        sector: "Sector",
+        position: "Position",
+        location: "Location",
+        kyc_status: "KYC Status",
+        country: "Country",
+      },
+    }
   },
   welcome: "Hello {name}!",
   auth: {
@@ -1107,6 +1121,7 @@ export default {
         configMissionGain: "Gain (FCFA)",
         configMissionDuration: "Duration (min)",
         configMissionDeadline: "Deadline",
+        configMissionSampleSize: "Number of validated submissions to be achieved",
         next: "Next",
         previous: "Previous",
         done: "Done",

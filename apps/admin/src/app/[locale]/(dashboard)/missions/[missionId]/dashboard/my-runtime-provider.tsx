@@ -10,7 +10,9 @@ import {
   groupParticipantsByAge,
   SurveyData,
 } from "@/lib/utils";
-import { AssistantRuntimeProvider, useEdgeRuntime } from "@assistant-ui/react";
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import { useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
+import { useChat } from "@ai-sdk/react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect, useMemo, useState } from "react";
 
@@ -28,11 +30,14 @@ export function MyRuntimeProvider({
   };
 }>) {
   const [executiveSummary, setExecutiveSummary] =
-    // useState<string>("Loading...");
     useState<string>(executiveSummaryMock);
-  const runtime = useEdgeRuntime({
+
+  const chat = useChat({
     api: "/api/chat",
+    initialMessages: [],
   });
+
+  const runtime = useAISDKRuntime(chat);
 
   const generateExecutiveSummary = useAction(
     generateExecutiveSummaryAction,
@@ -58,7 +63,7 @@ export function MyRuntimeProvider({
     if (mission?.executiveSummary) {
       setExecutiveSummary(mission.executiveSummary);
     }
-  }, [mission]);
+  }, [mission, responses, generateExecutiveSummary]);
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>

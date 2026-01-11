@@ -1,3 +1,4 @@
+// apps/app/src/lib/auth-client.ts
 import {
   adminClient,
   emailOTPClient,

@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@tada/ui/components/dialog";
 import { useScopedI18n } from "@/locales/client";
-import { useBillingStore } from "@/hooks/use-billing-store";
+import { useWorkspaceCreditsPurchaseStore } from "@/hooks/use-workspace-credits-purchase-store";
 
 type Plan = {
   id: string;
@@ -55,38 +55,46 @@ export function CreditsModal({
   toggleOpen = () => {},
   handleAsYouGo = () => {},
   organizationId,
+  workspaceId,
 }: {
   open?: boolean;
   toggleOpen?: () => void;
   handleAsYouGo?: () => void;
-  organizationId: string;
+  organizationId?: string; // optional now
+  workspaceId: string; // REQUIRED
 }) {
   const commonT = useScopedI18n("common");
   const t = useScopedI18n("creditsModal");
 
-  // Utilisation du store Zustand
   const {
+    workspaceId: storeWorkspaceId,
     credits,
-    setField,
-    setAllFields,
     unitPrice,
-    organizationId: storeOrganizationId,
-  } = useBillingStore();
+    currency,
+    setWorkspaceId,
+    setCredits,
+    setUnitPrice,
+    setCurrency,
+  } = useWorkspaceCreditsPurchaseStore();
+
   const total = (credits * unitPrice).toFixed(2);
 
   const [loadingPlan, setLoadingPlan] = React.useState<boolean>(false);
   const [plan, setPlan] = React.useState<Plan | null>(null);
   const [notFound, setNotFound] = React.useState<boolean>(false);
 
-  // Synchroniser l'organizationId avec le store
   React.useEffect(() => {
-    if (organizationId && organizationId !== storeOrganizationId) {
-      setField("organizationId", organizationId);
+    if (workspaceId && workspaceId !== storeWorkspaceId) {
+      setWorkspaceId(workspaceId);
     }
-  }, [organizationId, storeOrganizationId, setField]);
+  }, [workspaceId, storeWorkspaceId, setWorkspaceId]);
 
   React.useEffect(() => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      setPlan(null);
+      setNotFound(true);
+      return;
+    }
 
     let isMounted = true;
     setLoadingPlan(true);
@@ -100,7 +108,8 @@ export function CreditsModal({
 
         if ("plan" in data && data.plan) {
           setPlan(data.plan);
-          setField("unitPrice", data.plan?.addOn ?? 13);
+          setUnitPrice(data.plan?.addOn ?? 13);
+          setCurrency(data.plan?.currency ?? "EUR");
           setNotFound(false);
         } else {
           setPlan(null);
@@ -120,26 +129,24 @@ export function CreditsModal({
     return () => {
       isMounted = false;
     };
-  }, [organizationId, setField]);
+  }, [organizationId, setUnitPrice, setCurrency]);
 
-  // Handler pour la mise à jour des crédits
   const handleCreditsChange = (value: string) => {
     const numericValue = Number.parseInt(value || "0");
-    setField("credits", Number.isNaN(numericValue) ? 0 : numericValue);
+    setCredits(Number.isNaN(numericValue) ? 0 : numericValue);
   };
 
-  // Handler amélioré pour "As you go" qui passe les données du store
   const handleEnhancedAsYouGo = () => {
-    // Vous pouvez ajouter ici d'autres données du store si nécessaire
     const billingData = {
       credits,
-      organizationId: storeOrganizationId || organizationId,
+      workspaceId: storeWorkspaceId || workspaceId,
       total: parseFloat(total),
       unitPrice,
+      currency,
     };
 
-    console.log("Billing data:", billingData); // Pour debug
-    handleAsYouGo(); // Passer les données si la fonction les accepte
+    console.log("Workspace credits purchase:", billingData);
+    handleAsYouGo();
   };
 
   return (
@@ -194,13 +201,18 @@ export function CreditsModal({
                   step="1"
                 />
                 <div className="text-sm text-gray-600">
-                  {t("researchAsYouGo.totalHT")} <strong>€ {total}</strong>
+                  {t("researchAsYouGo.totalHT")}{" "}
+                  <strong>
+                    {currency === "EUR" ? "€" : currency} {total}
+                  </strong>
                 </div>
 
-                {/* Informations supplémentaires basées sur les crédits */}
                 {credits > 0 && (
                   <div className="text-xs text-gray-500 space-y-1">
-                    <div>Prix unitaire : € {unitPrice} / crédit</div>
+                    <div>
+                      Prix unitaire : {currency === "EUR" ? "€" : currency}{" "}
+                      {unitPrice} / crédit
+                    </div>
                   </div>
                 )}
               </div>
@@ -214,7 +226,7 @@ export function CreditsModal({
               </Button>
             </div>
 
-            {/* Right column: Active plan or fallback */}
+            {/* Right column */}
             <div className="border rounded-lg p-4 flex flex-col justify-between">
               {loadingPlan ? (
                 <div className="space-y-2 animate-pulse">
@@ -276,6 +288,7 @@ function PlanDetails({
               .map((f, i) => <li key={i}>• {f.text}</li>)}
         </ul>
       </div>
+
       <Link href="/pricing">
         <Button
           variant="outline"

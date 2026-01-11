@@ -91,7 +91,45 @@ export function ConfigMissionForContributorsForm({
       onSubmit={form.handleSubmit(onSubmit)}
       className="space-y-4 md:space-y-6"
     >
-      <div className="">
+      <div className="space-y-4">
+        <div>
+          <FormLabel>{t("settings.personalInfo.avatar")}</FormLabel>
+
+          <div className="flex items-center">
+            <div className="flex-1 border border-input rounded-md shadow-sm">
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  width={120}
+                  height={120}
+                  alt=""
+                  className="w-full"
+                />
+              ) : (
+                <label className=" p-6 text-center cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                  />
+                  <div className="w-10 h-10 bg-red-100 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <Icons.upload className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="text-primary mb-1">
+                    {t("settings.personalInfo.uploadText")}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {t("settings.personalInfo.dragAndDrop")}
+                  </p>
+                  <p className="text-gray-400 text-xs mt-1">
+                    {t("settings.personalInfo.fileTypes")}
+                  </p>
+                </label>
+              )}
+            </div>
+          </div>
+        </div>
         <div>
           <FormField
             control={form.control}
@@ -157,21 +195,68 @@ export function ConfigMissionForContributorsForm({
             )}
           />
         </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="md:col-span-1">
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm/5 font-medium">
+                    {t("missions.publish.form.configMissionDuration")}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder={t(
+                        "missions.publish.form.configMissionDuration"
+                      )}
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="md:col-span-1">
+            <FormField
+              control={form.control}
+              name="deadline"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm/5 font-medium">
+                    {t("missions.publish.form.configMissionDeadline")}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      placeholder={t("missions.publish.form.configMissionDeadline")}
+                      {...field}
+                      value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
+                      onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
         <div>
           <FormField
             control={form.control}
-            name="duration"
+            name="targetSampleSize"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm/5 font-medium">
-                  {t("missions.publish.form.configMissionDuration")}
+                  {t("missions.publish.form.configMissionSampleSize")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder={t(
-                      "missions.publish.form.configMissionDuration"
-                    )}
+                    placeholder={t("missions.publish.form.configMissionSampleSize")}
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
@@ -180,67 +265,6 @@ export function ConfigMissionForContributorsForm({
               </FormItem>
             )}
           />
-        </div>
-        <div>
-          <FormField
-            control={form.control}
-            name="deadline"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm/5 font-medium">
-                  {t("missions.publish.form.configMissionDeadline")}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="datetime-local"
-                    placeholder={t("missions.publish.form.configMissionDeadline")}
-                    {...field}
-                    value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
-                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div>
-          <FormLabel>{t("settings.personalInfo.avatar")}</FormLabel>
-
-          <div className="flex items-center">
-            <div className="flex-1">
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  width={120}
-                  height={120}
-                  alt=""
-                  className="w-full"
-                />
-              ) : (
-                <label className=" p-6 text-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                  />
-                  <div className="w-10 h-10 bg-red-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                    <Icons.upload className="h-5 w-5 text-primary" />
-                  </div>
-                  <p className="text-primary mb-1">
-                    {t("settings.personalInfo.uploadText")}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    {t("settings.personalInfo.dragAndDrop")}
-                  </p>
-                  <p className="text-gray-400 text-xs mt-1">
-                    {t("settings.personalInfo.fileTypes")}
-                  </p>
-                </label>
-              )}
-            </div>
-          </div>
         </div>
 
         <Button

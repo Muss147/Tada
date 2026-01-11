@@ -35,30 +35,36 @@ const ResumeStep = ({ mission }: { mission: Mission }) => {
   const t = useI18n();
 
   return (
-    <div className="grid grid-flow-col">
-      <AudiencesFilterProvider>
-        <div className="w-96 bg-white dark:bg-gray-800 overflow-y-auto border-r border-gray-200 dark:border-gray-700">
-          <MissionBrief
-            mission={{
-              id: mission.id,
-              name: mission.name,
-              orgId: mission.organizationId || "",
-              problemSummary: mission.problemSummary || "",
-              objectives: mission.objectives || "",
-              assumptions: mission.assumptions || "",
-              audiences:
-                (mission.audiences as Record<string, string | number>) || {},
-            }}
-            isPublish={true}
-          />
+    <div className="grid grid-cols-3">
+      <div className="col-span-3 md:col-span-1">
+        <AudiencesFilterProvider>
+          <div className="bg-white dark:bg-gray-800 overflow-y-auto border-r border-gray-200 dark:border-gray-700">
+            <MissionBrief
+              mission={{
+                id: mission.id,
+                name: mission.name,
+                orgId: mission.organizationId || "",
+                problemSummary: mission.problemSummary || "",
+                objectives: mission.objectives || "",
+                assumptions: mission.assumptions || "",
+                audiences:
+                  (mission.audiences as Record<string, string | number>) || {},
+              }}
+              isPublish={true}
+            />
+          </div>
+        </AudiencesFilterProvider>
+      </div>
+      <div className="col-span-3 md:col-span-2 flex-1 p-6">
+        <div className="flex flex-col md:flex-row justify-between gap-4">
+          <h2 className="text-2xl font-bold ">Prévisualisation</h2>
+          
+          <Button className="mb-2">
+            <Link href={`/missions/${mission.id}/surveys`} target="_blank">
+              {t("missions.publish.updateSurveys")}
+            </Link>
+          </Button>
         </div>
-      </AudiencesFilterProvider>
-      <div className="flex-1 overflow-y-auto max-h-screen p-6">
-        <Button className="mb-2">
-          <Link href={`/missions/${mission.id}/surveys`} target="_blank">
-            {t("missions.publish.updateSurveys")}
-          </Link>
-        </Button>
 
         <SurveyShow />
       </div>

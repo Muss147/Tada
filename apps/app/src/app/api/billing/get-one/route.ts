@@ -1,16 +1,20 @@
+// src/app/api/billing/get-one/route.ts
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const GetBillingInfoSchema = z.object({
-  organizationId: z.string(),
+  organizationId: z.string().min(1),
+  workspaceId: z.string().min(1).optional(),
 });
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const organizationId = searchParams.get("organizationId");
 
-  const parsed = GetBillingInfoSchema.safeParse({ organizationId });
+  const organizationId = searchParams.get("organizationId") ?? "";
+  const workspaceId = searchParams.get("workspaceId") ?? undefined;
+
+  const parsed = GetBillingInfoSchema.safeParse({ organizationId, workspaceId });
 
   if (!parsed.success) {
     return NextResponse.json(
@@ -24,14 +28,37 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const billingInfo = await prisma.billingInfo.findUnique({
-      where: { organizationId: parsed.data.organizationId },
-    });
+    const [billingInfo, workspaceAccount] = await Promise.all([
+      prisma.billingInfo.findUnique({
+        where: { organizationId: parsed.data.organizationId },
+      }),
+      parsed.data.workspaceId
+        ? prisma.workspaceCreditAccount.findUnique({
+            where: { workspaceId: parsed.data.workspaceId },
+            select: {
+              workspaceId: true,
+              balance: true,
+              currency: true,
+              updatedAt: true,
+            },
+          })
+        : Promise.resolve(null),
+    ]);
 
     return NextResponse.json(
       {
         success: true,
-        data: billingInfo,
+        data: {
+          billingInfo,
+          workspaceCredits: workspaceAccount
+            ? {
+                workspaceId: workspaceAccount.workspaceId,
+                balance: workspaceAccount.balance,
+                currency: workspaceAccount.currency,
+                updatedAt: workspaceAccount.updatedAt,
+              }
+            : null,
+        },
       },
       {
         headers: {

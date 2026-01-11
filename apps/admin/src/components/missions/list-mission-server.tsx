@@ -27,8 +27,11 @@ function fetchMissions({
 }: FetchMissionsParams) {
   const whereClause = {
     ...(query && { name: { contains: query } }),
-    ...(status && status !== "all" && { status }),
     ...(date && { createdAt: { gte: new Date(date) } }),
+    // ...(status && status !== "all" && { status }),
+    status: {
+      in: ["completed", "live"],
+    },
   };
 
   const orderByClause = sort.map((s) => ({ [s]: "asc" }));

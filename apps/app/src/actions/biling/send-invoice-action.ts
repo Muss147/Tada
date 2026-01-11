@@ -17,7 +17,7 @@ export const sendInvoiceEmailAction = authActionClient
   .action(async ({ parsedInput: { email, total } }) => {
     try {
       const payload = {
-        from: "no-reply@monrezo.net",
+        from: "no-reply@tadatiq.com",
         to: [email],
         subject: "[Tada] Facture",
         html: await render(

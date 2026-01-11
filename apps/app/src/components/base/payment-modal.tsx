@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dialog,
   DialogContent,
@@ -19,24 +20,25 @@ import {
 import { Checkbox } from "@tada/ui/components/checkbox";
 import { useState } from "react";
 import { useBillingStore } from "@/hooks/use-billing-store";
-import { useAction } from "next-safe-action/hooks";
-import { createBillingAction } from "@/actions/biling/create-billing-action";
-import { toast } from "@/hooks/use-toast";
-import { useCurrentLocale, useI18n, useScopedI18n } from "@/locales/client";
+import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 import { Loader2 } from "lucide-react";
-import { sendInvoiceEmailAction } from "@/actions/biling/send-invoice-action";
+import { toast } from "@/hooks/use-toast";
 import { useSession } from "@/lib/auth-client";
+
+import { useWorkspaceCreditsPurchaseStore } from "@/hooks/use-workspace-credits-purchase-store";
 
 interface PaymentModalProps {
   open: boolean;
   onOpenChange: () => void;
   inComingredits: number;
+  workspaceId: string;
 }
 
 export function PaymentModal({
   open,
   onOpenChange,
   inComingredits,
+  workspaceId,
 }: PaymentModalProps) {
   const commonT = useScopedI18n("common");
   const paymentModalT = useScopedI18n("paymentModal");
@@ -49,7 +51,6 @@ export function PaymentModal({
   const [paymentMethod, setPaymentMethod] = useState("invoice");
 
   const {
-    credits,
     street,
     city,
     zip,
@@ -61,46 +62,28 @@ export function PaymentModal({
     acceptTerms,
     organizationId,
     setField,
-    unitPrice,
   } = useBillingStore();
 
-  const total = (credits * unitPrice).toFixed(2);
+  const {
+    credits,
+    unitPrice,
+    currency,
+    workspaceId: storeWorkspaceId,
+  } = useWorkspaceCreditsPurchaseStore();
 
-  const sendInvoiceEmail = useAction(sendInvoiceEmailAction, {
-    onSuccess: ({ data }) => {
-      toast({
-        title: commonT("success"),
-        description: paymentModalT("paymentSuccess"),
-      });
-    },
-    onError: ({ error }) => {
-      console.log("error", error);
-      toast({
-        title: commonT("error.somethingWentWrong"),
-        variant: "destructive",
-      });
-    },
-  });
-
-  const createBilling = useAction(createBillingAction, {
-    onSuccess: ({ data }) => {
-      if (paymentMethod === "invoice") {
-        sendInvoiceEmail.execute({
-          email: "yaojean0857@gmail.com",
-          total,
-        });
-      }
-      window.location.reload();
-    },
-    onError: ({ error }) => {
-      toast({
-        title: commonT("error.somethingWentWrong"),
-        variant: "destructive",
-      });
-    },
-  });
+  const effectiveWorkspaceId = storeWorkspaceId || workspaceId;
 
   const handleSubmitBilling = async () => {
+    console.log("[PaymentModal] submit clicked", {
+      credits,
+      unitPrice,
+      storeWorkspaceId,
+      propWorkspaceId: workspaceId,
+      effectiveWorkspaceId,
+      organizationId,
+      sessionUserId: session?.user?.id,
+    });
+
     if (
       !acceptTerms ||
       !firstName ||
@@ -110,6 +93,7 @@ export function PaymentModal({
       !city ||
       !country
     ) {
+      console.log("[PaymentModal] missing required fields");
       toast({
         title: commonT("error.somethingWentWrong"),
         description: "Veuillez remplir tous les champs requis.",
@@ -118,61 +102,121 @@ export function PaymentModal({
       return;
     }
 
-    if (paymentMethod === "invoice") {
-      setLoadingCheckout(true);
-      try {
-        const response = await fetch("/api/custom-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            credits: credits,
-            organizationId,
-            unitPrice,
-            currency: locale === "fr" ? "eur" : "",
-            user: {
-              email: session?.user?.email,
-              name: session?.user?.name,
-              id: session?.user?.id,
-            },
-            metadata: {
-              credits: inComingredits + credits,
-              street,
-              city,
-              zip,
-              country,
-              company,
-              civility,
-              firstName,
-              lastName,
-              acceptTerms,
-              organizationId,
-            },
-          }),
-        });
+    if (!effectiveWorkspaceId || effectiveWorkspaceId.trim().length === 0) {
+      console.log("[PaymentModal] missing workspaceId");
+      toast({
+        title: commonT("error.somethingWentWrong"),
+        description: "Workspace introuvable. Veuillez réessayer.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-        const data = await response.json();
+    if (credits <= 0) {
+      console.log("[PaymentModal] invalid credits", credits);
+      toast({
+        title: commonT("error.somethingWentWrong"),
+        description: "Veuillez sélectionner un nombre de crédits valide.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-        if (!response.ok) {
-          toast({
-            title: commonT("error.somethingWentWrong"),
-            description: data.error || "Erreur lors de la création du paiement",
-            variant: "destructive",
-          });
-          setLoadingCheckout(false);
-          return;
-        }
+    if (paymentMethod !== "invoice") {
+      toast({
+        title: "Moyen de paiement non disponible",
+        description:
+          "Le paiement via PayPal n'est pas encore implémenté. Veuillez choisir une autre méthode.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-        // Redirection Stripe Checkout
-        window.location.href = data.url;
-      } catch (error) {
-        console.log("error", error);
+    setLoadingCheckout(true);
+
+    const requestId =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+    const payload = {
+      credits,
+      unitPrice,
+      currency: (currency || "eur").toLowerCase(),
+      workspaceId: effectiveWorkspaceId,
+      organizationId: organizationId || undefined,
+      user: {
+        id: session?.user?.id,
+        email: session?.user?.email,
+        name: session?.user?.name,
+      },
+      metadata: {
+        requestId,
+        balanceBefore: inComingredits,
+        creditsPurchased: credits,
+        balanceAfter: inComingredits + credits,
+
+        street,
+        city,
+        zip,
+        country,
+        company,
+        civility,
+        firstName,
+        lastName,
+        acceptTerms,
+
+        organizationId,
+        workspaceId: effectiveWorkspaceId,
+      },
+    };
+
+    console.log(
+      "[PaymentModal] POST /api/custom-checkout-session payload",
+      payload
+    );
+
+    try {
+      const response = await fetch("/api/custom-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      console.log("[PaymentModal] response status", response.status);
+
+      const data = await response.json().catch(() => null);
+      console.log("[PaymentModal] response body", data);
+
+      if (!response.ok) {
         toast({
           title: commonT("error.somethingWentWrong"),
-          description: "Erreur serveur, veuillez réessayer.",
+          description: data?.error || "Erreur lors de la création du paiement",
           variant: "destructive",
         });
         setLoadingCheckout(false);
+        return;
       }
+
+      if (!data?.url) {
+        toast({
+          title: commonT("error.somethingWentWrong"),
+          description: "URL de paiement manquante (Stripe).",
+          variant: "destructive",
+        });
+        setLoadingCheckout(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.error("[PaymentModal] network error", error);
+      toast({
+        title: commonT("error.somethingWentWrong"),
+        description: "Erreur serveur, veuillez réessayer.",
+        variant: "destructive",
+      });
+      setLoadingCheckout(false);
     }
   };
 
@@ -252,6 +296,8 @@ export function PaymentModal({
                 </Label>
               </div>
             </RadioGroup>
+
+            {/* ---- FORM (inchangé) ---- */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="civility">
@@ -261,7 +307,6 @@ export function PaymentModal({
                   value={civility}
                   onValueChange={(value) => setField("civility", value as any)}
                 >
-                  {" "}
                   <SelectTrigger id="civility" className="h-9">
                     <SelectValue placeholder={paymentModalT("form.civility")} />
                   </SelectTrigger>
@@ -271,6 +316,7 @@ export function PaymentModal({
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="lastName">
                   {paymentModalT("form.firstName")}
@@ -281,8 +327,9 @@ export function PaymentModal({
                   value={lastName}
                   onChange={(e) => setField("lastName", e.target.value)}
                   className="h-9"
-                />{" "}
+                />
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="firstName">
                   {paymentModalT("form.lastName")}
@@ -293,8 +340,9 @@ export function PaymentModal({
                   value={firstName}
                   onChange={(e) => setField("firstName", e.target.value)}
                   className="h-9"
-                />{" "}
+                />
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="street-number">
                   {paymentModalT("form.streetNumber")}
@@ -307,6 +355,7 @@ export function PaymentModal({
                   className="h-9"
                 />
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="postal-code">
                   {paymentModalT("form.postalCode")}
@@ -319,6 +368,7 @@ export function PaymentModal({
                   className="h-9"
                 />
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="city">{paymentModalT("form.city")}</Label>
                 <Input
@@ -329,6 +379,7 @@ export function PaymentModal({
                   className="h-9"
                 />
               </div>
+
               <div className="space-y-1">
                 <Label htmlFor="country">{paymentModalT("form.country")}</Label>
                 <Select
@@ -352,6 +403,7 @@ export function PaymentModal({
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="space-y-1 col-span-2">
                 <Label htmlFor="company">{paymentModalT("form.company")}</Label>
                 <Input
@@ -363,6 +415,7 @@ export function PaymentModal({
                 />
               </div>
             </div>
+
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
@@ -378,6 +431,7 @@ export function PaymentModal({
                 </a>
               </Label>
             </div>
+
             <Button
               className="w-full h-9"
               onClick={handleSubmitBilling}
@@ -395,9 +449,7 @@ export function PaymentModal({
               {loadingCheckout ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                paymentModalT("buyCreditsButton", {
-                  credits,
-                })
+                paymentModalT("buyCreditsButton", { credits })
               )}
             </Button>
           </div>
